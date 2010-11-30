@@ -5,6 +5,7 @@ import hashlib
 import subprocess
 import base64
 import re
+from datetime import datetime
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'buzz'))
 import buzz
@@ -37,6 +38,10 @@ def encrypt_msg(message_file_name, group_secret):
     # TODO: Choose some different number of letters
     
     short_group_hash = group_hash[0:8]
+    
+    cipher_file = open(message_file_name, 'a')
+    cipher_file.write(str(datetime.now()))
+    cipher_file.close()
     
     # Encrypt the plain text and save it to msg.encrypt
     subprocess.call(["./aescrypt", "-ep", group_secret, "-o", "msg.encrypt", message_file_name])
