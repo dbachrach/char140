@@ -6,6 +6,7 @@ import subprocess
 import base64
 import re
 from datetime import datetime
+import random
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'buzz'))
 import buzz
@@ -33,7 +34,14 @@ def decrypt_msg(message_file_name, group_secret):
 
 
 def encrypt_msg(message_file_name, group_secret):
-    group_hash = base64.b64encode(hashlib.sha256(group_secret).digest())
+    
+    # Pick a random hash function
+    hash_algs = [hashlib.sha1, hashlib.sha224, hashlib.sha256, hashlib.sha384, hashlib.sha512]
+    hash_alg = hash_algs[random.randint(0, len(hash_algs) - 1)]
+    
+    
+    
+    group_hash = base64.b64encode(hash_alg(group_secret).digest())
     
     # TODO: Choose some different number of letters
     
@@ -55,6 +63,7 @@ def encrypt_msg(message_file_name, group_secret):
         
     output = "#" + short_group_hash + " " + cipher_text
     
+    print output
     
     cipher_file = open('msg.out', 'w')
     cipher_file.write(output)
