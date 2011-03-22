@@ -1,103 +1,90 @@
 # python gen_msg.py <group secret> <message-file-name>
 
 import sys, os
-import hashlib
-import subprocess
+import codecs
 import base64
 import re
 from datetime import datetime
-import Crypto
+from Crypto import Random, Cipher
+from Crypto.Hash import HMAC, SHA, SHA256
 
 
-def decrypt_msg(message_file_name, group_secret):
+def decrypt_msg(hoot, plain_tag):
     
-    cipher_file = open(message_file_name, 'r')
-    msg = cipher_file.read()
-    cipher_file.close()
+    # Removes the short tag before the cipher text
+    hoot = re.sub(r'^#\S+ ', r'', hoot)
     
-    # Removes the hash tag before the cipher text
-    msg = re.sub(r'^#\S+ ', r'', msg)
+    #print hoot
+    
+    session_integrity_cipher = hoot[0:64]
+    integrity = hoot[64:92]
+    message = hoot[92:]
+    
+    print session_integrity_cipher, integrity, message
     
     # Base64 Decode the cipher text
-    msg = base64.b64decode(msg)
+    #msg = base64.b64decode(msg)
+
+
+def encrypt_msg(message, plain_tag, short_tag_length=2): 
+
+    PADDING = '{'
+    BLOCK_SIZE = 16
+    pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * PADDING
+    EncodeAES = lambda c, s: base64.b64encode(c.encrypt(pad(s)))
+
+    session_key = Random.get_random_bytes(16)
+    integrity_key = Random.get_random_bytes(20)
     
-    
-    cipher_file = open(message_file_name, 'w')
-    cipher_file.write(msg)
-    cipher_file.close()
-    
-    # Decrypt the cipher text and save it to msg.decrypt file
-    subprocess.call(["./aescrypt", "-dp", group_secret, "-o", "msg.decrypt", message_file_name])
+    sha = SHA256.new()
+    sha.update(plain_tag)
+    bit_long_tag = sha.digest()
 
-
-def encrypt_msg(message, plain_tag, short_tag_length=3): 
-
-    rander = Crypto.Random.new()
-
-	session_key = rander.get_random_bytes(16)
-	integrity_key = rander.get_random_bytes(20)
-	
-	sha = Crypto.Hash.SHA256.new()
-	bit_long_tag = sha.update(plain_tag).digest()
-	
     long_tag = base64.b64encode(bit_long_tag[0:16])
-
+    #long_tag = unicode(bit_long_tag[0:16], "utf_8")
+    #long_tag = bit_long_tag[0:16].encode("utf_8")
     short_tag = long_tag[0:short_tag_length]
-	
-	
-	session_integrity_payload = (session_key + integrity_key)
-	
-	aes = Crypto.Cipher.AES.new(long_tag[16:32])
-	
-	session_integrity_cipher = base64.b64encode(aes.encrypt(session_integrity_payload))
-	
-	aes = Crypto.Cipher.AES.new(session_key)
-	message_cipher = base64.b64encode(aes.encrypt(message))
-	
-	hmac = Crypto.Hash.HMAC.new(integrity_key, digestmod=SHA)
-	integrity = base64.b64encode(hmac.update(message_cpiher).digest())
-	
-	
-	output = "#" + short_tag + " " + session_integrity_cipher + " "	+ message_cipher + " " + integrity
-	
-	print "Output", output
-	
-    # TODO: Choose some different number of letters
     
-    # short_group_hash = group_hash[0:8]
-    # 
-    # cipher_file = open(message_file_name, 'a')
-    # cipher_file.write(str(datetime.now()))
-    # cipher_file.close()
-    # 
-    # # Encrypt the plain text and save it to msg.encrypt
-    # subprocess.call(["./aescrypt", "-ep", group_secret, "-o", "msg.encrypt", message_file_name])
-    #     
-    # cipher_file = open('msg.encrypt', 'r')
-    # cipher_text = cipher_file.read()
-    # cipher_file.close()
-    # 
-    # # Base64 encode cipher text
-    # cipher_text = base64.b64encode(cipher_text)
-    #     
-    # output = "#" + short_group_hash + " " + cipher_text
-    # 
-    # print output
-    # 
-    # cipher_file = open('msg.out', 'w')
-    # cipher_file.write(output)
-    # cipher_file.close()
+    
+    session_integrity_payload = (session_key + integrity_key)
+    
+    aes = Cipher.AES.new(bit_long_tag[16:32])
+    session_integrity_cipher = EncodeAES(aes, session_integrity_payload)
+    
+    aes = Cipher.AES.new(session_key)
+    message_cipher = EncodeAES(aes, message)
+    
+    
+    hmac = HMAC.new(integrity_key, digestmod=SHA)
+    hmac.update(message_cipher)
+    integrity = base64.b64encode(hmac.digest())
+    
+    
+    hoot = "#" + short_tag + " " + session_integrity_cipher + integrity + message_cipher
+    
+    print "Input (", len(message), "):", message
+    print "Output (", len(hoot), "):", hoot
+    
+    return hoot
+    # print "#shorttag", 1 + len(short_tag)
+    # print "space", 1
+    # print "Integrity", len(integrity)
+    # print "Session Integrity Cipher text", len(session_integrity_cipher)
+    # print "Message Cipher text", len(message_cipher)
+    
+    # TODO: What about date/time?
    
-    
+
 def main():
-    group_secret = sys.argv[1]
+    plain_tag = sys.argv[1]
     message = sys.argv[2]
+    size = 1
+    if len(sys.argv) > 3:
+        size = int(sys.argv[3])
     
-    print group_secret, message
-    
-    encrypt_msg(message, group_secret)
-    
-    #decrypt_msg('msg.out', group_secret)
+    for i in xrange(size):
+        hoot = encrypt_msg(message, plain_tag)
+        decrypt_msg(hoot, plain_tag)
 
 
 if __name__ == "__main__":
