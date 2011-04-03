@@ -1,0 +1,172 @@
+% hoot.tex
+
+% Author: Dustin Bachrach, Christopher Nunu, Dan Wallach, Matt Wright
+
+% Revisions:  28 March 2011
+
+\documentclass{acm_proc_article-sp}
+
+\usepackage{times}
+\usepackage{mathptm}
+
+\begin{document}
+
+\numberofauthors{4}
+
+\author{
+\alignauthor
+	Dustin Bachrach\\
+	\affaddr{Department of Computer Science}\\
+	\affaddr{Rice University}\\
+	\affaddr{Houston, Texas}\\
+	\email{ahdustin@gmail.com}	
+\alignauthor
+ 	Christopher Nunu\\
+	\affaddr{Department of Computer Science}\\
+	\affaddr{Rice University}\\
+	\affaddr{Houston, Texas}\\
+	\email{canunu@gmail.com}	
+\alignauthor
+	Dan Wallach\\
+	\affaddr{Department of Computer Science}\\
+	\affaddr{Rice University}\\
+	\affaddr{Houston, Texas}\\
+	\email{dwallach@rice.edu}\\
+\and
+\alignauthor
+	Matt Wright\\
+	\affaddr{Computer Science and Engineering}\\
+	\affaddr{University of Texas at Arlington}\\
+	\affaddr{Arlington, Texas}\\
+	\email{mwright@cse.uta.edu}
+}
+
+\title{Hoot}
+\date{May 6th, 2011}
+
+\maketitle
+
+\begin{abstract}
+
+\end{abstract}
+
+\section{Introduction}
+
+- Privacy
+
+- Define anonymity
+
+--- Subscriber anonymity
+
+--- Sender anonymity
+
+- What we are doing
+-- Define a protocol for users to communicate over an insecure public network like twitter with message confidentiality and subscriber anonymity. 
+
+- Punting on plain tag distribution
+
+\section{Related Work}
+
+- Todo
+
+\section{Design}
+
+- Confidentiality of a message
+
+- Identification of a message
+
+- Collisions
+
+-- Induced collisions
+
+-- Trade off between more or less collisions
+
+- 2 Session keys
+-- Session Key (Encryption)
+-- HMAC Key (Integrity)
+
+- What a message looks like
+
+\section{Implementation}
+
+- Protocol
+
+-- Session Keys
+-- Encryptin Session Key: Rand (16 bits)
+-- Integrity Session Key: Rand (20 bits)
+
+-- Identificatino: Sha256 plain tag
+--- first 128 bits are used for long tag
+--- first n bytes of long tag become short tag
+
+-- Confidentiality: AES (using session key)
+-- HMAC: SHA (integrity key)
+-- 
+
+\section{Incremental Deployment}
+
+\subsection{Message Length}
+
+- Two encoding options
+-- Base64
+	-- Simple
+	-- Universal
+	-- Longer message size 
+		---m + 20*(n/16) + 118 
+		---m <= 2, n <= 31, yields Hoot <= 140 characters
+-- Unicode
+	-- Describe Twitter's counting of 'characters'
+	-- Use to our advantage
+	-- Allows noraml English chracter tweets to fit in 140 chars
+	-- Shorter message size
+	--- 64 + m + 12 * (n / 16)
+	--- m <= 2, n <= 111, yields Hoot <= 140 characters
+
+\subsection{Pipeline Performance}
+
+- Twitter's stats (http://blog.twitter.com/2011/03/numbers.html):
+	-- 140 million tpd
+	-max: 6939 hps
+	
+- All our numbers are using base64 encoding:
+
+Encryption
+----------
+100,000 hoot encryptions -> 27.631s        3619.123 hps
+500,000 hoot encryptions - 137.402s        3638.957 hps
+Avg: 3614.531 hps
+
+Decryption
+----------
+100,000 hoot decryptions -> 6.430s         15552.099 hps
+500,000 hoot decryptions - 32.005s         15622.558 hps
+Avg: 15587.328 hps
+
+- Given these numbers, a Twitter server could easily encrypt the entire twitter firehose.
+
+- In reality, would probably get less tweets, but this gives us current upper bound
+
+- To be certain that twitter can keep up, add a few nodes and optimize, and will definitely keep up.
+
+- Interesting to note that decryption rate is important on client, since a client is searching tweets to find potential hoots (and may not collaborate w/ twitter)
+
+
+
+\section{Discussion}
+
+- would twitter actually do this
+	-- Probably not
+	-- Twitter wants to know what people are talking about
+	-- Honestly, best if twitter doesn't do this, since users can't "trust" twitter, encryption is better done on their own machine and results posted to twitter
+- use of this protocol (or who would use it)
+
+\section{Conclusions}
+
+
+
+\bibliographystyle{abbrv}
+\bibliography{hoot-bib}
+
+\balancecolumns
+
+\end{document}
