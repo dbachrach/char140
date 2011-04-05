@@ -52,30 +52,76 @@
 
 \section{Introduction}
 
-- Privacy
+- Like to have thing that feels like twitter but anonymity properties:
 
-- Define anonymity
+- Twitter/Facebook relevant in Tunisia, (Social media playing big role in revolution accross many countries. govt deliberately shut down)
 
---- Subscriber anonymity
+- While we can't keep them from filtering out service altogether, want to have private communication in plain sight (not stenagraphic)
 
---- Sender anonymity
+- Strong crypto usable by people whispering to each other in streets
+
+- Only trusted channel is not electronic (spoken word), to exchange key.
+
+
+- complimentary to Tor, solve problems Tor+Twitter does not
+
+
+
 
 - What we are doing
 -- Define a protocol for users to communicate over an insecure public network like twitter with message confidentiality and subscriber anonymity. 
 
 - Punting on plain tag distribution
 
-\section{Related Work}
+- Vocabulary
 
-- Todo
+\section{Background}
+
+1) History of government censorship, man in the middle
+	- Tunisia code injection
+	- Chinese firewall
+	- Crypto keys for important services to iranian source (Komodo)
+	- Person providing netwrok (even over ssl) might be evil
+
+2) Tor
+	- Trying to work against governent censorship
+	
+- "Group Crypto Keys"
+	
+\section{Definitions}
+
+- What is anonymous
+
+- "Cover traffic", "k anonymity"
+
+- Privacy
+
+- Define anonymity
+--- Sender anonymity
+--- Subscriber anonymity
+
+- Basic Crypto:
+	Message auth codes
+	Hash Functions
+	AES
+	Vanilla crypto
 
 \section{Design}
 
+- Problem: Twitter like semantics w/ encrypted messages
+	- Follow a Hashtag
+	- Take hashtag and create something with crytpo strength
+	- Something derived from tags you can search on
+	- But also deliberate collisions (cover traffic)
+	
 - Confidentiality of a message
 
 - Identification of a message
-
-- Collisions
+	- Can hash a hash tag (vocabulary problem)
+		- Use these terms: plain tag, long tag, short tag
+	- Short tags
+	- Collisions
+	- long tags give us lots of entropy use it for session key for integrity and for identification
 
 -- Induced collisions
 
@@ -87,21 +133,44 @@
 
 - What a message looks like
 
+- Crypto equations
+
+\section{Experiments}
+
+- How long a short tag should be
+- Enough cover traffic?
+
+- what that tells us about design parameters of solution
+
+- Then we can conclude that we need this number of bits, etc
+
+- Wrap up all experiments into What can our system do
+	- Easy to collide or not to collide (Tune covertraffic)
+	- Efficient computer message encryption
+
+
+
 \section{Implementation}
 
 - Protocol
 
 -- Session Keys
--- Encryptin Session Key: Rand (16 bits)
+-- Encryption Session Key: Rand (16 bits)
 -- Integrity Session Key: Rand (20 bits)
 
--- Identificatino: Sha256 plain tag
+-- Identification: Sha256 plain tag
 --- first 128 bits are used for long tag
 --- first n bytes of long tag become short tag
 
 -- Confidentiality: AES (using session key)
 -- HMAC: SHA (integrity key)
 -- 
+
+\section{Discussion}
+1. Can you incrementally roll it out
+	- Service provided by twitter or yourself
+2. 140 character limit
+	- Twitter doesn't have to go too far to have all the metadata for encryption
 
 \section{Incremental Deployment}
 
@@ -121,6 +190,8 @@
 	-- Shorter message size
 	--- 64 + m + 12 * (n / 16)
 	--- m <= 2, n <= 111, yields Hoot <= 140 characters
+	
+	TODO: Actually encrypt our data. avg length? Longest?
 
 \subsection{Pipeline Performance}
 
@@ -153,12 +224,17 @@ Avg: 15587.328 hps
 
 
 \section{Discussion}
-
+- Usability
+	- use of this protocol (or who would use it)
+	- 7+-2, can people remember plain tags (spoken secrets) (phone numbers) (hide crypto key in phone number) (base 10 digit short tags)
+	
 - would twitter actually do this
 	-- Probably not
 	-- Twitter wants to know what people are talking about
 	-- Honestly, best if twitter doesn't do this, since users can't "trust" twitter, encryption is better done on their own machine and results posted to twitter
-- use of this protocol (or who would use it)
+		-- Alternate backend, completely different built on distr system. (DHTs, distributed hash table, CHORD, Pastry)
+		-- These message are short enough that they can be stored anywhere. Centrlized system (Twitter, Buzz), anything that's publicly searchable (distributed or central)
+
 
 \section{Conclusions}
 
