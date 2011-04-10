@@ -20,21 +20,18 @@
 	\affaddr{Rice University}\\
 	\affaddr{Houston, Texas}\\
 	\email{ahdustin@gmail.com}	
-	
 \alignauthor
  	Christopher Nunu\\
 	\affaddr{Department of Computer Science}\\
 	\affaddr{Rice University}\\
 	\affaddr{Houston, Texas}\\
-	\email{canunu@gmail.com}
-	
+	\email{canunu@gmail.com}	
 \alignauthor
 	Dan Wallach\\
 	\affaddr{Department of Computer Science}\\
 	\affaddr{Rice University}\\
 	\affaddr{Houston, Texas}\\
 	\email{dwallach@rice.edu}\\
-
 \and
 \alignauthor
 	Matt Wright\\
@@ -50,6 +47,8 @@
 \maketitle
 
 \begin{abstract}
+
+TODO:
 
 \end{abstract}
 
@@ -73,9 +72,6 @@
 
 
 - complimentary to Tor, solve problems Tor+Twitter does not
-
-
-
 
 - What we are doing
 -- Define a protocol for users to communicate over an insecure public network like twitter with message confidentiality and subscriber anonymity. 
@@ -130,69 +126,32 @@ The header also contains an set of encrypted keys. To combat replay attacks, the
 
 Finally, the message body is encrypted with the session key, and then appended to the message header.
 
-	
-% - Confidentiality of a message
-
-% - Identification of a message
-% 	- Can hash a hash tag (vocabulary problem)
-% 		- Use these terms: plain tag, long tag, short tag
-	% - Short tags
-	% - Collisions
-	% - long tags give us lots of entropy use it for session key for integrity and for identification
-
-% -- Induced collisions
-
-% -- Trade off between more or less collisions
-
-% - 2 Session keys
-% -- Session Key (Encryption)
-% -- HMAC Key (Integrity)
-
-- What a message looks like
-- Crypto equations/sizes
-
-\section{Experiments}
-
-- How long a short tag should be
-- Enough cover traffic?
-
-- what that tells us about design parameters of solution
-
-- Then we can conclude that we need this number of bits, etc
-
-- Wrap up all experiments into What can our system do
-	- Easy to collide or not to collide (Tune covertraffic)
-	- Efficient computer message encryption
-
-
+- TODO(Chris): What a message looks like
+- TODO(Chris): Crypto equations/sizes
 
 \section{Implementation}
 
-- Protocol
+DUSTIN:
+Many ways to implement. Here's a prototype. Heres how it works
+
+- mention unicode games. Provide both a unicode and a base64 version. Twitter restricts message lenght. squeeze out more chars. Won't work if client doesn't use unicode. doesnt work if language encrypting requires full unicode set. Because we wrote two version. 1 uses b64, one uses unicdode
+
+- Python 2.7
 
 -- Session Keys
 -- Encryption Session Key: Rand (16 bits)
 -- Integrity Session Key: Rand (20 bits)
 
--- Identification: Sha256 plain tag
---- first 128 bits are used for long tag
+-- Identification: Sha256 plain tag -> Long Tag
+--- first 128 bits are used for short tag, then encode (SHORT TAGS IS ALWAYS b64)
 --- first n bytes of long tag become short tag
 
 -- Confidentiality: AES (using session key)
 -- HMAC: SHA (integrity key)
--- 
-
-\section{Discussion}
-1. Can you incrementally roll it out
-	- Service provided by twitter or yourself
-2. 140 character limit
-	- Twitter doesn't have to go too far to have all the metadata for encryption
-
-\section{Incremental Deployment}
+--
 
 \subsection{Message Length}
 
-- Two encoding options
 -- Base64
 	-- Simple
 	-- Universal
@@ -209,8 +168,31 @@ Finally, the message body is encrypted with the session key, and then appended t
 	
 	TODO: Actually encrypt our data. avg length? Longest?
 
-\subsection{Pipeline Performance}
+\section{Experiments}
 
+- Measurements are based on our prototype
+- Power log
+
+CHRIS:
+- How long a short tag should be
+- Collider
+- Enough cover traffic?
+
+- what that tells us about design parameters of solution
+
+- Then we can conclude that we need this number of bits, etc
+
+- Wrap up all experiments into What can our system do
+	- Easy to collide or not to collide (Tune covertraffic)
+	- Efficient computer message encryption
+	
+
+
+
+
+\subsection{Performance}
+
+DUSTIN:
 - Twitter's stats (http://blog.twitter.com/2011/03/numbers.html):
 	-- 140 million tpd
 	-max: 6939 hps
@@ -240,6 +222,11 @@ Avg: 15587.328 hps
 
 
 \section{Discussion}
+1. Can you incrementally roll it out
+	- Service provided by twitter or yourself
+2. 140 character limit
+	- Twitter doesn't have to go too far to have all the metadata for encryption
+
 
 
 - Usability
@@ -256,12 +243,16 @@ Avg: 15587.328 hps
 	-- Honestly, best if twitter doesn't do this, since users can't "trust" twitter, encryption is better done on their own machine and results posted to twitter
 		-- Alternate backend, completely different built on distr system. (DHTs, distributed hash table, CHORD, Pastry)
 		-- These message are short enough that they can be stored anywhere. Centrlized system (Twitter, Buzz), anything that's publicly searchable (distributed or central)
+		
+\subsection{Incremental Deployment}
 
->>>>>>> 6d693588239d396d942c875b68c8f7b2a2343ccc
+- How hard is it for twitter to do this. 
+- Reference message fitting into 140 char using unicode
+- Reference peak hps, and how our system holds up
 
 \section{Conclusions}
 
-
+TODO:
 
 \bibliographystyle{abbrv}
 \bibliography{hoot–bib}
