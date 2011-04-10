@@ -1,0 +1,65 @@
+
+Identification
+
+b&u:
+2+m: '#' + short tag (m chars) + ' '
+
+Session Integrity Cipher text
+
+b: 64 
+u: 35
+
+Integrity 
+
+b: 28
+u: 15
+
+Message Encryption (AES w/ block size of 16 bytes)
+
+n chars -> cipher text chars
+1-15  -> 24
+16-31  -> 44
+32-47 -> 64
+
+
+1-15 -> 12
+16-31 -> 24
+32-47 -> 35
+48-63 -> 47
+64-79   -> 59
+b: 20 * (n / 16) + 24
+u: 12 * (n / 16) + 12
+
+
+
+Total
+
+b:
+2 + m + 64 + 28 + 20 * (n / 16) + 24
+m + 20*(n/16) + 118 
+m <= 2, n <= 31, yields Hoot <= 140 characters
+
+u:
+2 + m + 35 + 15 + 12 * (n / 16) + 12
+64 + m + 12 * (n / 16)
+m <= 2, n <= 111, yields Hoot <= 140 characters
+
+TIMING:
+
+1.86GHz Intel Core 2 Duo, 4GB Ram, Macbook Air
+
+Encryption
+----------
+100,000 hoot encryptions -> 27.631s        3619.123 hps
+500,000 hoot encryptions - 137.402s        3638.957 hps
+Avg: 3614.531 hps
+
+Decryption
+----------
+100,000 hoot decryptions -> 6.430s         15552.099 hps
+500,000 hoot decryptions - 32.005s         15622.558 hps
+Avg: 15587.328 hps
+
+
+Encrypt-then-mac: http://www.daemonology.net/blog/2009-06-24-encrypt-then-mac.html http://rdist.root.org/2010/09/10/another-reason-to-mac-ciphertext-not-plaintext/
+Twitter unicode: http://atxconsulting.com/blog/tjfontaine/2009/07/01/twuuenc-uuencode-web20 http://git.atxconsulting.com/twuuenc/
