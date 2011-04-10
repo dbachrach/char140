@@ -6,8 +6,8 @@
 
 \documentclass{acm_proc_article-sp}
 
-\usepackage{times}
 \usepackage{mathptm}
+\usepackage{times}
 
 \begin{document}
 
@@ -20,18 +20,21 @@
 	\affaddr{Rice University}\\
 	\affaddr{Houston, Texas}\\
 	\email{ahdustin@gmail.com}	
+	
 \alignauthor
  	Christopher Nunu\\
 	\affaddr{Department of Computer Science}\\
 	\affaddr{Rice University}\\
 	\affaddr{Houston, Texas}\\
-	\email{canunu@gmail.com}	
+	\email{canunu@gmail.com}
+	
 \alignauthor
 	Dan Wallach\\
 	\affaddr{Department of Computer Science}\\
 	\affaddr{Rice University}\\
 	\affaddr{Houston, Texas}\\
 	\email{dwallach@rice.edu}\\
+
 \and
 \alignauthor
 	Matt Wright\\
@@ -194,12 +197,12 @@ Finally, the message body is encrypted with the session key, and then appended t
 	-- Simple
 	-- Universal
 	-- Longer message size 
-		---m + 20*(n/16) + 118 
+		---m + 20 * (n/16) + 118 
 		---m <= 2, n <= 31, yields Hoot <= 140 characters
 -- Unicode
-	-- Describe Twitter's counting of 'characters'
+	-- Describe Twitter's counting of `characters'
 	-- Use to our advantage
-	-- Allows noraml English chracter tweets to fit in 140 chars
+	-- Allows normal English character tweets to fit in 140 chars
 	-- Shorter message size
 	--- 64 + m + 12 * (n / 16)
 	--- m <= 2, n <= 111, yields Hoot <= 140 characters
@@ -246,18 +249,23 @@ Avg: 15587.328 hps
 - would twitter actually do this
 	-- Probably not
 	-- Twitter wants to know what people are talking about
+<<<<<<< HEAD
+	-- Honestly, best if twitter doesn't do this, since users can't ``trust'' twitter, encryption is better done on their own machine and results posted to twitter
+- use of this protocol (or who would use it)
+=======
 	-- Honestly, best if twitter doesn't do this, since users can't "trust" twitter, encryption is better done on their own machine and results posted to twitter
 		-- Alternate backend, completely different built on distr system. (DHTs, distributed hash table, CHORD, Pastry)
 		-- These message are short enough that they can be stored anywhere. Centrlized system (Twitter, Buzz), anything that's publicly searchable (distributed or central)
 
+>>>>>>> 6d693588239d396d942c875b68c8f7b2a2343ccc
 
 \section{Conclusions}
 
 
 
 \bibliographystyle{abbrv}
-\bibliography{hoot-bib}
+\bibliography{hoot–bib}
 
-\balancecolumns
+\balancecolumns{}
 
 \end{document}
