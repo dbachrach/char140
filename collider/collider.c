@@ -217,20 +217,18 @@ void baseIncrementer(int* num, int base, int num_digits) {
 unsigned long long* getIterationChunks(unsigned long long exploration_space_size, int num_threads) {
 	
 	unsigned long long exploration_chunks = (unsigned long long) exploration_space_size / num_threads;
-	int exploration_chunks_remainder = (int)exploration_space_size % num_threads;
+	int exploration_chunks_remainder = (int)(exploration_space_size % num_threads);
 	
 	unsigned long long* iterationChunks = malloc(num_threads * sizeof(unsigned long long));
 	
-	for( int i = 0; i < num_threads; i++ )
+	for( int i = 0; i < num_threads; i++ ) {
 		iterationChunks[i] = exploration_chunks;
-	
-	int index = 0;
-	while (exploration_chunks_remainder != 0 ) {
-		
-		iterationChunks[index % num_threads] += 1;
-		index++;
-		exploration_chunks_remainder--;
-	}
+        
+        if( exploration_chunks_remainder != 0 ) {
+            iterationChunks[i]++;
+            exploration_chunks_remainder--;
+        }
+    }
 	
 	return iterationChunks;
 }
@@ -247,6 +245,7 @@ int main(int argc, char *argv[])
 	const char *prefix = argv[2];
 	const int suffix_size = atoi(argv[3]);
 	int num_tags = atoi(argv[4]);
+    const int s_num_tags = num_tags;
 	const int threads = atoi(argv[5]);
 	
 	validate(short_tag, prefix, suffix_size, num_tags, threads);
@@ -257,14 +256,10 @@ int main(int argc, char *argv[])
 	const int alphanumLen = strlen(alphanums);
 	const unsigned long long exploration_space_size = (unsigned long long)pow(alphanumLen, suffix_size);
 	
-	//
 	// Byte accurate calculation of final buffer size
-	//
 	size_t long_tag_encoded_size = ((20 / BINARY_UNIT_SIZE) + ((20 % BINARY_UNIT_SIZE) ? 1 : 0)) * BASE64_UNIT_SIZE;
 	
-	//
 	// Include space for a terminating zero
-	//
 	long_tag_encoded_size += 1;
 	
 	//seed the random generator and use it to give a random starting position
@@ -278,9 +273,10 @@ int main(int argc, char *argv[])
 		printf("Error, long long is not twice the size of int as expected.");
 		exit(1);
 	}
-	unsigned long long startPos = (unsigned long long)rand() % exploration_space_size;
+	unsigned long long startPos = rand();
 	startPos <<= sizeof(int);
-	startPos += (unsigned long long)rand() % exploration_space_size;
+	startPos += rand();
+    startPos = startPos % exploration_space_size;
 	
 	//divide the space up into approximately equal chunks based on number of threads
 	unsigned long long* iterationChunks = getIterationChunks(exploration_space_size, threads);
@@ -308,6 +304,7 @@ int main(int argc, char *argv[])
 		
 		//compute the start position by advancing the start index by chunks
 		unsigned long long start = startPos;
+
 		for (int j = 0; j < threads; j++) {
 			
 			//if the chunk matches the thread num, we'e advanced enough
@@ -329,7 +326,7 @@ int main(int argc, char *argv[])
 		unsigned long long index = 0;
 		unsigned long long numIterations = iterationChunks[i];
 		
-		while((num_tags > 0 || num_tags == -1) && index < numIterations)
+		while((num_tags > 0 || s_num_tags == -1) && index < numIterations)
 		{
 			
 			// Generate random string by using the suffix_rep digits as lookups into
@@ -354,9 +351,11 @@ int main(int argc, char *argv[])
 				short_tag_new[shortTagLen] = '\0';
 				
 				printf("Found new tag: %s -> %s\n", plain_tag, long_tag_encoded);
-				#pragma omp critical
-				{
-					if (num_tags != -1) {
+                
+                if (s_num_tags != -1) {
+                    
+                    #pragma omp critical
+                    {
 						num_tags--;
 					}
 				}
