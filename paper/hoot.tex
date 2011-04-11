@@ -150,7 +150,7 @@ The body of the Hoot is the cypher text, \textit{C}, of a message, \textit{M}, e
 	C \leftarrow E_{SessionKey}(M)
 \end{equation}
 
-The header also contains the integrity digest, \texit{D}, of the cypher text, using the HMAC Key in the header. By including an integrity digest, the protocol allows for quick verification that a message is for a specific group without having to decrypt the message. It also verifies that the Hoot has not been tampered with. 
+The header also contains the integrity digest, \textit{D}, of the cypher text, using the HMAC Key in the header. By including an integrity digest, the protocol allows for quick verification that a message is for a specific group without having to decrypt the message. It also verifies that the Hoot has not been tampered with. 
 
 \begin{equation}
 	D \leftarrow HMAC_{HMACKey}(C)
