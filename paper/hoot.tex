@@ -8,6 +8,7 @@
 
 \usepackage{mathptm}
 \usepackage{times}
+\usepackage{graphicx}
 
 \begin{document}
 
@@ -201,6 +202,12 @@ characters. Assuming again a Short Tag of length 2, a Unicode encoded message ca
 
 We performed the following experiments using our prototype to validate the protocol.
 
+\begin{figure}[hash-dist]
+\begin{center}
+\includegraphics[height=2in,width=2.84in]{graphs/hash-tag-dist.pdf}
+\caption{2009 Twitter Hash Tag distribution on a log-log scale.}
+\end{center}
+\end{figure}
 
 - Power log
 
@@ -216,10 +223,6 @@ CHRIS:
 - Wrap up all experiments into What can our system do
 	- Easy to collide or not to collide (Tune covertraffic)
 	- Efficient computer message encryption
-	
-
-
-
 
 \subsection{Performance}
 
@@ -227,13 +230,15 @@ In this experiment we wanted to see how well the encryption engine performed. In
 
 The following benchmarks were run on a 1.86GHz Intel Core 2 Duo, 4GB Ram, Macbook Air using Base64 encoding. 
 
-Encryption
-----------
-Avg: 3614.531 Hoots per second
 
-Decryption
-----------
-Avg: 15587.328 Hoots per second
+\begin{center}
+    \begin{tabular}{ | l | l | l | p{5cm} |}
+    \hline
+	Action & Average Hoots per second \\ \hline
+	Encryption & 3614.531 \\ \hline
+	Decryption & 15587.328 \\ \hline
+    \end{tabular}
+\end{center}
 
 Given these numbers, a Twitter server could easily encrypt the entire Twitter feed as the messages were posted. To handle peak usage like the 6939 tweets per second Twitter observed, many optimizations could be made, the simplest being to add a couple computers to help with the load. Our experiment shows that the Hoot protocol does not have significant overhead during encryption or decryption, so it can be adopted with little engineering effort.
 
