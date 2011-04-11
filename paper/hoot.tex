@@ -129,7 +129,7 @@ with other innocent topics.
 To generate a collision, we need to shorten the long tag, generating a \textit{Short Tag}, which will induce more collisions. The shorter the Short Tag, the higher the collision rate will be and the less sure an observer can be of what topic a Hoot reader is listening to. With this greater anonymity comes more computational work, however. Since more group messages will now be belong to the same identifier, a follower must decrypt more messages to find relevant signal. Depending on the required degree of subscriber anonymity, more collisions might be worth the computational overhead. Also, even given a constant Short Tag length, a group can choose a tag that will collide with extremely popular tags to generate even more noise. Given a Long tag of byte-length \textit{N}, we produce a Short Tag by taking the first \textit{K} bytes of it:
 
 \begin{equation}
-	ShortTag \leftarrow LongTag_{[0-K]} : K < N
+	ShortTag \leftarrow LongTag_{[0:K]} : K < N
 \end{equation}
 
 The header also contains an set of encrypted keys, \textit{(Session Key, Digest Key)}. To combat replay attacks, the protocol uses a random session key to encrypt the plain text. This session key is then included in the set of keys in the header. The protocol ensures integrity the standard way by including an HMAC of the cipher text. The key to the HMAC function is randomly generated and is included in these set of keys: 
@@ -142,7 +142,7 @@ The header also contains an set of encrypted keys, \textit{(Session Key, Digest 
 To encrypt this set of keys, we exploit the entropy of the Long Tag. Since the identifier for a message is only the first \textit{K} bytes in the Long Tag, we can use the latter set of bytes elsewhere. By encrypting the keys with part of the Long Tag, a reader can easily know the key to decrypt with since it is simply the hash of the Plain Tag, and we also do not require knowledge of two different secrets. Thus, given an encryption function and corresponding key, \textit{$E_{key}$}, we have the encrypted keys as:
 
 \begin{equation}
-	KeyPair \leftarrow E_{LongTag_{[(K+1)-N]}}(SessionKey,DigestKey)
+	KeyPair \leftarrow E_{LongTag_{[(K+1):N]}}(SessionKey.DigestKey)
 \end{equation}
 
 The body of the Hoot is the cypher text, \textit{C}, of a message, \textit{M}, encrypted with the Session Key:
@@ -162,7 +162,6 @@ Therefore, a complete Hoot appears as:
 \begin{equation}
 	Hoot \leftarrow ShortTag.KeyPair.D.C
 \end{equation}
-- TODO(Chris): Crypto equations/sizes
 
 \section{Implementation}
 
@@ -202,16 +201,17 @@ characters. Assuming again a Short Tag of length 2, a Unicode encoded message ca
 
 We performed the following experiments using our prototype to validate the protocol.
 
-\begin{figure}[hash-dist]
-\begin{center}
-\includegraphics[height=2in,width=2.84in]{graphs/hash-tag-dist.pdf}
-\caption{2009 Twitter Hash Tag distribution on a log-log scale.}
-\end{center}
-\end{figure}
+\subsection{Cover Traffic}
+
+% \begin{figure}[hash-dist]
+% \begin{center}
+% \includegraphics[scale=.25]{graphs/hash-tag-dist.pdf}
+% \caption{2009 Twitter Hash Tag distribution on a log-log scale.}
+% \end{center}
+% \end{figure}
 
 - Power log
 
-CHRIS:
 - How long a short tag should be
 - Collider
 - Enough cover traffic?
@@ -219,10 +219,13 @@ CHRIS:
 - what that tells us about design parameters of solution
 
 - Then we can conclude that we need this number of bits, etc
-
 - Wrap up all experiments into What can our system do
+<<<<<<< HEAD
 	- Easy to collide or not to collide (Tune cover traffic)
 	- Efficient computer message encryption
+=======
+	- Easy to collide or not to collide (Tune covertraffic)
+>>>>>>> 43a047542b49d97052fd3efce939b1cda7954d58
 
 \subsection{Performance}
 
@@ -246,6 +249,7 @@ The following benchmarks were run on a 1.86GHz Intel Core 2 Duo, 4GB Ram, Macboo
 Given these numbers, a Twitter server could easily encrypt the entire Twitter feed as the messages were posted. To handle peak usage like the 6939 tweets per second Twitter observed, many optimizations could be made, the simplest being to add a couple computers to help with the load. Our experiment shows that the Hoot protocol does not have significant overhead during encryption or decryption, so it can be adopted with little engineering effort.
 
 It is interesting to note that the decryption rate is important to a client, since a client will be searching tweets trying to identify and decrypt potential Hoots. A client may not trust Twitter to do the decryption since that involves sharing the Plain Tag with Twitter, so a client would decrypt the message on their machine. Almost every client will not have a datacenter of computers for decryption, but our  process can decrypt Hoots almost five times faster than it encrypts them. A client, even with limited computing power, can easily keep up with the Twitter feed.
+
 
 \section{Discussion}
 1. Can you incrementally roll it out
