@@ -136,7 +136,7 @@ To generate a collision, we need to shorten the long tag, generating a \textit{S
 	ShortTag \leftarrow LongTag_{[0:K]} : K < N
 \end{equation}
 
-The header also contains an set of encrypted keys, \textit{(Session Key, Digest Key)}. To combat replay attacks, the protocol uses a random session key to encrypt the plain text. This session key is then included in the set of keys in the header. The protocol ensures integrity the standard way by including an HMAC of the cipher text. The key to the HMAC function is randomly generated and is included in these set of keys: 
+The header also contains an set of encrypted keys, \textit{(Session Key, Digest Key)}. To combat replay attacks, the protocol uses a random session key to encrypt the plain text. This session key is then included in the set of keys in the header. The protocol ensures integrity the standard way by including an HMAC of the cipher text (http://www.daemonology.net/blog/2009-06-24-encrypt-then-mac.html). The key to the HMAC function is randomly generated and is included in these set of keys: 
 
 \begin{align}
 	& SessionKey \leftarrow randomBytes() \\
@@ -231,7 +231,7 @@ The power log scale shows us that there is a large spectrum of subscriber anonym
 In order to explore the feasibility of steering a particular Plain Tag to collide with an existing tag, we built a collider tool. The tool takes in a Short Tag substring , \textit{T}, a prefix, \textit{P}, a Suffix Length, \textit{L}, an alphabet 
 \textit{A}. The collider finds all concatenations of \textit{P} and strings of length \textit{L} from \textit{A*} such that the truncated hash of the resultant string is equal to \textit{T}. \hl{(better if written in pseudocode?)}
 
-The search space, then, is of size $|A|^L$. If we wanted to match byte strings, $|A| = 256$, however, we decided to restrict the alphabet to alphanumeric, yielding $|A| = 62$. Additionally, the search space can be explored in parallel, giving the Collider executing on a system with \textit{P} processing units, a runtime of $O(\frac{62^L}{P})$. \hl{(do we need to go into more detail as to how we do this?)}
+The search space, then, is of size $|A|^L$. If we wanted to match byte strings, $|A| = 256$, however, we decided to restrict the alphabet to alphanumeric, yielding $|A| = 62$. Additionally, the search space can be explored in parallel, giving the Collider executing on a system with \textit{P} \hl{(we already defined P above)} processing units, a runtime of $O(\frac{62^L}{P})$. \hl{(do we need to go into more detail as to how we do this?)}
 
 \begin{figure}
 \begin{center}
@@ -252,7 +252,7 @@ The search space, then, is of size $|A|^L$. If we wanted to match byte strings, 
 \end{figure}
 
 
-As we expect, the runtime in Figure \ref{fig:collider-times} scales exponentially with \textit{L}. 
+As expected, the runtime in Figure \ref{fig:collider-times} scales exponentially with \textit{L}. 
 
 
 \hl{
@@ -268,7 +268,7 @@ As we expect, the runtime in Figure \ref{fig:collider-times} scales exponentiall
 
 In this experiment we wanted to see how well the encryption engine performed. In March 2011, Twitter stated that the site receives 140 million tweets per day or 1620 tweets per second on average (http://blog.twitter.com/2011/03/numbers.html). They also said that the maximum tweets per second ever was 6939. These numbers act as rough upper bounds to the number of Hoots per second the system would need to keep up with. In all likelihood, the number of encrypted messages posted would be drastically smaller than regular messages.
 
-The following benchmarks were run on a 1.86GHz Intel Core 2 Duo, 4GB Ram, Macbook Air using Base64 encoding. 
+The benchmarks in Table \ref{tab:hps} were run on a 1.86GHz Intel Core 2 Duo, 4GB Ram, Macbook Air using Base64 encoding.
 
 
 \begin{table}
@@ -281,6 +281,7 @@ The following benchmarks were run on a 1.86GHz Intel Core 2 Duo, 4GB Ram, Macboo
 	Decryption & 15587.328 \\ \hline
     \end{tabular}
 \end{center}
+\label{tab:hps}
 \end{table}
 
 Given these numbers, a Twitter server could easily encrypt the entire Twitter feed as the messages were posted. To handle peak usage like the 6939 tweets per second Twitter observed, many optimizations could be made, the simplest being to add a couple computers to help with the load. Our experiment shows that the Hoot protocol does not have significant overhead during encryption or decryption, so it can be adopted with little engineering effort.
