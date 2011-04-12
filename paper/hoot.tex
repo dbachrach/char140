@@ -141,9 +141,12 @@ The header also contains an set of encrypted keys, \textit{(Session Key, Digest 
 
 To encrypt this set of keys, we exploit the entropy of the Long Tag. Since the identifier for a message is only the first \textit{K} bytes in the Long Tag, we can use the latter set of bytes elsewhere. By encrypting the keys with part of the Long Tag, a reader can easily know the key to decrypt with since it is simply the hash of the Plain Tag, and we also do not require knowledge of two different secrets. Thus, given an encryption function and corresponding key, \textit{$E_{key}$}, we have the encrypted keys as:
 
-\begin{equation}
-	KeyPair \leftarrow E_{LongTag_{[(K+1):N]}}(SessionKey.DigestKey)
-\end{equation}
+\begin{align}
+\begin{split}
+	KeyPair \leftarrow E_{LongTag_{[J:N]}}(SessionKey.DigestKey)& \\
+	\text{where } J > K \wedge J < N&
+\end{split}	
+\end{align}
 
 The body of the Hoot is the cypher text, \textit{C}, of a message, \textit{M}, encrypted with the Session Key:
 
@@ -220,12 +223,8 @@ We performed the following experiments using our prototype to validate the proto
 
 - Then we can conclude that we need this number of bits, etc
 - Wrap up all experiments into What can our system do
-<<<<<<< HEAD
-	- Easy to collide or not to collide (Tune cover traffic)
-	- Efficient computer message encryption
-=======
-	- Easy to collide or not to collide (Tune covertraffic)
->>>>>>> 43a047542b49d97052fd3efce939b1cda7954d58
+- Easy to collide or not to collide (Tune cover traffic)
+- Efficient computer message encryption
 
 \subsection{Performance}
 

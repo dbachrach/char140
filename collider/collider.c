@@ -350,7 +350,7 @@ int main(int argc, char *argv[])
 				strncpy((char*)short_tag_new, long_tag_encoded, shortTagLen);
 				short_tag_new[shortTagLen] = '\0';
 				
-				printf("Found new tag: %s -> %s\n", plain_tag, long_tag_encoded);
+				//printf("Found new tag: %s -> %s\n", plain_tag, long_tag_encoded);
                 
                 if (s_num_tags != -1) {
                     
