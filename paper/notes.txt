@@ -1,0 +1,36 @@
+source for related work
+-google scholar
+
+look at other terms of anonymity. (see Tor for ex.)
+what do we do that Tor doesn't
+complementary pairing.
+
+group crypto (keys)
+HMAC
+cover traffic (k-anonymity)
+
+intro
+introduce vocabulary
+design constraints
+anonymity properties
+goals (can't deal with DOS, but facilitate by cryptographic constructs, want to follow a tag without revealing it)
+cover traffic
+
+background
+history of censorship/listening (man in the middle, govn't censorship, chinese firewall)
+social media as a means of organizing revolutions (see middle east)
+tor
+
+definitions
+anonymity (5 types, where are we)
+crypto terms (hash, AES, keys, HMACs)
+our terms
+
+design
+talk about entropy from hash
+
+wrap-up
+enough entropy
+one machine can encrypt twitter fire hose
+efficiently collide/not collide
+tune cover traffic
