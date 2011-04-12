@@ -165,6 +165,8 @@ Therefore, a complete Hoot appears as:
 
 \section{Implementation}
 
+In this section we describe an implementation of the Hoot protocol we create for our prototype.
+
 \subsection{Generating a Hoot}
 
 The Hoot protocol can be implemented in a variety of ways using different encryption and hashing algorithms. We created a Python prototype that fully implements the protocol.
@@ -252,33 +254,36 @@ It is interesting to note that the decryption rate is important to a client, sin
 
 
 \section{Discussion}
+
+In this section, we discuss a variety of issues and future extensions of the Hoot design.
+
+\subsection{Incremental Rollout}
+
 1. Can you incrementally roll it out
 	- Service provided by twitter or yourself
 2. 140 character limit
 	- Twitter doesn't have to go too far to have all the metadata for encryption
-
-
-
-- Usability
-	- use of this protocol (or who would use it)
-	- 7+-2, can people remember plain tags (spoken secrets) (phone numbers) (hide crypto key in phone number) (base 10 digit short tags)
 	
+	- How hard is it for twitter to do this. 
+	- Reference message fitting into 140 char using unicode
+	- Reference peak hps, and how our system holds up
+
+\subsection{Usability}
+
+As described in the Cover Traffic section, a group can deliberately collide with a popular tag by concatenating an easily rememberable string of text with random letters or numbers. As Miller noted in (The Magical Number Seven, Plus or Minus Two: Some Limits on Our Capacity for Processing Information), people can remember  
+7 +/- 2 unique packets of data, so as long as these collisions can be generated with a suffix in that range a user is likely to be able to remember it. We could further improve rememberability by restricting suffix values to only digits, and then generate a suffix of 7 or 10 digits, emulating a phone number. The main requirement is that a group should be able to have a unique shared secret that can deliberately collide with other tags while still being easy to remember and more importantly easy to transfer. Since our proposal does not deal with key transfer, we assume our key communication is done through whisper channels and thus must be short and memorizable for simple transfer. We have found that a collision can be found with only appending 3-6 characters to a prefix, so deliberate collisions can both be found and transferred without much effort.
+
+\subsection{Adoption}	
 - would twitter actually do this
 	-- Probably not
 	-- Twitter wants to know what people are talking about
-<<<<<<< HEAD
 	-- Honestly, best if twitter doesn't do this, since users can't ``trust'' twitter, encryption is better done on their own machine and results posted to twitter
-- use of this protocol (or who would use it)
-=======
-	-- Honestly, best if twitter doesn't do this, since users can't trust twitter, encryption is better done on their own machine and results posted to twitter
-		-- Alternate backend, completely different built on distr system. (DHTs, distributed hash table, CHORD, Pastry)
-		-- These message are short enough that they can be stored anywhere. Centralized system (Twitter, Buzz), anything that's publicly searchable (distributed or central)
-		
-\subsection{Incremental Deployment}
+	
+\subsection{Alternate Backends}
+	-- Alternate backend, completely different built on distr system. (DHTs, distributed hash table, CHORD, Pastry)
+	-- These message are short enough that they can be stored anywhere. Centralized system (Twitter, Buzz), anything that's publicly searchable (distributed or central)
 
-- How hard is it for twitter to do this. 
-- Reference message fitting into 140 char using unicode
-- Reference peak hps, and how our system holds up
+
 
 \section{Conclusions}
 
