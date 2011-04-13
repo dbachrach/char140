@@ -1,0 +1,29 @@
+fixes for paper:
+for Collider time
+remove title
+remove legend
+remove drop shadows
+remove where clause in long tag //put in text
+remove : K < N //put in text
+rename Session key -> encryption key, Digest key -> MAC key, KeyPair -> SessionKeys
+
+for math mode
+\left( //instead of ( 
+\right) //instead of )
+\mathit{} //for italicized
+\mathrm{} //roman
+\mathbf{} //bold font
+
+for concat (,,,,)
+
+\begin{equation*} no numbering
+\end{equation*}
+
+\{mathiness\} //on its own line
+
+look at SSL (TLS) spec for vocabulary
+
+talk about IV usage (ie we don't because the keys are randomly generated)
+
+paper- why johnny can't encrypt http://www.gaudior.net/alma/johnny.pdf
+ 
