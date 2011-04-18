@@ -1,11 +1,10 @@
-
 \section{Discussion}
 
 In this section, we discuss a variety of issues and future extensions of the Hoot design.
 
 \subsection{Incremental Rollout}
 
-
+\hl{
 1. Can you incrementally roll it out
 	- Service provided by twitter or yourself
 2. 140 character limit
@@ -14,17 +13,25 @@ In this section, we discuss a variety of issues and future extensions of the Hoo
 	- How hard is it for twitter to do this. 
 	- Reference message fitting into 140 char using unicode
 	- Reference peak hps, and how our system holds up
-
+}
 \subsection{Adoption}	
 
 The next question to ask after we have shown that rolling out the Hoot service is feasible would be whether Twitter would actually implement such a feature. Based on the nature of Twitter, we believe that Twitter would not add a secure messaging framework like Hoot. Twitter as a company needs to know what people are talking about, so it can provide relevant advertisement. Adding the Hoot infrastructure to Twitter would prevent Twitter from knowing the content of the messages, and so we believe the Hoot service will never be adopted. However, this need not prevent individuals from using the Hoot protocol over Twitter. As long as Twitter faithfully delivers tweets, users are free to run the Hoot encryption on their own machines over their messages and then post the output to Twitter. In fact, this method is more secure in that a user only has to trust their machine. If Twitter is responsible for encrypting a message, nothing is stopping them from keeping a copy of the plain text message. Paranoid users will always want to encrypt messages themselves, so Twitter adopting the Hoot protocol is unnecessary.
 		
 \subsection{Usability}
 
-As described in the Cover Traffic section, a group can deliberately collide with a popular tag by concatenating an easily rememberable string of text with random letters or numbers. As Miller noted in (The Magical Number Seven, Plus or Minus Two: Some Limits on Our Capacity for Processing Information), people can remember  
+As described in the Cover Traffic section, a group can deliberately collide with a popular tag by concatenating an easily rememberable string of text with random letters or numbers. As Miller\cite{miller56} noted, people can remember  
 7 +/- 2 unique packets of data, so as long as these collisions can be generated with a suffix in that range a user is likely to be able to remember it. We could further improve rememberability by restricting suffix values to only digits, and then generate a suffix of 7 or 10 digits, emulating a phone number. The main requirement is that a group should be able to have a unique shared secret that can deliberately collide with other tags while still being easy to remember and more importantly easy to transfer. Since our proposal does not deal with key transfer, we assume our key communication is done through whisper channels and thus must be short and memorizable for simple transfer. We have found that a collision can be found with only appending 3-6 characters to a prefix, so deliberate collisions can both be found and transferred without much effort.
-	
+
+\hl{
+-- Entropy 7+-2
+-- Deliberate posting crap (to hide your stuff).
+-- Increases work factor (signal to noise)
+-- Fairly strong attacker, but user who don't have ability for a lot of entropy
+-- 70 bits is enough compared to the weakness of everything else
+}
 \subsection{Alternate Backends}
 
 Even though our protocol was designed with Twitter in mind, it is extensible to other systems and platforms. The Hoot protocol describes a secure way to transfer short messages (with short encryption overhead) across a publicly available network completely openly. Twitter is a great example of this environment but not the only one. Hoot could interact, for example, with a Distributed Hash Table system (DHT) like CHORD or Pastry. Importantly, Hoot can interface with both centralized systems like Twitter or Buzz or decentralized systems. As long as the platform's content is publicly searchable, the Hoot protocol allows secure transmission to anonymous group followers.
 
+\hl{Discuss how we can make it harder for an attacker. Maybe hashing 1000 times...}

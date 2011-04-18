@@ -6,7 +6,7 @@ We performed the following experiments using our prototype to validate the proto
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=.25, bb= 0cm 0cm 30.5cm 21.5cm]{hash-tag-dist.pdf}
+\includegraphics[scale=.4, bb= 0cm 0cm 20.6cm 12.9cm]{hash-tag-dist.pdf}
 \caption{2009 Twitter Hash Tag distribution on a log-log scale.
 \label{fig:hash-dist}
 }
@@ -64,7 +64,9 @@ The benchmarks in Table \ref{tab:hps} were run on a 1.86GHz Intel Core 2 Duo, 4G
 
 
 \begin{table}
-\caption{Average Hoots Per Second for Encryption and Decryption}
+\caption{Average Hoots Per Second for Encryption and Decryption
+\label{tab:hps}
+}
 \begin{center}
     \begin{tabular}{ l  l }
 	\hline
@@ -73,7 +75,6 @@ The benchmarks in Table \ref{tab:hps} were run on a 1.86GHz Intel Core 2 Duo, 4G
 	Decryption & 15587.328 \\ \hline
     \end{tabular}
 \end{center}
-\label{tab:hps}
 \end{table}
 
 Given these numbers, a Twitter server could easily encrypt the entire Twitter feed as the messages were posted. To handle peak usage like the 6939 tweets per second Twitter observed, many optimizations could be made, the simplest being to add a couple computers to help with the load. Our experiment shows that the Hoot protocol does not have significant overhead during encryption or decryption, so it can be adopted with little engineering effort.
