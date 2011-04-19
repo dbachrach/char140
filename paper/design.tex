@@ -17,7 +17,7 @@ To generate a collision, we need to shorten the long tag, generating a \textit{S
 	\mathit{ShortTag} \leftarrow \mathit{LongTag}_{[0:K]} : K < N
 \end{equation*}
 
-The header also contains an set of encrypted session keys, \textit{(Encryption Key, MAC Key)}. To combat replay attacks, the protocol uses a random session key to encrypt the plain text. This session key, called the Encryption Key, is then included in the set of keys in the header. The protocol ensures integrity the standard way by including an HMAC of the cipher text (http://www.daemonology.net/blog/2009-06-24-encrypt-then-mac.html). The key to the HMAC function is randomly generated and is included in these set of keys: 
+The header also contains an set of encrypted session keys, \textit{(Encryption Key, MAC Key)}. To combat replay attacks, the protocol uses a random session key to encrypt the plain text. This session key, called the Encryption Key, is then included in the set of keys in the header. The protocol ensures integrity the standard way by including an HMAC of the cipher text (http://www.daemonology.net/blog/2009-06-24-encrypt-then-mac.html) \hl{how to cite webpages?}. The key to the HMAC function is randomly generated and is included in these set of keys: 
 
 \begin{align*}
 	& \mathit{EncryptionKey} \leftarrow \mathit{randomBytes}\left(\right) \\
@@ -50,5 +50,5 @@ The header also contains the integrity digest, \textit{D}, of the cypher text, u
 Therefore, a complete Hoot appears as:
 
 \begin{equation*}
-	\mathit{Hoot} \leftarrow \mathit{ShortTag},\mathit{SessionKeys},D,C
+	\mathit{Hoot} \leftarrow \left(\mathit{ShortTag},\mathit{SessionKeys},D,C\right)
 \end{equation*}
