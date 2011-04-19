@@ -21,7 +21,7 @@ Given our goal to conform to Twitter, the final output of a message must be unde
 Base64 encoding is simple, universal, yet yields longer message sizes. Given a short tag of length $m$ and a plain text message of length $n$, a Base64 encoded message has
 
 \begin{equation*}
-	m + 20 * \mathit{floor}\left(\frac{n}{16}\right) + 118
+	m + 20 \times \mathit{floor}\left(\frac{n}{16}\right) + 118
 \end{equation*}
 
 characters. Assuming a Short Tag of 2 characters, to fit a Base64 encoded message into 140 characters, the plain text message can be at most 31 characters.
@@ -29,7 +29,7 @@ characters. Assuming a Short Tag of 2 characters, to fit a Base64 encoded messag
 A unicode message on the other hand can be much shorter. Given $m$ and $n$, a Unicode encoded message has
 
 \begin{equation*}
-	m + 12 * \mathit{floor}\left(\frac{n}{16}\right) + 64
+	m + 12 \times \mathit{floor}\left(\frac{n}{16}\right) + 64
 \end{equation*}
 
 characters. Assuming again a Short Tag of length 2, a Unicode encoded message can fit within 140 characters when the plain text is at most 111 characters. By using Unicode, the Hoot protocol only uses 29 characters of overhead and can handle reasonable length messages. Obviously, if longer messages are needed, multiple Hoots can be posted, but by having such a low overhead, we are getting 79\% utility out of the 140 characters.

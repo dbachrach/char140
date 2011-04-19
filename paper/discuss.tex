@@ -29,15 +29,16 @@ As described in the Cover Traffic section, a group can deliberately collide with
 -- Increases work factor (signal to noise)
 -- Fairly strong attacker, but user who don't have ability for a lot of entropy
 -- 70 bits is enough compared to the weakness of everything else
+-- Discuss how we can make it harder for an attacker. Maybe hashing 1000 times...
 }
 
 \subsection{Adaptability}
 
 Since Hoot benefits from and encourages collision, there will come a point when there is too much collision, i.e. there will be too much noise to signal for a specific group when following an identifier that collides with many groups. At some point, the entire Hoot universe will want to decrease the amount of collisions. The simple solution is to increase the Short Tag length. Whenever there is too many collisions, the Short Tag length will be increased by one, which will result in far less collisions until the communication increases and eventually the cycle continues. 
 
-The nature of Hoot makes it convenient for this Short Tag length tuning to be done at the system level or at the group level. For instance, a group that is overrun with collisions with popular group could simply increase their Short Tag length internally. All Hoots would include the extra character in the Short Tag, and all subscribes would search for the longer Short Tag. It is also as simple for the entire system to switch to a longer identifier by having an "oracle" broadcast to everyone that the system Short Tag length has increased.
+The nature of Hoot makes it convenient for this Short Tag length tuning to be done at the system level or at the group level. For instance, a group that is overrun with collisions with popular group could simply increase their Short Tag length internally. All Hoots would include the extra character in the Short Tag, and all subscribes would search for the longer Short Tag. It is also as simple for the entire system to switch to a longer identifier by having an ``oracle'' broadcast to everyone that the system Short Tag length has increased.
 
-Even in a distributed system where some users may not receive the oracle's broadcast, the system still functions. For example, assume user A is following a group who's Long Tag begins A5trxq, and in A's view, Short Tags should be 2 characters. For user B, who posts messages to the group, the Short Tag length should be 3. B's Hoot would then look like \#A5t, but A would be searching for \#A5. Twitter's search functionality will still return B's messages for A's search. Although A will be getting much more noise than signal when they search at the shorter length, they will not miss any Hoots.
+Even in a distributed system where some users may not receive the oracle's broadcast, the system still functions. For example, assume user $A$ is following a group who's Long Tag begins ``A5trxq...'', and in $A$'s view, Short Tags should be 2 characters. For user $B$, who posts messages to the group, the Short Tag length should be 3. $B$'s Hoot would then look like ``\#A5t'', but $A$ would be searching for ``\#A5". Twitter's search functionality will still return $B$'s messages for $A$'s search. Although $A$ will be getting much more noise than signal when they search at the shorter length, they will not miss any Hoots.
 
 Previously, we stated that a Short Tag is the first K bytes of the Long Tag, so we explicitly put a limit onto how long a Short Tag can be. Does this prevent us from adapting to an ever growing Hoot ecosystem? In our implementation, we use the first 16 bytes of the Long Tag for identification. Therefore using Base64 encoding, we get $62^{16}$ or $4\times10^{28}$ unique identifiers. In a system with 16 byte Short Tags, there would rarely if ever be collisions, much less too many collisions to increase the length.
 
@@ -54,5 +55,3 @@ chris
 \subsection{Alternate Backends}
 
 Even though our protocol was designed with Twitter in mind, it is extensible to other systems and platforms. The Hoot protocol describes a secure way to transfer short messages (with short encryption overhead) across a publicly available network completely openly. Twitter is a great example of this environment but not the only one. Hoot could interact, for example, with a Distributed Hash Table system (DHT) like CHORD or Pastry. Importantly, Hoot can interface with both centralized systems like Twitter or Buzz or decentralized systems. As long as the platform's content is publicly searchable, the Hoot protocol allows secure transmission to anonymous group followers.
-
-\hl{Discuss how we can make it harder for an attacker. Maybe hashing 1000 times...}
