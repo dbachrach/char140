@@ -30,6 +30,30 @@ As described in the Cover Traffic section, a group can deliberately collide with
 -- Fairly strong attacker, but user who don't have ability for a lot of entropy
 -- 70 bits is enough compared to the weakness of everything else
 }
+
+\subsection{Adaptability}
+
+\hl{abc
+dustin
+-short tag
+- increasing short tag length when amount of traffic becomes too much.
+- Tunable parameter at a system level
+- Could also self tune by including extra characters in short tag so search results show less collisions
+- If need be, could search at the older length, to find older messages, or messages from people who haven't switched to new length
+- as long as you follow a prefix hash tag
+- set a limit on short tag length (ref back to design section where short tag comes from first k bytes of long tag. does this really prevent us. In our implementation, we use first 128 bits devoted to identification. therefore you can get $62^16= 4.77e28$, huge)
+- how difficult finding a collision using all 16 bytes. everytime we add a new character, we add an order of magnitude to finding a collision 
+- some discussion on how it infringes on chracters
+- when we add that one variable, do we become uniquely identifiable because there isn't enough covertraffic. What you would like is a way to increase short tag length slower than exponentially by large constants like 62. Might be nice to only double space, which would involve only adding one bit to the short tag length, but since twitter is character based, not bit based, this is difficult.
+}
+
+\hl{
+chris 
+- need a citation for core growth so we can make argument about whether searching will keep being feasible
+- twitter vs moore
+- need a citation, or argument, for how fast we expect twitter to grow in the future, can we turn the nob slow enough to keep in pace with processing power, and still be usable? 
+}
+
 \subsection{Alternate Backends}
 
 Even though our protocol was designed with Twitter in mind, it is extensible to other systems and platforms. The Hoot protocol describes a secure way to transfer short messages (with short encryption overhead) across a publicly available network completely openly. Twitter is a great example of this environment but not the only one. Hoot could interact, for example, with a Distributed Hash Table system (DHT) like CHORD or Pastry. Importantly, Hoot can interface with both centralized systems like Twitter or Buzz or decentralized systems. As long as the platform's content is publicly searchable, the Hoot protocol allows secure transmission to anonymous group followers.

@@ -28,7 +28,7 @@ To encrypt this set of keys, we exploit the entropy of the Long Tag. Since the i
 
 \begin{align*}
 \begin{split}
-	\mathit{KeyPair} \leftarrow E_{\mathit{LongTag}_{[J:N]}}\left(\mathit{EncryptionKey},\mathit{MacKey}\right)& \\
+	\mathit{SessionKeys} \leftarrow E_{\mathit{LongTag}_{[J:N]}}\left(\mathit{EncryptionKey},\mathit{MacKey}\right)& \\
 	: K < J \leq N &
 \end{split}	
 \end{align*}
@@ -39,7 +39,7 @@ The body of the Hoot is the cypher text, \textit{C}, of a message, \textit{M}, e
 	C \leftarrow E_{\mathit{EncryptionKey}}\left(M\right)
 \end{equation*}
 
-Both encryption processes do not need an Initialization Vector to prevent replay attacks. The encryption operation to generate the \textit{KeyPair} uses a constant key, but the content which it encrypts is two random stream of bytes. Even with the constant key, it will encrypt to a different cipher-text everytime. The encryption operation to generate $C$ uses a random session key, \textit{EncryptionKey}, which will also produce different cipher-text for the same message. This shows why we do not need an IV and that our protocol is safe from replay attacks. A receiver can keep track of all the session keys it has previously seen, so if it encounters a new message with keys it has already seen and the same exact message, it can dismiss the message as a replay.
+Both encryption processes do not need an Initialization Vector to prevent replay attacks. The encryption operation to generate the \textit{SessionKeys} uses a constant key, but the content which it encrypts is two random stream of bytes. Even with the constant key, it will encrypt to a different cipher-text everytime. The encryption operation to generate $C$ uses a random session key, \textit{EncryptionKey}, which will also produce different cipher-text for the same message. This shows why we do not need an IV and that our protocol is safe from replay attacks. A receiver can keep track of all the session keys it has previously seen, so if it encounters a new message with keys it has already seen and the same exact message, it can dismiss the message as a replay.
 
 The header also contains the integrity digest, \textit{D}, of the cypher text, using the MAC Key in the header. By including an integrity digest, the protocol allows for quick verification that a message is for a specific group without having to decrypt the message. It also verifies that the Hoot has not been tampered with. 
 
@@ -50,5 +50,5 @@ The header also contains the integrity digest, \textit{D}, of the cypher text, u
 Therefore, a complete Hoot appears as:
 
 \begin{equation*}
-	\mathit{Hoot} \leftarrow \mathit{ShortTag},\mathit{KeyPair},D,C
+	\mathit{Hoot} \leftarrow \mathit{ShortTag},\mathit{SessionKeys},D,C
 \end{equation*}
