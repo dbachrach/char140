@@ -14,17 +14,6 @@ An attack that can be administered by Twitter or a third party is a replay attac
 
 A malicious Twitter also can take a valid Hoot and change the associated author or time that it displays with it. Our system does not directly prevent against these attacks, but they can be addressed by including the time stamp and author name with in the plain text of the message.
 
-Finally, we want to prevent Twitter or any third party from gathering trending data on the encrypted posts. Even if they cannot read the messages, they can observe that someone is posting to the same group of recipients following certain patterns (such as daily at X time, or after major events), this repetition could compromise the group's identity by essentially creating a profile. This type of information is less of a concern to users of Twitter that are simply chatting, but one can imagine that this information can end up being used to identify spies. For example, by observing a pattern between company secrets being leaked to some competitor and a particular employee's secret tweets to a group just hours prior to each incident, the leaker could be identified. This attack can be prevented by using anonymizing services like Tor coupled with a collision technique we will describe later to create ``cover traffic.''
+We want to prevent Twitter or any third party from gathering trending data on the encrypted posts. Even if they cannot read the messages, they can observe that someone is posting to the same group of recipients following certain patterns (such as daily at X time, or after major events), this repetition could compromise the group's identity by essentially creating a profile. This type of information is less of a concern to users of Twitter that are simply chatting, but one can imagine that this information can end up being used to identify spies. For example, by observing a pattern between company secrets being leaked to some competitor and a particular employee's secret tweets to a group just hours prior to each incident, the leaker could be identified. This attack can be prevented by using anonymizing services like Tor coupled with a collision technique we will describe later to create ``cover traffic.''
 
-\hl{
-- Punting on plain tag distribution
-- Does not protect against double agents. (known weakness)
-- Key should be sharable by gossip but gossip is also weakness.
-- Crypto strength to be just enough that its easier to attack via gossip than via crypto
-
--omnipotent eavesdropper
-
-- assume ``whisper channel"
-
-- Why Johnny Can't Encrypt - Paper
-}
+Finally, there are certain aspects of security which we placing beyond the scope of this protocol. Key distribution, is something we do not address. Ours is a world where the key must be distributed through outside channels, either exchanged over a known secure channel, or whispered through the streets of Cairo. We especially want our protocol to take advantage of such a `whisper channel', and be easy enough to use and reconfigure that a lay person can use it with little learning curve. \hl{insert Why Johnny can't encrypt discussion and reference here maybe?} Protecting against double agents is also a real concern in certain circles, and while we make no effort to protect against this, the ease of distribution of the key should allow a group to expunge members and regroup with ease. Our goal is to make the Crypto portions of the protocol sufficiently robust that an attacker would find it easier to use a double agent than to crack the protocol. At this point, our work is essentially done, and member management is left to group itself.

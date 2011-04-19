@@ -33,12 +33,6 @@ The search space, then, is of size $|A|^L$. If we wanted to match byte strings, 
 \end{center}
 \end{figure}
 
-As expected, the runtime in Figure \ref{fig:collider-times} scales exponentially with \textit{L}, which in turn it becomes quickly infeasible for a single machine to do an exhaustive search of spaces where the suffix length is greater than 6.
-
-Provided an attacker knows a particular group's prefix and the alphabet out of which they are generating the suffix, the embarrassingly parallel nature lends itself to brute force attacks. If we consider the adversary to be a government for example, it would be fair to assume they have thousands of machines at their disposal for such an attack. It becomes important, then for a user to pick a Plain Tag outside reasonable brute forcing bounds. 
-
-\hl{should the `rememberable' limit discussion go here? or should this paragraph be moved out to discussion?}
-
 \begin{figure}
 \begin{center}
 \includegraphics[scale=.5, viewport=0cm 0cm 16.5cm 7.5cm]{collider-hits.pdf}
@@ -47,6 +41,12 @@ Provided an attacker knows a particular group's prefix and the alphabet out of w
 }
 \end{center}
 \end{figure}
+
+As expected, the runtime in Figure \ref{fig:collider-times} scales exponentially with \textit{L}, which in turn it becomes quickly infeasible for a single machine to do an exhaustive search of spaces where the suffix length is greater than 6.
+
+Provided an attacker knows a particular group's prefix and the alphabet out of which they are generating the suffix, the embarrassingly parallel nature lends itself to brute force attacks. If we consider the adversary to be a government for example, it would be fair to assume they have thousands of machines at their disposal for such an attack. It becomes important, then for a user to pick a Plain Tag outside reasonable brute forcing bounds. 
+
+\hl{should the `rememberable' limit discussion go here? or should this paragraph be moved out to discussion?}
 
 Another concern is how easy it is to collide with another tag. From Fig. \ref{fig:collider-hits}, we find that beyond 4 characters, it was impossible to find collisions within easily searchable spaces (suffix sizes < 6). 
 

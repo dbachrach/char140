@@ -1,9 +1,8 @@
-This is pdfTeX, Version 3.1415926-1.40.11 (TeX Live 2010) (format=pdflatex 2011.4.11)  18 APR 2011 23:19
+This is pdfTeX, Version 3.1415926-1.40.11 (TeX Live 2010) (format=pdflatex 2011.4.11)  19 APR 2011 00:59
 entering extended mode
  restricted \write18 enabled.
- file:line:error style messages enabled.
  %&-line parsing enabled.
-**hoot.tex
+**hoot
 (./hoot.tex
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for english, dumylang, nohyphenation, ge
@@ -346,18 +345,6 @@ ftex.map}
 
 
 ]) (./background.tex
-
-LaTeX Warning: Citation `tor' on page \thepage  undefined on input line 22.
-
-
-LaTeX Warning: Citation `mixminion' on page \thepage  undefined on input line 2
-3.
-
-
-LaTeX Warning: Citation `terminology' on page \thepage  undefined on input line
- 40.
-
-
 Overfull \hbox (15.70595pt too wide) in paragraph at lines 55--62
 []\T1/ptm/m/n/9 Anonymity: - sender anonymity - Un-link-a-bil-ity - Re-ceiver a
 nonymity
@@ -375,26 +362,33 @@ Overfull \hbox (37.78238pt too wide) in paragraph at lines 20--21
 blog/2009-
  []
 
-) (./implementation.tex) (./experiments.tex
-<./graphs/hash-tag-dist.pdf, id=18, 587.19376pt x 366.36874pt>
+) (./implementation.tex) (./experiments.tex [3]
+<./graphs/hash-tag-dist.pdf, id=27, 587.19376pt x 366.36874pt>
 File: ./graphs/hash-tag-dist.pdf Graphic file (type pdf)
 
-<use ./graphs/hash-tag-dist.pdf> [3]
-<./graphs/collider-hits.pdf, id=28, 469.43939pt x 214.5078pt>
-File: ./graphs/collider-hits.pdf Graphic file (type pdf)
-
-<use ./graphs/collider-hits.pdf>
-<./graphs/collider-times.pdf, id=29, 905.98662pt x 620.86955pt>
+<use ./graphs/hash-tag-dist.pdf>
+<./graphs/collider-times.pdf, id=28, 905.98662pt x 620.86955pt>
 File: ./graphs/collider-times.pdf Graphic file (type pdf)
 
-<use ./graphs/collider-times.pdf>) (./discuss.tex [0 <./graphs/hash-tag-dist.pd
-f> <./graphs/collider-hits.pdf> <./graphs/collider-times.pdf>]
+<use ./graphs/collider-times.pdf>
+<./graphs/collider-hits.pdf, id=29, 469.43939pt x 214.5078pt>
+File: ./graphs/collider-hits.pdf Graphic file (type pdf)
 
-LaTeX Warning: Citation `miller56' on page \thepage  undefined on input line 23
-.
+<use ./graphs/collider-hits.pdf> [4 <./graphs/hash-tag-dist.pdf> <./graphs/coll
+ider-times.pdf> <./graphs/collider-hits.pdf>]
+Overfull \hbox (5.42717pt too wide) in paragraph at lines 53--54
+[]\T1/ptm/m/n/9 The re-sults of these ex-per-i-ments place some lim-its on what
+ choices
+ []
 
 
-Overfull \hbox (3.78772pt too wide) in paragraph at lines 41--42
+Overfull \hbox (4.15895pt too wide) in paragraph at lines 55--56
+\T1/ptm/m/n/9 cer-tainly tun-able de-grees of anonymity thanks to the ap-par-en
+t power-
+ []
+
+) (./discuss.tex [5]
+Overfull \hbox (3.78772pt too wide) in paragraph at lines 40--41
 \T1/ptm/m/n/9 sume user $\OML/cmm/m/it/9 A$ \T1/ptm/m/n/9 is fol-low-ing a grou
 p who's Long Tag be-gins ``A5trxq...'',
  []
@@ -403,7 +397,10 @@ p who's Long Tag be-gins ``A5trxq...'',
 
 Package FiXme: `\texthl {TODO:}' on input line 3.
 
-) (./hoot.bbl)
+) (./hoot.bbl
+Underfull \vbox (badness 3019) has occurred while \output is active []
+
+)
 
 Package FiXme Summary: Number of notes: 0,
 (FiXme)                Number of warnings: 0,
@@ -415,15 +412,15 @@ Package FiXme Summary: Number of notes: 0,
 Package balance Warning: You have called \balance in second column
 (balance)                Columns might not be balanced.
 
-[1] (./hoot.aux) ) 
+[6] (./hoot.aux) ) 
 Here is how much of TeX's memory you used:
  3152 strings out of 493763
  40307 string characters out of 3144954
- 130716 words of memory out of 3000000
+ 130728 words of memory out of 3000000
  6339 multiletter control sequences out of 15000+200000
  54060 words of font info for 66 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
- 39i,15n,26p,1145b,817s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 39i,15n,26p,1141b,817s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/local/texlive/2010/texmf-dist/fonts/enc/dvips/base/8r.e
 nc}</usr/local/texlive/2010/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex
 9.pfb></usr/local/texlive/2010/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.
@@ -440,10 +437,10 @@ live/2010/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/20
 f-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2010/texmf-dist/fon
 ts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2010/texmf-dist/fonts/type1/u
 rw/times/utmri8a.pfb>
-Output written on hoot.pdf (5 pages, 304621 bytes).
+Output written on hoot.pdf (6 pages, 305962 bytes).
 PDF statistics:
- 348 PDF objects out of 1000 (max. 8388607)
- 218 compressed objects within 3 object streams
+ 351 PDF objects out of 1000 (max. 8388607)
+ 220 compressed objects within 3 object streams
  0 named destinations out of 1000 (max. 500000)
  16 words of extra memory for PDF output out of 10000 (max. 10000000)
 
