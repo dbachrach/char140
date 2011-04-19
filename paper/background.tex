@@ -44,20 +44,26 @@ sender(s) and messages --- and {\em relationship anonymity} --- the
 sender and recipient cannot be linked with each other.
 
 Hoot does not seek to provide sender anonymity: the adversary can
-observe the fact that a given sender sent a particular message. Against
-weaker adversaries who cannot eavesdrop on the sender, Hoot can provide
-pseudonymity. More importantly, Hoot does aim to provide recipient
+observe the fact that a given sender sent a particular message.
+\hlfixme{is that true? I can tell that you sent a message on the bieber
+  channel and that's it, right?}
+%Against weaker adversaries who cannot eavesdrop on the sender, Hoot can
+%provide pseudonymity.
+Hoot does aim to provide recipient anonymity. In particular, we can say
+that the main goal of Hoot is provide recipient unlinkability. We note
+that it will be obvious to our attacker that the recipients receive the
+messages; what is unclear is whether the receipients have the key to
+decrypt and read the messages or if they are listening to another
+channel.
 
-It does
+Hoot can also be said to provide {\em subscriber anonymity}, as
+introduced by Mislove et al. in their description of
+AP3~\cite{ap3}. Hordes~\cite{hordes} and P5~\cite{P5} have similar
+requirements. The main additional feature sought from subscriber anonymity
+over recipient anonymity is that the act of subscribing should not
+reveal information that could be used to break recipient anonymity.
 
 
-
-Anonymity:
-- sender anonymity
-- Unlinkability
-- Receiver anonymity
-- subscriber anonymity
-- Relationship anonymity
 - Group anonymity
 
 Social network privacy
