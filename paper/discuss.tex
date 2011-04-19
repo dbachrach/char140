@@ -24,7 +24,6 @@ As described in the Cover Traffic section, a group can deliberately collide with
 7 +/- 2 unique packets of data, so as long as these collisions can be generated with a suffix in that range a user is likely to be able to remember it. We could further improve rememberability by restricting suffix values to only digits, and then generate a suffix of 7 or 10 digits, emulating a phone number. The main requirement is that a group should be able to have a unique shared secret that can deliberately collide with other tags while still being easy to remember and more importantly easy to transfer. Since our proposal does not deal with key transfer, we assume our key communication is done through whisper channels and thus must be short and memorizable for simple transfer. We have found that a collision can be found with only appending 3-6 characters to a prefix, so deliberate collisions can both be found and transferred without much effort.
 
 \hl{
--- Entropy 7+-2
 -- Deliberate posting crap (to hide your stuff).
 -- Increases work factor (signal to noise)
 -- Fairly strong attacker, but user who don't have ability for a lot of entropy

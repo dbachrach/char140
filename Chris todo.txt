@@ -1,0 +1,10 @@
+TODO
+
+Design
+
+Experiments
+-Generate graph of collisions based on prefix length
+-size 8 seems to eliminate most collisions, allows for exact lookup (should you choose to wish)
+-fix graphs
+-mention problems with embarrassing parallel space
+-mention encoding issues on short tags
