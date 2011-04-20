@@ -13,7 +13,6 @@
 
 The power log scale shows us that there is a large spectrum of subscriber anonymity that can be taken advantage of. Colliding with popular tags gives you plausible deniability as there are relatively few tags dominating the space at a given time, and thus appear as legitimate interests. If there were a more even distribution of tags, then someone observing you following a particular tag would have less incentive to ignore suspicion that your activities might be objectionable to them. \hl{can we get a statistic on what the average number of tags someone follows is?}
 
-
 \subsection{Collider}
 
 In order to explore the feasibility of steering a particular Plain Tag to collide with an existing Short Tag, we built a collider tool. The tool takes in a Short Tag substring, \textit{T}, a prefix string, \textit{S}, a suffix length, \textit{L}, an alphabet 
@@ -74,6 +73,9 @@ The benchmarks in Table \ref{tab:hps} were run on a 1.86GHz Intel Core 2 Duo, 4G
     \end{tabular}
 \end{center}
 \end{table}
+
+
+\hl{computation is negligible. one computer can do it, twittr has more than 1 comp. bandwidth is multiplied by more. more tweets per group. fundamentaly, twitter has to pay this for receiver anonymity. inherent to our scheme. Quantify how much. twitter's bandwitdh bill would go up and they aren't already making money. Cite sandler. people on average send 100 messages and have 100 followers. we dont know how big the groups, we can know how many poeple post, can't know how many listen. After incedient, lots of \#NotAFactualStatement. no idea how many actually listen. Many people could post w/o listening and viceversa. We could treat the numbers as equivelent but that's probbably not a factual statement.Cite: http://www.politico.com/news/stories/0411/53214.html}
 
 Given these numbers, a Twitter server could easily encrypt the entire Twitter feed as the messages were posted. To handle peak usage like the 6939 tweets per second Twitter observed, many optimizations could be made, the simplest being to add a couple computers to help with the load. Our experiment shows that the Hoot protocol does not have significant overhead during encryption or decryption, so it can be adopted with little engineering effort.
 
