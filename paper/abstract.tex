@@ -1,5 +1,21 @@
 \begin{abstract}
 
+This paper presents the design and engineering of a system called HooT. HooT presents an
+interface that feels much like Twitter, except hashtags, which are normally used to denote
+conversation topics, are overloaded with cryptographic semantics; hashtags become cryptographic keys.
+A HooT can then tunnel through other microblogging services, without observers able to read the
+message unless they know the original hashtag or tags that were used when the HooT was created.
+%
+We analyze HooT through traces collected from the real Twitter, showing that a single modern computer 
+has enough computational throughput to encrypt every tweet, in real time. Our traces also let us
+analyze the bandwidth and anonymity tradeoffs that would come with different variations on how
+plaintext hashtags are encoded and how they will purposefully collide with one another.
+%
+Ultimately, censorship resistance and receiver anonymity comes from these collisions. A user subscribing
+to a high-volume innocuous hashtag would be indistinguishable from a user subscribing to a low-volume
+subversive hashtag.
+
+
 \hlfixme{TODO: This is an example of the hlfixme command. When we get
   down to the last 2-3 days, we'll set the fixme status from ``draft''
   to ``final,'' which will prevent compilation to pdf without fixing or
