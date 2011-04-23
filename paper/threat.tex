@@ -1,9 +1,9 @@
 \section{Design Goals}
 
-Our goal is to allow a user to send a secure message to a private group of individuals allowing only the group members to read the plain-text message, and to accomplish this with a user interface that looks and feels much like the vanilla Twitter interface. Ultimately, this creates a variety of constrains and challenges.
+Our goal is to allow a user to send a secure message to a private group of individuals allowing only the group members to read the plain-text message, and to accomplish this with a user interface that looks and feels much like the vanilla Twitter interface. Ultimately, this creates a variety of constraints and challenges.
 
 \begin{description}
-\item[Simple key distribution.] We don't want to require any sort of prearranged cryptographic key hierarchy. We don't want any sort of complex key management process that would confused unsophisticated users.  Instead, if the user knows the hashtag, that's all that's necessary to read or post messages.
+\item[Simple key distribution.] We don't want to require any sort of prearranged cryptographic key hierarchy. We don't want any sort of complex key management process that would confuse unsophisticated users.  Instead, if the user knows the hashtag, that's all that's necessary to read or post messages.
 
 \item[Privacy.] Plaintext hashtags within a message will be used to encrypt and verify those messages.  In order to keep an attacker from guessing the plaintext hashtags (with or without brute-forcing searches), we must require these tags to have a significant amount of entropy, yet this is in tension with our desire to have the plaintext hashtags be something that users can share and memorize by voice alone.
 
