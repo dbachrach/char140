@@ -7,6 +7,7 @@ pdf:
 	perl bblfix.pl < prop.bblx > prop.bbl
 	pdflatex ${filename}
 	pdflatex ${filename}
+	pdflatex ${filename}
 
 read:
 	open ${filename}.pdf &
