@@ -3,8 +3,8 @@ filename=hoot
 pdf: 
 	pdflatex ${filename}
 	bibtex ${filename}||true
-	mv prop.bbl prop.bblx
-	perl bblfix.pl < prop.bblx > prop.bbl
+	mv ${filename}.bbl ${filename}.bblx
+	perl bblfix.pl < ${filename}.bblx > ${filename}.bbl
 	pdflatex ${filename}
 	pdflatex ${filename}
 	pdflatex ${filename}
