@@ -16,8 +16,8 @@ To generate a collision, we need to shorten the long tag, generating a \textit{s
 & \forall_{i \in [0, N)}  \mathit{suffix} \leftarrow i \\
 & \mathit{PlainTag} \leftarrow  \mathit{prefix}.\mathit{suffix} \\
 & \mathit{ShortTag} \leftarrow H({\mathit PlainTag}).\mathrm{bits}(0 \ldots k-1) \\
-& \mathbf{if}\ {\mathit ShortTag} \leftarrow H(\mathit{target}).\mathrm{bits}(0 \ldots k-1)\\
-& \mathbf{then}\ \mathrm{emit} (\mathit{PlainTag} , {\mathit{ShortTag}})
+& \mathbf{if}\ {\mathit ShortTag} = H(\mathit{target}).\mathrm{bits}(0 \ldots k-1)\\
+& \mathbf{then}\ \mathrm{emit} (\mathit{PlainTag} , {\mathit{ShortTag}}) 
 \end{align*}
 %
 In this case, the suffix would be a natural number of some humanly memorizable number of digits (i.e., $N$ is probably at most seven digits). Equivalently, we could search over some other humanly memorizable namespace with suitably high entropy. The system would search over all possible suffixes to identify hash collisions. (This process should be done randomly, rather than in-order, to increase the attacker's difficulty in conducting brute force attacks.) This new plain tag could then be spread through human gossip.
@@ -25,7 +25,7 @@ In this case, the suffix would be a natural number of some humanly memorizable n
 \paragraphX{Message header and body.}
 The header will include the short tag, to ensure that hashtag searches can find the message. It must also include the necessary information for somebody who knows the plain tag to properly decrypt and verify the integrity of the message. 
 
-To that end, for every message, we derive a random pair of session keys, one for encryption and one for message integrity. (Since we intend to use efficient symmetric key ciphers and HMAC functions, session keys may be selected to be 128 bits, each, or something else similarly small.) The session keys are then encrypted with the long tag, using different bits than the $k$ bits used when truncating it to derive the short tag; the long tag has plenty of available entropy for our use. If we needed more, we could always use the long tag bits to initialize a suitably strong pseudo-random number generator.
+To that end, for every message, we derive a random pair of session keys, one for encryption and one for message integrity. (Since we intend to use efficient symmetric key ciphers and message authentication functions, session keys may be selected to be 128 bits, each) The session keys are then encrypted with a {\em tag key} derived from the long tag, using different bits than the $k$ bits used when truncating it to derive the short tag; the long tag has plenty of available entropy for our use. If we needed more, we could always use the remaining long tag bits to initialize a suitably strong pseudo-random number generator.
 
 Putting it all together, starting from a plaintext message $M$ with {\em PlainTag} within it, a complete HooT message will be as follows:
 %
@@ -41,9 +41,9 @@ C & \leftarrow & E_{k_{\mathrm{enc}}}(M) \\
 This generalizes to support multiple plain tags. For each one, a separate long tag can be generated, resulting in multiple tag keys ($k_\mathrm{tag}$), each of which is used to encrypt the same session keys. The final HooT would have multiple short tags and multiple encryptions of the session keys.
 
 \paragraphX{Message security analysis.}
-Because the session keys are derived at random, even two identical messages will have completely different ciphetexts. If the encryption scheme in use requires an initialization vector (e.g., CBC mode), this could be included message header. For other encryption schemes like counter mode, no IV will be necessary and the randomness of the key will ensure the non-determinism of the ciphertext.
+Because the session keys are derived at random, two identical plaintext messages will have different ciphetexts. If the encryption scheme in use requires an initialization vector (e.g., CBC mode), this could be included message header. For other encryption schemes like counter mode, no IV will be necessary and the randomness of the key will ensure the non-determinism of the ciphertext.
 
-Message integrity is determined via symmetric-key message authentication code. Because the MAC is computed over the ciphertext, and the MAC key is also generated at random, the MAC leaks absolutely no information about the plaintext. The MAC verification process also serves the purpose of identifying if a prospective message matches the plain tag in question (for which multiple other plain tags will collide in the short tags), or whether a message is irrelevant to the user's plain tag search query, and should be dropped.
+Message integrity is validated with a symmetric-key message authentication code. Because the MAC is computed over the ciphertext, and the MAC key is also generated at random, the MAC leaks absolutely no information about the plaintext. The MAC verification process also serves the purpose of identifying if a prospective message matches the plain tag in question (for which multiple other plain tags will collide in the short tags), or whether a message is irrelevant to the user's plain tag search query, and should be dropped.
 
 Replay attacks can be defeated by treating the session keys ($k_{\mathrm{enc}}$, $k_{\mathrm{mac}}$) as nonces. It's highly unlikely that two different messages will share the same session keys.
 
