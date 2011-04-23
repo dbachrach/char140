@@ -8,19 +8,19 @@ To create an identifier, we must find a short set of bits that are derivable fro
 
 The protocol could simply use the long tag as an identifier, but this choice leads to several problems. First, to uphold our design goal of being concise and to fit within Twitter's 140 character limit, it is infeasible to use the full output of a hash function. Secondly, strong hash functions do not produce many collisions. If a group is communicating in secret, not only do we want to protect the content of the communication, but we would like to conceal subscription to a particular group. For example, a rebellion group wishes to communicate over Twitter using HooTs, but it can be dangerous for a supporter of the rebellion to listen and subscribe to the identifier of the group. If, however, the identifier of the group can collide with the identifier of a popular Internet topic, like Justin Bieber or many other such Twitter celebrities, group followers can shadow their rebellious activities with other innocent topics. 
 
-To generate a collision, we need to shorten the long tag, generating a \textit{short tag}, which will induce more collisions. The shorter the short tag, the higher the collision rate will be and the less sure an observer can be of what topic a HooT reader is listening to. With this greater anonymity comes more computational work, however. Since more group messages will now be belong to the same identifier, a follower must decrypt more messages to find the desired ones. Depending on the required degree of subscriber anonymity, more collisions might be worth the computational overhead (i.e., higher collision rates imply better anonymity but require downloading larger amounts of messages which serve no purpose other than acting as cover traffic). Also, even given a constant short tag length, a group can choose a tag that will collide with a popular tag, allowing for a predictably high amount of cover traffic as well as providing a cover story for follows of that tag. For example, if an Egyptian protest group wanted to find a collision with Justin Bieber's movie:
+To generate a collision, we need to shorten the long tag, generating a \textit{short tag} of $k$ bits, which will, by design, induce collisions between unrelated plain tags. The shorter the short tag, the higher the collision rate will be and the less sure an observer can be as to what topic a HooT reader is actually following. With this greater anonymity comes more computational work; since more group messages will now be belong to the same identifier, a follower must decrypt more messages to find the desired ones. Depending on the required degree of subscriber anonymity, more collisions might be worth the computational overhead (i.e., higher collision rates imply better anonymity but require downloading larger amounts of messages which serve no purpose other than acting as cover traffic). Also, even given a constant short tag length, a group can choose a tag that will collide with a popular tag, allowing for a predictably high amount of cover traffic as well as providing a cover story for follows of that tag. For example, if an Egyptian protest group wanted to find a collision with Justin Bieber's movie:
 %
 \begin{align*}
 & \mathit{prefix} \leftarrow  ``\mathrm{\#Tahrir}'' \\
 & \mathit{target} \leftarrow ``\mathrm{\#nsn3d}'' \\
 & \forall_{i \in [0, N)}  \mathit{suffix} \leftarrow i \\
 & \mathit{PlainTag} \leftarrow  \mathit{prefix}.\mathit{suffix} \\
-& \mathit{ShortTag} \leftarrow H({\mathit PlainTag}).\mathrm{truncate}(k\ \mathrm{bits}) \\
-& \mathbf{if} {\mathit ShortTag} \leftarrow H(\mathit{target}).\mathrm{truncate}(k\ \mathrm{bits})\\
+& \mathit{ShortTag} \leftarrow H({\mathit PlainTag}).\mathrm{bits}(0 \ldots k-1) \\
+& \mathbf{if}\ {\mathit ShortTag} \leftarrow H(\mathit{target}).\mathrm{bits}(0 \ldots k-1)\\
 & \mathbf{then}\ \mathrm{emit} (\mathit{PlainTag} , {\mathit{ShortTag}})
 \end{align*}
 %
-In this case, the suffix would be a natural number of some humanly memorizable number of digits. Equivalently, we could search over some other humanly memorizable namespace with suitably high entropy. The system would search over all possible suffixes to identify a hash collision. This new plain tag could then be spread through human gossip.
+In this case, the suffix would be a natural number of some humanly memorizable number of digits (i.e., $N$ is probably at most seven digits). Equivalently, we could search over some other humanly memorizable namespace with suitably high entropy. The system would search over all possible suffixes to identify hash collisions. (This process should be done randomly, rather than in-order, to increase the attacker's difficulty in conducting brute force attacks.) This new plain tag could then be spread through human gossip.
 
 \paragraphX{Message header and body.}
 The header will include the short tag, to ensure that hashtag searches can find the message. It must also include the necessary information for somebody who knows the plain tag to properly decrypt and verify the integrity of the message. 
@@ -31,8 +31,8 @@ Putting it all together, starting from a plaintext message $M$ with {\em PlainTa
 %
 \begin{eqnarray*}
 \mathit{LongTag} & \leftarrow & H(\mathit{PlainTag}) \\
-\mathit{ShortTag} & \leftarrow & \mathit{LongTag}.\mathrm{bits}(0 \ldots k) \\
-k_{\mathrm{tag}} & \leftarrow & \mathit{LongTag}.\mathrm{bits}(k+1 \ldots) \\
+\mathit{ShortTag} & \leftarrow & \mathit{LongTag}.\mathrm{bits}(0 \ldots k-1) \\
+k_{\mathrm{tag}} & \leftarrow & \mathit{LongTag}.\mathrm{bits}(k \ldots) \\
 k_{\mathrm{enc}}, k_{\mathrm{mac}} & \leftarrow & \mathit{random bits} \\
 C & \leftarrow & E_{k_{\mathrm{enc}}}(M) \\
 \mathit{HooT}  & \leftarrow &  \left(\mathit{ShortTag}, E_{k_{\mathrm{tag}}} \left(k_{\mathrm{enc}}, k_{\mathrm{mac}}\right), \mathrm{MAC}_{k_{\mathrm{mac}}}(C), C\right)
@@ -45,6 +45,6 @@ Because the session keys are derived at random, even two identical messages will
 
 Message integrity is determined via symmetric-key message authentication code. Because the MAC is computed over the ciphertext, and the MAC key is also generated at random, the MAC leaks absolutely no information about the plaintext. The MAC verification process also serves the purpose of identifying if a prospective message matches the plain tag in question (for which multiple other plain tags will collide in the short tags), or whether a message is irrelevant to the user's plain tag search query, and should be dropped.
 
-Replay attacks can be defeated by treating the session keys $\left(k_{\mathrm{enc}}, k_{\mathrm{mac}}\right)$ as nonces. It's highly unlikely that two different messages will share the same session keys.
+Replay attacks can be defeated by treating the session keys ($k_{\mathrm{enc}}$, $k_{\mathrm{mac}}$) as nonces. It's highly unlikely that two different messages will share the same session keys.
 
 Consequently, the basic HooT message encryption scheme appears to be sound, with the only obvious weakness being the selection of the plain tag. We will analyze the broader security of the HooT scheme later in Section~\ref{sec:something-else}.
