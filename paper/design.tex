@@ -1,28 +1,46 @@
 \section{Design}
+\label{sec:design}
 
-The Hoot protocol consists of a message header and a message body. The header contains the identifier, Encryption Key, MAC Key, and integrity digest. Messages are indirect in that they do not reference recipients. Anyone who knows the shared secret must be able to read the message, but should also be able to find the message easily. Rather than attempting to treat every message posted to Twitter as a potential group message, and thus decrypting the entire Twitter stream, the protocol places an identifier into every Hoot so a fellow group member can simply search for the identifier to see all potential messages. With a constant group identifier, readers can also publicly follow that identifier like any other Hash Tag on Twitter.
+The HooT protocol consists of a message header and a message body. The header contains the identifier, Encryption Key, MAC Key, and integrity digest. As with Twitter, messages do not name their recipients. Anyone who knows one or more of the secret hashtags associated with a HooT must be able to read the message, but should also be able to find the message easily. Rather than attempting to treat every message posted to Twitter as a potential group message, and thus decrypting the entire Twitter stream, the protocol places an identifier into every HooT so a fellow group member can simply search for the identifier to see all potential messages. With a constant group identifier, readers can also publicly follow that identifier like any other hashtag on Twitter.
 
-To create an identifier, we must find a short set of bits that are derivable from the shared secret, but give an attacker little information about the shared secret itself. Hash functions provide a great way to get a set of bits from a shared secret without divulging much information about the original shared secret. In our protocol, the shared secret is called a \textit{Plain Tag}, which is comparable to a Twitter Hash Tag. The result of hashing the Plain Tag with a given hash function, \textit{H}, is referred to as the \textit{Long Tag}. Thus,
+\paragraphX{Group identifiers.}
+To create an identifier, we must find a short set of bits that are derivable from the shared secret, but give an attacker little information about the shared secret itself. Hash functions provide a great way to get a set of bits from a shared secret without divulging much information about the original shared secret. In our protocol, the shared secret is called a \textit{plain tag}, which is comparable to a normal Twitter hashtag. The result of hashing the plain tag with a given hash function, \textit{H}, is referred to as the \textit{long tag}, i.e.: $\mathit{LongTag} \leftarrow H\left(\mathit{PlainTag}\right)$.
 
-\begin{equation*}
-	\mathit{LongTag} \leftarrow H\left(\mathit{PlainTag}\right)
-\end{equation*} 
+The protocol could simply use the long tag as an identifier, but this choice leads to several problems. First, to uphold our design goal of being concise and to fit within Twitter's 140 character limit, it is infeasible to use the full output of a hash function. Secondly, strong hash functions do not produce many collisions. If a group is communicating in secret, not only do we want to protect the content of the communication, but we would like to conceal subscription to a particular group. For example, a rebellion group wishes to communicate over Twitter using HooTs, but it can be dangerous for a supporter of the rebellion to listen and subscribe to the identifier of the group. If, however, the identifier of the group can collide with the identifier of a popular Internet topic, like Justin Bieber or many other such Twitter celebrities, group followers can shadow their rebellious activities with other innocent topics. 
 
-The protocol could simply use the Long Tag as an identifier, but this choice leads to several problems. First, to uphold our design goal of being concise and to fit within Twitter's 140 character limit, it is infeasible to use the full output of a hash function. Secondly, strong hash functions do not produce many collisions. If a group is communicating in secret, not only do we want to protect the content of the communication, but we would like to conceal subscription to a particular group. For example, a rebellion group wishes to communicate over Twitter using Hoots, but it can be dangerous for a supporter of the rebellion to listen and subscribe to the identifier of the group. If, however, the identifier of the group can collide with the identifier of a popular Internet topic, like Charlie Sheen, group followers can shadow their rebellious activities 
-with other innocent topics. 
-
-To generate a collision, we need to shorten the long tag, generating a \textit{Short Tag}, which will induce more collisions. The shorter the Short Tag, the higher the collision rate will be and the less sure an observer can be of what topic a Hoot reader is listening to. With this greater anonymity comes more computational work, however. Since more group messages will now be belong to the same identifier, a follower must decrypt more messages to find relevant signal. Depending on the required degree of subscriber anonymity, more collisions might be worth the computational overhead. Also, even given a constant Short Tag length, a group can choose a tag that will collide with extremely popular tags to generate even more noise. Given a Long tag of byte-length \textit{N}, we produce a Short Tag by taking the first \textit{K} bytes of it:
-
-\begin{equation*}
-	\mathit{ShortTag} \leftarrow \mathit{LongTag}_{[0:K]} : K < N
-\end{equation*}
-
-The header also contains an set of encrypted session keys, \textit{(Encryption Key, MAC Key)}. To combat replay attacks, the protocol uses a random session key to encrypt the plain text. This session key, called the Encryption Key, is then included in the set of keys in the header. The protocol ensures integrity the standard way by including an HMAC of the cipher text (http://www.daemonology.net/blog/2009-06-24-encrypt-then-mac.html) \hl{how to cite webpages?}. The key to the HMAC function is randomly generated and is included in these set of keys: 
-
+To generate a collision, we need to shorten the long tag, generating a \textit{short tag}, which will induce more collisions. The shorter the short tag, the higher the collision rate will be and the less sure an observer can be of what topic a HooT reader is listening to. With this greater anonymity comes more computational work, however. Since more group messages will now be belong to the same identifier, a follower must decrypt more messages to find the desired ones. Depending on the required degree of subscriber anonymity, more collisions might be worth the computational overhead (i.e., higher collision rates imply better anonymity but require downloading larger amounts of messages which serve no purpose other than acting as cover traffic). Also, even given a constant short tag length, a group can choose a tag that will collide with a popular tag, allowing for a predictably high amount of cover traffic as well as providing a cover story for follows of that tag. For example, if an Egyptian protest group wanted to find a collision with Justin Bieber's movie:
+%
 \begin{align*}
-	& \mathit{EncryptionKey} \leftarrow \mathit{randomBytes}\left(\right) \\
-	& \mathit{MacKey} \leftarrow \mathit{randomBytes}\left(\right)
+& \mathit{prefix} \leftarrow  ``\mathrm{\#Tahrir}'' \\
+& \mathit{target} \leftarrow ``\mathrm{\#nsn3d}'' \\
+& \forall_{i \in [0, N)}  \mathit{suffix} \leftarrow i \\
+& \mathit{PlainTag} \leftarrow  \mathit{prefix}.\mathit{suffix} \\
+& \mathit{ShortTag} \leftarrow H({\mathit PlainTag}).\mathrm{truncate}(k\ \mathrm{bits}) \\
+& \mathbf{if} {\mathit ShortTag} \leftarrow H(\mathit{target}).\mathrm{truncate}(k\ \mathrm{bits})\\
+& \mathbf{then}\ \mathrm{emit} (\mathit{PlainTag} , {\mathit{ShortTag}})
 \end{align*}
+%
+In this case, the suffix would be a natural number of some humanly memorizable number of digits. Equivalently, we could search over some other humanly memorizable namespace with suitably high entropy. The system would search over all possible suffixes to identify a hash collision. This new plain tag could then be spread through human gossip.
+
+\paragraphX{Message header and body.}
+The header will include the short tag, to ensure that hashtag searches can find the message. It must also include the necessary information for somebody who knows the plain tag to properly decrypt and verify the integrity of the message. 
+
+To that end, for every message, we derive a random pair of session keys, one for encryption and one for message integrity. (Since we intend to use efficient symmetric key ciphers and HMAC functions, session keys may be selected to be 128 bits, each, or something else similarly small.) The session keys are then encrypted with the long tag, using different bits than the $k$ bits used when truncating it to derive the short tag; the long tag has plenty of available entropy for our use. If we needed more, we could always use the long tag bits to initialize a suitably strong pseudo-random number generator.
+
+Putting it all together, starting from a plaintext message $M$ with {\em PlainTag} within it, a complete HooT message will be as follows:
+%
+\begin{eqnarray*}
+\mathit{LongTag} & \leftarrow & H(\mathit{PlainTag}) \\
+\mathit{ShortTag} & \leftarrow & \mathit{LongTag}.\mathrm{bits}(0 \ldots k) \\
+k_{\mathrm{tag}} & \leftarrow & \mathit{LongTag}.\mathrm{bits}(k+1 \ldots) \\
+k_{\mathrm{enc}}, k_{\mathrm{mac}} & \leftarrow & \mathit{random bits} \\
+C & \leftarrow & E_{k_{\mathrm{enc}}}(M) \\
+\mathit{HooT}  & \leftarrow &  \left(\mathit{ShortTag}, E_{k_{\mathrm{tag}}} \left(k_{\mathrm{enc}}, k_{\mathrm{mac}}\right), \mathrm{MAC}_{k_{\mathrm{mac}}}(C), C\right)
+\end{eqnarray*}
+%
+This generalizes to support multiple plaintags by generating a long tag from each one and providing multiple encryptions of the 
+% work in progress here...
+
 
 To encrypt this set of keys, we exploit the entropy of the Long Tag. Since the identifier for a message is only the first \textit{K} bytes in the Long Tag, we can use the latter set of bytes elsewhere. By encrypting the keys with part of the Long Tag, a reader can easily know the key to decrypt with since it is simply the hash of the Plain Tag, and we also do not require knowledge of two different secrets. Thus, given an encryption function and corresponding key, \textit{$E_{key}$}, we have the encrypted keys as:
 
@@ -33,7 +51,7 @@ To encrypt this set of keys, we exploit the entropy of the Long Tag. Since the i
 \end{split}	
 \end{align*}
 
-The body of the Hoot is the cypher text, \textit{C}, of a message, \textit{M}, encrypted with the Encryption Key:
+The body of the HooT is the cypher text, \textit{C}, of a message, \textit{M}, encrypted with the Encryption Key:
 
 \begin{equation*}
 	C \leftarrow E_{\mathit{EncryptionKey}}\left(M\right)
@@ -41,14 +59,14 @@ The body of the Hoot is the cypher text, \textit{C}, of a message, \textit{M}, e
 
 Both encryption processes do not need an Initialization Vector to prevent replay attacks. The encryption operation to generate the \textit{SessionKeys} uses a constant key, but the content which it encrypts is two random stream of bytes. Even with the constant key, it will encrypt to a different cipher-text everytime. The encryption operation to generate $C$ uses a random session key, \textit{EncryptionKey}, which will also produce different cipher-text for the same message. This shows why we do not need an IV and that our protocol is safe from replay attacks. A receiver can keep track of all the session keys it has previously seen, so if it encounters a new message with keys it has already seen and the same exact message, it can dismiss the message as a replay.
 
-The header also contains the integrity digest, \textit{D}, of the cypher text, using the MAC Key in the header. By including an integrity digest, the protocol allows for quick verification that a message is for a specific group without having to decrypt the message. It also verifies that the Hoot has not been tampered with. 
+The header also contains the integrity digest, \textit{D}, of the cypher text, using the MAC Key in the header. By including an integrity digest, the protocol allows for quick verification that a message is for a specific group without having to decrypt the message. It also verifies that the HooT has not been tampered with. 
 
 \begin{equation*}
 	D \leftarrow \mathit{HMAC}_{\mathit{MacKey}}\left(C\right)
 \end{equation*}
 
-Therefore, a complete Hoot appears as:
+Therefore, a complete HooT appears as:
 
 \begin{equation*}
-	\mathit{Hoot} \leftarrow \left(\mathit{ShortTag},\mathit{SessionKeys},D,C\right)
+	\mathit{HooT} \leftarrow \left(\mathit{ShortTag},\mathit{SessionKeys},D,C\right)
 \end{equation*}
