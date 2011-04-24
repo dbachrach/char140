@@ -21,7 +21,6 @@ filename=hoot
 
 pdf:
 	pdflatex ${filename}
-	pdflatex ${filename}
 	mv ${filename}.bbl ${filename}.bblx
 	perl bblfix.pl < ${filename}.bblx > ${filename}.bbl
 	pdflatex ${filename}

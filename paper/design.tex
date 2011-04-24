@@ -22,6 +22,12 @@ To generate a collision, we need to shorten the long tag, generating a \textit{s
 %
 In this case, the suffix would be a natural number of some humanly memorizable number of digits (i.e., $N$ is probably at most seven digits). Equivalently, we could search over some other humanly memorizable namespace with suitably high entropy. The system would search over all possible suffixes to identify hash collisions. (This process should be done randomly, rather than in-order, to increase the attacker's difficulty in conducting brute force attacks.) This new plain tag could then be spread through human gossip.
 
+\hlfixme{Mention that a salt is not really useful here since the
+  attacker needs to do decryptions, not comparisons, and thus cannot do
+  pre-computation for a rainbow table. He could pre-compute and store
+  all the keys, but the benefit is at most a savings of half. Note that
+  it is useful if we make hashing slow -- goes in discussion.}
+
 \paragraphX{Message header and body.}
 The header will include the short tag, to ensure that hashtag searches can find the message. It must also include the necessary information for somebody who knows the plain tag to properly decrypt and verify the integrity of the message. 
 
