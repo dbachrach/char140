@@ -3,7 +3,7 @@
 In this section, we briefly outline our threat model and then describe
 the goals of our design.
 
-\subsection{Threat Model}
+\subsection{Threat Model} \label{sec:threat}
 HooT is designed to provide censorship resistance against an adversary
 who can observe all HooT traffic and can block any tweets it chooses. In
 practice, it may only block tweets being received by a subset of users,
@@ -25,7 +25,7 @@ processors working for 790
 days.\footnote{\url{http://www.distributed.net/images/9/92/20020925_-_PR_-_64_bit_solved.pdf}}
 Extrapolating using Moore's Law, we assume that the adversary can
 perform the same computation in approximately two weeks. We describe how
-to address increases in computing power in Section~\ref{discuss}.
+to address increases in computing power in Section~\ref{sec:discuss}.
 
 We assume that the HooT server does not cooperate with the adversary. We
 also assume that the adversary has no insiders in the group who leak the
@@ -36,9 +36,9 @@ resistance. Note that this serves as a practical bound on any attack; if
 it would be easier to establish an insider in the group or subvert one
 of the client systems than perform the attack, then the attack is not
 worth considering in the system design. We discuss mitigations to such
-attacks in Section~\ref{discuss}.
+attacks in Section~\ref{sec:discuss}.
 
-\subsection{System Goals}
+\subsection{System Goals} \label{sec:goals}
 Our goal is to allow a user to send a secure message to a private group
 of individuals, allowing only the group members to read the plain-text
 message, and to accomplish this with a user interface that looks and
@@ -137,15 +137,23 @@ a variety of constraints and challenges.
 %  receiver is downloading.
 
 \item[Sender anonymity or deniability] Along those lines, we can only
-  provide limited protection to a sender. If a sender is physically
-  threatened to decrypt a posted message, we offer no attempt to build a
-  backdoor into the system where a message might have two valid
-  decryptions. Instead, message senders who need to remain anonymous or
-  who require the ability to deny having posted a given message must use
-  external means, such as Tor, to connect to the HooT service for
-  posting messages. (If a decentralized or P2P transport mechanism was
-  used for microblogging, like BirdFeeder~\cite{sandler08}, the system
-  might be extended to have anonymous posting features.)
+  provide limited protection to a sender. A sender gains some plausible
+  deniability against an observer that she could be tweeting about the
+  topic of a colliding group. Similarly, she nominally gains sender
+  anonymity in the sense that members of the colliding groups could
+  actually be sender. If, however, a sender is physically threatened to
+  decrypt a posted message, we offer no protection.
+% mkw -- removed the backdoor idea for simplicity of the text.
+%     -- if restored, I suggest citing a related backdoor idea and point
+%     -- how expensive it would be.
+% (e.g. a technique by which a message might have two valid
+%  decryptions).
+Instead, message senders who need to remain anonymous or who require the
+ability to deny having posted a given message must use external means,
+such as Tor, to connect to the HooT service for posting messages. (If a
+decentralized or P2P transport mechanism was used for microblogging,
+like BirdFeeder~\cite{sandler08}, the system might be extended to have
+anonymous posting features.)
 
 \item[Replay attacks] It's possible that a malicious user, or even a
   malicious microblogging service, could not only remove messages but
