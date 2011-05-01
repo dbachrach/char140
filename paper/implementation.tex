@@ -1,12 +1,14 @@
 \section{Implementation}
+\label{sec:implementation}
 
-In this section we describe our prototype \hoot implementation, which
-helps to illustrate the design choices and trade-offs available in this
-approach.
+In this section we describe our prototype \hoot implementation, which we
+use for performance experiments (see
+Section~\ref{sec:experiments}). Additionally, our discussion in this
+section helps to illustrate the design choices and trade-offs available
+in the \hoot approach.
 
-%
-%T \subsection{Generating a Hoot}
-%
+%\subsection{Generating a Hoot}
+\paragraphX{Generating a Hoot}
 The \hoot protocol allows for a variety of different encryption,
 hashing, and message authentication schemes. Our prototype client,
 implemented in Python, takes the following steps to construct a message:
@@ -30,6 +32,21 @@ implemented in Python, takes the following steps to construct a message:
 \item Print the message, consisting of a {\tt \#} symbol, the short tag,
   a space, the encrypted keys, the HMAC digest, and the cipher text.
 \end{itemize}
+
+We note that the prototype does not currently include a mechanism for
+generating collisions between short tags. This would be useful primarily
+for the first person to start the group or generate a new plain tag
+(effectively resetting the password). We describe a mechanism that
+could be used for generating collisions in Section~\ref{sec:collider}.
+
+%To generate collisions, the client should accept as input an existing
+%short tag that the user wants her tag to collide with and the prefix to
+%be used for the plain tag (rather than the entire plain tag). The
+%client could then apply a random sequence of suffix values to the
+%prefix, take hashes of the resulting plain tags, and compare the short
+%tag derived from each hash with the desired short tag until it finds
+%match found. We address the cost to find such a collision in
+%Section~\ref{sec:experiments}.
 
 \paragraphX{Message length.}  
 We wish to render messages in a format that can be transmitted via

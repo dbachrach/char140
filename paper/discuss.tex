@@ -31,6 +31,13 @@ As described in the Cover Traffic section, a group can deliberately collide with
 -- Discuss how we can make it harder for an attacker. Maybe hashing 1000 times...
 }
 
+\hlfxnote{ Having the client (+ Twitter?) find some groups for you to
+  collide with, rather than you having to find them yourself.}
+
+%For some users, it may be appropriate for the client to search twitter
+%characteristics of the groups with which the user wants the collision,
+%e.g. the activity level of the groups and
+
 \subsection{Adaptability}
 
 Since Hoot benefits from and encourages collision, there will come a point when there is too much collision, i.e. there will be too much noise to signal for a specific group when following an identifier that collides with many groups. At some point, the entire Hoot universe will want to decrease the amount of collisions. The simple solution is to increase the Short Tag length. Whenever there is too many collisions, the Short Tag length will be increased by one, which will result in far less collisions until the communication increases and eventually the cycle continues. 
