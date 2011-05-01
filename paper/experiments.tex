@@ -150,10 +150,19 @@ user can make regarding anonymity.
 
 \subsection{Performance}
 
-In this experiment we wanted to see how well the encryption engine performed. In March 2011, Twitter stated that the site receives 140 million tweets per day or 1620 tweets per second on average (http://blog.twitter.com/2011/03/numbers.html). They also said that the maximum tweets per second ever was 6939. These numbers act as rough upper bounds to the number of Hoots per second the system would need to keep up with. In all likelihood, the number of encrypted messages posted would be drastically smaller than regular messages.
-
-The benchmarks in Table \ref{tab:hps} were run on a 1.86GHz Intel Core 2 Duo, 4GB Ram, Macbook Air using Base64 encoding.
-
+Adoption of \hoot requires that the overhead for encryption and
+decryption be reasonable. One path to adoption would have Twitter or
+another microblogging service offer \hoot for users seeking group
+privacy or censorship resistance. We thus consider computation overhead
+in the context of encrypting all Twitter traffic as a worst case. In
+March 2011, Twitter stated that the site receives 140 million tweets per
+day or 1620 tweets per second on average
+(\url{http://blog.twitter.com/2011/03/numbers.html}). They also said
+that the maximum tweets per second ever was 6939. These numbers act as
+rough upper bounds to the number of Hoots per second the system would
+need to keep up with. In all likelihood, the number of encrypted
+messages posted would be drastically smaller than regular messages, at
+least in the early deployment of \hoot.
 
 \begin{table}
 \caption{Average Hoots Per Second for Encryption and Decryption
@@ -162,18 +171,50 @@ The benchmarks in Table \ref{tab:hps} were run on a 1.86GHz Intel Core 2 Duo, 4G
 \begin{center}
     \begin{tabular}{ l  l }
 	\hline
-	Action & Average Hoots per second \\ \hline
-	Encryption & 3614.531 \\
-	Decryption & 15587.328 \\ \hline
+	Action & Average hoots per second \\ \hline
+	Encryption & 3610 \\
+	Decryption & 15590 \\ \hline
+%	Encryption & 3614.531 \\
+%	Decryption & 15587.328 \\ \hline
     \end{tabular}
 \end{center}
 \end{table}
 
+To study the amount of computation required to support \hoot over
+Twitter, we used \hlfixme{our hoot prototype? did you call it from a
+  script or write a separate module to do this?} running on a MacBook
+Air with a 1.86GHz Intel Core 2 Duo and 4GB Ram to encrypt and decrypt
+\hlfixme{a really big number} of hoots using Base64 encoding.
+\hlfixme{How were the numbers taken? do you run 100K hoots and divide by
+  the time? Run for 1000 seconds and count the number of hoots?}  In
+Table~\ref{tab:hps}, we see the result of this experiment. The amount of
+computation for encryption is negligible for Twitter: the average load
+can be handled by one laptop. A Twitter server could easily encrypt the
+entire Twitter feed as the messages were posted. To handle peak usage
+like the 6939 tweets per second Twitter observed, a variety of
+optimizations could be made and, if necessary, the server could be a
+more powerful machine with more processors.
 
-\hl{computation is negligible. one computer can do it, twittr has more than 1 comp. bandwidth is multiplied by more. more tweets per group. fundamentaly, twitter has to pay this for receiver anonymity. inherent to our scheme. Quantify how much. twitter's bandwitdh bill would go up and they aren't already making money. Cite sandler. people on average send 100 messages and have 100 followers. we dont know how big the groups, we can know how many poeple post, can't know how many listen. After incedient, lots of \#NotAFactualStatement. no idea how many actually listen. Many people could post w/o listening and viceversa. We could treat the numbers as equivelent but that's probbably not a factual statement.Cite: http://www.politico.com/news/stories/0411/53214.html}
+The decryption rate is important to clients, since clients will need to
+search through hoots with colliding hashtags and decrypt the session
+keys for each one to see if it decrypts correctly. Note that, with a
+simple fixed constant string prepended to the keys, the client can
+quickly verify whether the message was encrypted using $k_{tag}$ or if
+another group's key was used. Since our process can decrypt Hoots almost
+five times faster than it encrypts them, even clients with limited
+computing power can keep up with the entire Twitter feed. In practice,
+clients would only need to decrypt hoots that share the same short tag,
+which should be a small fraction of this cost even for very active
+groups.
 
-Given these numbers, a Twitter server could easily encrypt the entire Twitter feed as the messages were posted. To handle peak usage like the 6939 tweets per second Twitter observed, many optimizations could be made, the simplest being to add a couple computers to help with the load. Our experiment shows that the Hoot protocol does not have significant overhead during encryption or decryption, so it can be adopted with little engineering effort.
-
-It is interesting to note that the decryption rate is important to a client, since a client will be searching tweets trying to identify and decrypt potential Hoots. A client may not trust Twitter to do the decryption since that involves sharing the plain tag with Twitter, so a client would decrypt the message on their machine. Almost every client will not have a datacenter of computers for decryption, but our  process can decrypt Hoots almost five times faster than it encrypts them. A client, even with limited computing power, can easily keep up with the Twitter feed.
+%A client may not trust Twitter to do the decryption since that involves
+%sharing the plain tag with Twitter, so a client would decrypt the
+%message on their machine. Almost every client will not have a datacenter
+%of computers for decryption, but 
+%adopted with little engineering effort.
 
 \hl{Should experiments have a wrap up paragraph?}
+
+\hlfxnote{mkw -- I don't think so. We'll cover more ground in the
+  discussion.}
+
