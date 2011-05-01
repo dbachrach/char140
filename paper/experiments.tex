@@ -1,64 +1,168 @@
 \section{Experiments}
+\label{sec:experiments}
+
+In this section, we describe the results of our analysis of Twitter
+traces from\hlfixme{Need to have details on where all this data comes
+  from}. Additionally, we show the results of experiments using our
+prototype to examine the computational overhead of implementing \hoot
+over all Twitter traffic.
 
 \subsection{Cover Traffic}
+
+We first show that Twitter groups provide good possibilities for cover
+traffic that \hoot can leverage to hide groups seeking plausible
+deniability.
 
 \begin{figure}
 \begin{center}
 \includegraphics[scale=.5, viewport= 0cm 0cm 16.6cm 12.9cm]{hash-tag-dist.pdf}
-\caption{2009 Twitter Hash Tag distribution on a log-log scale.
-\label{fig:hash-dist}
+\caption{2009 Twitter Hashtag activity distribution on a log-log
+  scale.\label{fig:hash-dist}
 }
 \end{center}
 \end{figure}
+\hlfixme{fig:hash-dist: The x-axis should be ``Hashtag,'' not ``Hash
+  Tag''.}
 
-The power log scale shows us that there is a large spectrum of subscriber anonymity that can be taken advantage of. Colliding with popular tags gives you plausible deniability as there are relatively few tags dominating the space at a given time, and thus appear as legitimate interests. If there were a more even distribution of tags, then someone observing you following a particular tag would have less incentive to ignore suspicion that your activities might be objectionable to them. \hl{can we get a statistic on what the average number of tags someone follows is?}
+In Figure~\ref{fig:hash-dist}, we show the distribution of number of
+tweets for each hashtag, ordered by activity level in a log-log scatter
+plot. \hlfixme{need to know what this is taken over. All of 2009?} The
+distribution appears to follow a typical power law distribution, with a
+few very active hashtags and many hashtags with few tweets. A large
+cluster of hashtags appear only once in our dataset. 
+
+This distribution shows us that there is a large spectrum of subscriber
+anonymity set sizes that can be taken leveraged for \hoot. To get a high
+degree of anonymity, the group can choose a plain tag whose short tag
+collides with a popular tag. With such a group, the sudden influx of new
+followers will not be as suspicious. \hl{can we get a statistic on what
+  the average number of tags someone follows is?}  Some groups may opt
+for better plausible deniability by selecting a tag that is only
+moderately popular but serves as a believable innocuous interest for
+group members.
+%gives
+%you plausible deniability as there are relatively few tags dominating
+%the space at a given time, and thus appear as legitimate interests. If
+%there were a more even distribution of tags, then someone observing you
+%following a particular tag would have less incentive to ignore suspicion
+%that your activities might be objectionable to them. 
 
 \subsection{Collider}
+\label{sec:collider}
 
-In order to explore the feasibility of steering a particular Plain Tag to collide with an existing Short Tag, we built a collider tool. The tool takes in a Short Tag substring, \textit{T}, a prefix string, \textit{S}, a suffix length, \textit{L}, an alphabet 
-\textit{A}. The collider finds the concatenations of \textit{S} and strings of length \textit{L} from \textit{A*} such that the truncated hash of the resultant string matches \textit{T}.
+To explore the feasibility of finding a plain tag that collides with an
+existing short tag, we built a tool called the {\em collider}.
+\hlfixme{I presume this was build in Python? It matters for the
+  experiment. Also, what's the crypto library?}
+The collider takes in a short tag, \textit{T}, a prefix string,
+\textit{S}, a suffix length, \textit{L}, an alphabet \textit{A}. It
+finds the concatenations of \textit{S} and strings of length \textit{L}
+from \textit{A*} such that the truncated hash of the resultant string
+matches \textit{T}.
 
-It has two modes of operation. In the default mode, he user specifies some number of tags to return that collide. The collider begins its scan at a random point in the search space and continues scanning until the requested number of tags are found. The second mode scans the entire search space, and therefore returns all matching tags for a given prefix and suffix length.
+The collider has two modes of operation. In the default mode, he user
+specifies the desired number of colliding tags. The collider begins its
+scan at a random point in the search space and continues scanning until
+the requested number of tags are found. The second mode scans the entire
+search space and therefore returns all matching tags for a given prefix
+and suffix length.
 
-The search space, then, is of size $|A|^L$. If we wanted to match byte strings, $|A| = 256$, however, we decided to restrict the alphabet to alphanumeric characters due to Twitter's understanding of characters and not bytes, yielding $|A| = 62$. Additionally, the search space can be explored in parallel, giving the Collider executing on a system with \textit{P} processing units, a runtime of $O(\frac{62^L}{P})$.
-
+The search space is of size $|A|^L$. If we wanted to match byte strings,
+$|A| = 256$. However, since Twitter operates on characters and not
+bytes, we restrict the alphabet to alphanumeric characters, yielding
+$|A| = 62$. We note that the search space can be explored in parallel,
+which makes the runtime of the collider executing on a system with
+\textit{P} processing units $O(\frac{62^L}{P})$.
 
 \begin{figure}
 \begin{center}
 \includegraphics[scale=.5, viewport=0cm 0cm 16.6cm 13.6cm]{collider-times.pdf}
-\caption{Runtime for the Collider to search the exploration spaces of sizes $62^3$, $62^4$, $62^5$ on dual quad-core Intel i5 processors.
+\caption{Runtime for the collider to search for all matching tags
+  suffixes of length $L=3,4,5$ on a PC with dual quad-core Intel i5
+  processors.
+  %spaces of sizes $62^3$, $62^4$, $62^5$ 
 \label{fig:collider-times}
 }
 \end{center}
 \end{figure}
+\hlfixme{fig:collider-times: The suffix length on the x-axis should be
+  3, 4, 5, right?}
 
 \begin{figure}
 \begin{center}
 \includegraphics[scale=.5, viewport=0cm 0cm 16.5cm 7.5cm]{collider-hits.pdf}
-\caption{Percent of search space that returned hits for an entered Short Tag, with a Prefix of `rice', and given Suffix Length. Length 2 prefix was `Ch', 4 was `Char', and 8 was `CharlieS'.
+\caption{Percent of search space that returned hits for an entered short
+  tag, with a Prefix of `rice', and given Suffix Length. We used the
+  short tags 'Ch', 'Char', and 'CharlieS' for short tags of length two,
+  four, and eight, respectively.
 \label{fig:collider-hits}
 }
 \end{center}
 \end{figure}
 
-As expected, the runtime in Figure \ref{fig:collider-times} scales exponentially with \textit{L}, which in turn it becomes quickly infeasible for a single machine to do an exhaustive search of spaces where the suffix length is greater than 6.
+\hlfixme{fig:collider-hits: font!}
 
-Provided an attacker knows a particular group's prefix and the alphabet out of which they are generating the suffix, the embarrassingly parallel nature lends itself to brute force attacks. If we consider the adversary to be a government for example, it would be fair to assume they have thousands of machines at their disposal for such an attack. It becomes important, then for a user to pick a Plain Tag outside reasonable brute forcing bounds. 
+As expected, the runtime---shown in
+Figure~\ref{fig:collider-times}---scales exponentially with \textit{L}.
+With our implementation, it is currently infeasible for a single PC to
+do an exhaustive search for a suffix length greater than six in a
+reasonable amount of time, e.g. less than a day. Even if optimizations
+could speed up the calculation, it would likely need to take less than
+an hour to be usable for most groups.  \hlfixme{What about finding one
+  useful suffix? That's the real question...}
 
-\hl{should the `rememberable' limit discussion go here? or should this paragraph be moved out to discussion?}
+Another concern is the ability to find colliding tags at all. The
+probabilty of trying $|A|^L$ tags and finding at least one that has the
+same short tag as an existing $c$-character tag is given by:
+%
+\[1-(1-\frac{1}{|A|^c})^{|A|^L}.\]
+%
+For an alphabet of $|A|=62$ glyphs and a short tag length of $c=2$, a
+suffix of $L=3$ characters is enough to nearly guarantee at least one
+collision. For a short tag length of $c=4$, a suffix of $L=5$ is
+required.  \hlfixme{Numerically, on my calculator, I notice that for
+  A=62, L=c will give you prob. 0.643, and L=c+1 gives you very
+  tiny. That's not a coincidence -- find the correspondence.}
 
-Another concern is how easy it is to collide with another tag. From Fig. \ref{fig:collider-hits}, we find that beyond 4 characters, it was impossible to find collisions within easily searchable spaces (suffix sizes < 6). 
+To validate this analysis with real tags, we studied the number of
+collisions we could find for various values of $c$ and $L$ for a
+specific prefix (``rice'') and fixed short tag values. The results,
+shown in Figure~\ref{fig:collider-hits}, confirm that short tags of
+length four require a suffix of length four or more to find a collision.
 
-The results of these experiments place some limits on what choices a user can make currently regarding anonymity. You can only collide with up to 4 characters in a tag before the search space becomes such that any guarantee of collision is trivially small. Furthermore, $62^6$ is the upper bound on the search space for what a single computer can reasonably calculate a suffix to enable a collision with. Adding one more character to the suffix sends the computation into the span of days on a modern computer at time of writing.
+%how easy it is to collide with another tag. From
+%Fig. \ref{fig:collider-hits}, we find that beyond 4 characters, it was
+%impossible to find collisions within easily searchable spaces (suffix
+%sizes < 6).
 
-However, we also show that tag collision is possible, there are certainly tunable degrees of anonymity thanks to the apparent power-log distribution of twitter tags already, and finding such a collision is feasibly done on a personal computer. \hl{What more to say here?}
+The results of these experiments indicate some limits on what choices a
+user can make regarding anonymity.
+\hlfixme{rewrite after figuring out the new meaning}
+%You can only collide with up to 4
+%characters in a tag before the search space becomes such that any
+%guarantee of collision is trivially small. 
+%Furthermore, $62^6$ is the upper bound on the search space for what a
+%single computer can reasonably calculate as a suffix to enable a
+%collision. Adding one more character to the suffix sends the computation
+%into the span of days on a modern computer at time of writing.
+%
+%However, we also show that tag collision is possible, there are certainly tunab%le degrees of anonymity thanks to the apparent power-log distribution of twitte%r tags already, and finding such a collision is feasibly done on a personal com%puter. \hl{What more to say here?}
 
 \subsection{Performance}
 
-In this experiment we wanted to see how well the encryption engine performed. In March 2011, Twitter stated that the site receives 140 million tweets per day or 1620 tweets per second on average (http://blog.twitter.com/2011/03/numbers.html). They also said that the maximum tweets per second ever was 6939. These numbers act as rough upper bounds to the number of Hoots per second the system would need to keep up with. In all likelihood, the number of encrypted messages posted would be drastically smaller than regular messages.
-
-The benchmarks in Table \ref{tab:hps} were run on a 1.86GHz Intel Core 2 Duo, 4GB Ram, Macbook Air using Base64 encoding.
-
+Adoption of \hoot requires that the overhead for encryption and
+decryption be reasonable. One path to adoption would have Twitter or
+another microblogging service offer \hoot for users seeking group
+privacy or censorship resistance. We thus consider computation overhead
+in the context of encrypting all Twitter traffic as a worst case. In
+March 2011, Twitter stated that the site receives 140 million tweets per
+day or 1620 tweets per second on average
+(\url{http://blog.twitter.com/2011/03/numbers.html}). They also said
+that the maximum tweets per second ever was 6939. These numbers act as
+rough upper bounds to the number of Hoots per second the system would
+need to keep up with. In all likelihood, the number of encrypted
+messages posted would be drastically smaller than regular messages, at
+least in the early deployment of \hoot.
 
 \begin{table}
 \caption{Average Hoots Per Second for Encryption and Decryption
@@ -67,18 +171,50 @@ The benchmarks in Table \ref{tab:hps} were run on a 1.86GHz Intel Core 2 Duo, 4G
 \begin{center}
     \begin{tabular}{ l  l }
 	\hline
-	Action & Average Hoots per second \\ \hline
-	Encryption & 3614.531 \\
-	Decryption & 15587.328 \\ \hline
+	Action & Average hoots per second \\ \hline
+	Encryption & 3610 \\
+	Decryption & 15590 \\ \hline
+%	Encryption & 3614.531 \\
+%	Decryption & 15587.328 \\ \hline
     \end{tabular}
 \end{center}
 \end{table}
 
+To study the amount of computation required to support \hoot over
+Twitter, we used \hlfixme{our hoot prototype? did you call it from a
+  script or write a separate module to do this?} running on a MacBook
+Air with a 1.86GHz Intel Core 2 Duo and 4GB Ram to encrypt and decrypt
+\hlfixme{a really big number} of hoots using Base64 encoding.
+\hlfixme{How were the numbers taken? do you run 100K hoots and divide by
+  the time? Run for 1000 seconds and count the number of hoots?}  In
+Table~\ref{tab:hps}, we see the result of this experiment. The amount of
+computation for encryption is negligible for Twitter: the average load
+can be handled by one laptop. A Twitter server could easily encrypt the
+entire Twitter feed as the messages were posted. To handle peak usage
+like the 6939 tweets per second Twitter observed, a variety of
+optimizations could be made and, if necessary, the server could be a
+more powerful machine with more processors.
 
-\hl{computation is negligible. one computer can do it, twittr has more than 1 comp. bandwidth is multiplied by more. more tweets per group. fundamentaly, twitter has to pay this for receiver anonymity. inherent to our scheme. Quantify how much. twitter's bandwitdh bill would go up and they aren't already making money. Cite sandler. people on average send 100 messages and have 100 followers. we dont know how big the groups, we can know how many poeple post, can't know how many listen. After incedient, lots of \#NotAFactualStatement. no idea how many actually listen. Many people could post w/o listening and viceversa. We could treat the numbers as equivelent but that's probbably not a factual statement.Cite: http://www.politico.com/news/stories/0411/53214.html}
+The decryption rate is important to clients, since clients will need to
+search through hoots with colliding hashtags and decrypt the session
+keys for each one to see if it decrypts correctly. Note that, with a
+simple fixed constant string prepended to the keys, the client can
+quickly verify whether the message was encrypted using $k_{tag}$ or if
+another group's key was used. Since our process can decrypt Hoots almost
+five times faster than it encrypts them, even clients with limited
+computing power can keep up with the entire Twitter feed. In practice,
+clients would only need to decrypt hoots that share the same short tag,
+which should be a small fraction of this cost even for very active
+groups.
 
-Given these numbers, a Twitter server could easily encrypt the entire Twitter feed as the messages were posted. To handle peak usage like the 6939 tweets per second Twitter observed, many optimizations could be made, the simplest being to add a couple computers to help with the load. Our experiment shows that the Hoot protocol does not have significant overhead during encryption or decryption, so it can be adopted with little engineering effort.
-
-It is interesting to note that the decryption rate is important to a client, since a client will be searching tweets trying to identify and decrypt potential Hoots. A client may not trust Twitter to do the decryption since that involves sharing the Plain Tag with Twitter, so a client would decrypt the message on their machine. Almost every client will not have a datacenter of computers for decryption, but our  process can decrypt Hoots almost five times faster than it encrypts them. A client, even with limited computing power, can easily keep up with the Twitter feed.
+%A client may not trust Twitter to do the decryption since that involves
+%sharing the plain tag with Twitter, so a client would decrypt the
+%message on their machine. Almost every client will not have a datacenter
+%of computers for decryption, but 
+%adopted with little engineering effort.
 
 \hl{Should experiments have a wrap up paragraph?}
+
+\hlfxnote{mkw -- I don't think so. We'll cover more ground in the
+  discussion.}
+

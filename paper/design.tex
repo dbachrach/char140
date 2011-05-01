@@ -211,9 +211,20 @@ that two different messages will share the same session keys.
 
 \paragraphX{Dictionary Attacks and Brute Force.}  
 %
+Provided an attacker knows a targeted group's prefix and the alphabet
+out of which they generate the suffix, our scheme is vulnerable to brute
+force.
+
+. If we consider the adversary
+to be a government for example, it would be fair to assume they have
+thousands of machines at their disposal for such an attack. It becomes
+important, then for a user to pick a plain tag outside reasonable brute
+forcing bounds.
+
 
 \paragraphX{Traffic Analysis.}  
 %
+\hlfxnote{Sudden increases in a group's membership.}
 
 \hlfixme{Need to discuss all the features and attacks described in
   Section 2, at least briefly.}
