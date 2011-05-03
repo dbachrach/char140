@@ -3,22 +3,6 @@
 
 In this section, we describe the HooT protocol and analyze its security.
 
-\begin{table*}
-\caption{Hoot Process
-\label{tab:example}
-}
-\begin{center}
-    \begin{tabular}{ l  l  l  l  l }
-	\hline
-	 & Tweets & Long Tags & Short Tags & Hoots \\ \hline
-	1 & Its all bout the {\bf \#bieber} 100\%Belieber                                 & {\tt 9txrq71tfn8} &  {\tt 9tx} & {\tt \#9tx Xrtfn}... \\
-	2 & Don't be a drag; just be a queen whether you're broke or {\bf \#CharlieSheen} & {\tt 7prQnd121f2} & {\tt 7pr} & {\tt \#7pr n771r}... \\
-	3 & {\bf \#free-egypt} We'll meet at the usual, 11pm.                             & {\tt 2p7rtfx9pa1} & {\tt 2p7} & {\tt \#2p7 pp76a}... \\
-	4 & {\bf \#free-egype-9rqt} We'll meet at the usual, 11pm.                        & {\tt 9tx79srpLtt} &  {\tt 9tx}  & {\tt \#9tx 18yyQ}... \\
-    \end{tabular}
-\end{center}
-\end{table*}
-
 \subsection{Design}
 \label{sec:design}
 
@@ -206,6 +190,25 @@ each one, a separate long tag can be generated, resulting in multiple
 tag keys ($k_\mathrm{tag}$), each of which is used to encrypt the same
 session keys. The final HooT would have multiple short tags and multiple
 encryptions of the session keys.
+
+\begin{table*}
+\caption{\hoot Process
+\label{tab:process}
+}
+\begin{center}
+    \begin{tabular}{ l  l  l  l  l }
+	\hline
+	 & Tweet & Long Tag & Short Tag & Hoot \\ \hline
+	1 & Its all bout the {\bf \#bieber} 100\%Belieber                                 & {\tt 9txrq71tfn8} &  {\tt 9tx} & {\tt \#9tx Xrtfn}... \\
+	2 & Don't be a drag; just be a queen whether you're broke or {\bf \#CharlieSheen} & {\tt 7prQnd121f2} & {\tt 7pr} & {\tt \#7pr n771r}... \\
+	3 & {\bf \#free-egypt} We'll meet at the usual, 11pm.                             & {\tt 2p7rtfx9pa1} & {\tt 2p7} & {\tt \#2p7 pp76a}... \\
+	4 & {\bf \#free-egype-9rqt} We'll meet at the usual, 11pm.                        & {\tt 9tx79srpLtt} &  {\tt 9tx}  & {\tt \#9tx 18yyQ}... \\
+    \end{tabular}
+\end{center}
+\end{table*}
+
+\hlfixme{This needs some revision and might need to be placed or led into in a different way.}
+Table~\ref{tab:process} shows the process of how a plain-text tweet would be converted to a \hoot. 1 and 2 are two regular tweets from popular hashtags: \#bieber and \#CharlieSheen. 3 is a \hoot where receiver anonymity is critical, but it's short tag, 2p7, does not collide with anything else. 4 shows how the same group might alter their plain tag so they can deliberate collide with \#bierber's short tag of 9tx.
 
 
 \subsection{Security Analysis}
