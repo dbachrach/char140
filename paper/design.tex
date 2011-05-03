@@ -11,10 +11,10 @@ In this section, we describe the HooT protocol and analyze its security.
     \begin{tabular}{ l  l  l  l  l }
 	\hline
 	 & Tweets & Long Tags & Short Tags & Hoots \\ \hline
-	1 & Its all bout the {\bf \#bieber} 100\%Belieber                                 & 9txrq71tfn8 &  9tx & \#9tx Xrtfn... \\
-	2 & Don't be a drag; just be a queen whether you're broke or {\bf \#CharlieSheen} & 7prQnd121f2 & 7pr & \#7pr n771r... \\
-	3 & {\bf \#free-egypt} We'll meet at the usual, 11pm.                             & 2p7rtfx9pa1 & 2p7 & \#2p7 pp76a... \\
-	4 & {\bf \#free-egype-9rqt} We'll meet at the usual, 11pm.                        & 9tx79srpLtt &  9tx  & \#9tx 18yyQ... \\
+	1 & Its all bout the {\bf \#bieber} 100\%Belieber                                 & {\tt 9txrq71tfn8} &  {\tt 9tx} & {\tt \#9tx Xrtfn}... \\
+	2 & Don't be a drag; just be a queen whether you're broke or {\bf \#CharlieSheen} & {\tt 7prQnd121f2} & {\tt 7pr} & {\tt \#7pr n771r}... \\
+	3 & {\bf \#free-egypt} We'll meet at the usual, 11pm.                             & {\tt 2p7rtfx9pa1} & {\tt 2p7} & {\tt \#2p7 pp76a}... \\
+	4 & {\bf \#free-egype-9rqt} We'll meet at the usual, 11pm.                        & {\tt 9tx79srpLtt} &  {\tt 9tx}  & {\tt \#9tx 18yyQ}... \\
     \end{tabular}
 \end{center}
 \end{table*}
@@ -98,19 +98,29 @@ tag that will collide with a popular tag, allowing for a predictably
 high amount of cover traffic as well as providing a cover story for
 followers of that tag. For example, if an Egyptian protest group wanted
 to find a collision with Justin Bieber's movie, we perform the following
-calculations: \hlfixme{Dan, maybe you have a better TeX-y way to
-  represent this?  It seems like a while loop is more appropriate in
-  place of the forall, especially with an indent.}
+calculations:
 %
-\begin{align*}
-& \mathit{prefix} \leftarrow  ``\mathrm{\#Tahrir}'' \\
-& \mathit{target} \leftarrow ``\mathrm{\#nsn3d}'' \\
-& \forall_{i \in [0, N)}  \mathit{suffix} \leftarrow i \\
-& \mathit{PlainTag} \leftarrow  \mathit{prefix}.\mathit{suffix} \\
-& \mathit{ShortTag} \leftarrow H({\mathit PlainTag}).\mathrm{bits}(0 \ldots k-1) \\
-& \mathbf{if}\ {\mathit ShortTag} = H(\mathit{target}).\mathrm{bits}(0 \ldots k-1)\\
-& \mathbf{then}\ \mathrm{emit} (\mathit{PlainTag} , {\mathit{ShortTag}}) 
-\end{align*}
+\begin{codebox}
+\Procname{$\proc{Find-Tag}(\id{prefix}, \id{target}, N)$}
+\zi \For $i \gets [0,N)$
+\zi \Do
+\zi $\id{PlainTag} \gets  \id{prefix}.\id{suffix}$
+\zi $\id{ShortTag} \gets H(\id{PlainTag}).\mathrm{bits}(0 \ldots k-1)$
+\zi \If $\id{ShortTag} = H(\id{target}).\func{bits}(0 \ldots k-1)$
+\zi \Then $\func{emit} (\id{PlainTag} , \id{ShortTag})$
+\zi \End
+\End
+\end{codebox}
+
+% \begin{align*}
+% & \mathit{prefix} \leftarrow  ``\mathrm{\#Tahrir}'' \\
+% & \mathit{target} \leftarrow ``\mathrm{\#nsn3d}'' \\
+% & \forall_{i \in [0, N)}  \mathit{suffix} \leftarrow i \\
+% & \mathit{PlainTag} \leftarrow  \mathit{prefix}.\mathit{suffix} \\
+% & \mathit{ShortTag} \leftarrow H({\mathit PlainTag}).\mathrm{bits}(0 \ldots k-1) \\
+% & \mathbf{if}\ {\mathit ShortTag} = H(\mathit{target}).\mathrm{bits}(0 \ldots k-1)\\
+% & \mathbf{then}\ \mathrm{emit} (\mathit{PlainTag} , {\mathit{ShortTag}}) 
+% \end{align*}
 %
 In this case, the suffix would be a natural number of a number of digits
 $N$ that can be memorized by humans (i.e., $N$ is probably at most seven
@@ -169,6 +179,7 @@ In sum, the HooT client takes plaintext message $M$ and a plain tag
 %  PlainTag} within it \hl{this sentence doesn't make sense to me}, a
 %complete HooT message will be as follows:
 %
+
 \begin{eqnarray*}
 \mathit{LongTag} & \leftarrow & H(\mathit{PlainTag}) \\
 \mathit{ShortTag} & \leftarrow & \mathit{LongTag}.\mathrm{bits}(0 \ldots k-1) \\
