@@ -96,18 +96,19 @@ more messages to find the desired ones.
 Given a consistent system-wide short tag length, a group can choose a
 tag that will collide with a popular tag, allowing for a predictably
 high amount of cover traffic as well as providing a cover story for
-followers of that tag. For example, if an Egyptian protest group wanted
-to find a collision with Justin Bieber's movie, we perform the following
-calculations:
+followers of that tag.
+% For example, if an Egyptian protest group wanted
+% to find a collision with Justin Bieber's movie, we perform the following
+% calculations:
 %
 \begin{codebox}
-\Procname{$\proc{Find-Tag}(\id{prefix}, \id{target}, N)$}
-\zi \For $i \gets [0,N)$
+\Procname{$\proc{Find-Tag}(\id{prefix}, \id{target}, N, k)$}:
+\zi \For $i \gets [0,N)$, in random order
 \zi \Do
 \zi $\id{PlainTag} \gets  \id{prefix}.\id{suffix}$
 \zi $\id{ShortTag} \gets H(\id{PlainTag}).\mathrm{bits}(0 \ldots k-1)$
 \zi \If $\id{ShortTag} = H(\id{target}).\func{bits}(0 \ldots k-1)$
-\zi \Then $\func{emit} (\id{PlainTag} , \id{ShortTag})$
+\zi \Then $\func{return} (\id{PlainTag} , \id{ShortTag})$
 \zi \End
 \End
 \end{codebox}
@@ -122,17 +123,28 @@ calculations:
 % & \mathbf{then}\ \mathrm{emit} (\mathit{PlainTag} , {\mathit{ShortTag}}) 
 % \end{align*}
 %
-In this case, the suffix would be a natural number of a number of digits
-$N$ that can be memorized by humans (i.e., $N$ is probably at most seven
-digits~\cite{miller56}). Equivalently, we could search over some other
-memorizable namespace with suitably high entropy, like a short string of
-characters found on a keyboard. The system would search over all
-possible suffixes to identify hash collisions. Note that the search
-should be done randomly, rather than in-order, to increase the
-attacker's difficulty in conducting brute force attacks. This new plain
-tag could then be spread through human gossip. 
+This algorithm searches for a tag collision, where the \id{PlainTag} suffix is
+a number between 0 and $N$, and the \id{ShortTag} is $k$ bits long.
+What should be reasonable values for $N$ and $k$?
 
-To further increase the entropy of the secret, the prefix could be
+$k$ determines the length of the \id{ShortTag}. As discussed above, the value for $k$
+trades off anonymity versus search overhead for a receiver. $k$ will likely need to be
+a constant shared widely across the space of HooT users.
+
+$N$ is bounded by how large a \id{PlainTag} string can be reasonably
+passed among potential HooT participants. If the communication of the
+\id{PlainTag} must happen by word of mouth, $N$ will be bounded,
+perhaps, by the number of digits that can be memorized by most humans
+(so, if humans can remember around seven decimal
+digits~\cite{miller56}, then $N$ would be $10^7$). Equivalently, we
+could search over some other memorizable namespace with suitably high
+entropy, like a short string of characters found on a keyboard.
+Regardless, the group creator would use \proc{Find-Tag} to search over all possible suffixes to
+identify hash collisions. Note that the search should be done
+randomly, rather than in-order, to increase the attacker's difficulty
+in conducting brute force attacks. 
+
+To further increase the entropy of the secret, the prefix could also be
 chosen randomly from a large dictionary. In general, any of a variety of
 password-selection techniques could be used for the prefix, including
 using pass-phrases consisting of multiple complete
