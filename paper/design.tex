@@ -106,7 +106,7 @@ followers of that tag.
 \zi \For $i \gets [0,N)$, in random order
 \zi \Do
 \zi $\id{PlainTag} \gets  \id{prefix}.\id{suffix}$
-\zi $\id{ShortTag} \gets H(\id{PlainTag}).\mathrm{bits}(0 \ldots k-1)$
+\zi $\id{ShortTag} \gets H(\id{PlainTag}).\func{bits}(0 \ldots k-1)$
 \zi \If $\id{ShortTag} = H(\id{target}).\func{bits}(0 \ldots k-1)$
 \zi \Then $\func{return} (\id{PlainTag} , \id{ShortTag})$
 \zi \End
