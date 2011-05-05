@@ -11,21 +11,18 @@ in the \hoot approach.
 \paragraphX{Generating a Hoot}
 The \hoot protocol allows for a variety of different encryption,
 hashing, and message authentication schemes. Our prototype client,
-implemented in Python, takes the following steps to construct a message:
+implemented in Python using the PyCrypto\footnote{\url{http://www.dlitz.net/software/pycrypto/}} library, takes the following steps to construct a message:
 \begin{itemize}
 \item Generate a long tag by taking a SHA2-256 hash of the plain
   tag. The first 128 bits of the long tag are used exclusively for the
   short tag; we use a $k$-bit prefix of this string. The remaining 128
   bits are used as the tag key, $k_{\mathrm{tag}}$, to encrypt the
   session keys.
-\item Generate a random 128-bit encryption key, $k_{\mathrm{enc}}$,
-  \hlfixme{What random number generator are we using?  Hopefully a good
-    cryptographic one or hardware random?} and a random 160-bit MAC key,
-  $k_{\mathrm{mac}}$\hlfixme{Why 160? Birthday
-    attacks don't apply to keys, just hash outputs (and don't apply in
-    this case anyway). Maybe Dan can chime in here...}. These keys are
+\item Using PyCrypto's cryptographically-strong random number generator, generate 
+  a random 128-bit encryption key, $k_{\mathrm{enc}}$, and a random 128-bit MAC key,
+  $k_{\mathrm{mac}}$. These keys are
   concatenated together and then encrypted with the tag key using AES in
-  counter mode.\hlfixme{I assume that there a fixed initial counter; 0?}
+  counter mode with a fixed initial counter of $0$.
 \item Encrypt the plaintext message with $k_{\mathrm{enc}}$ using AES in
   counter mode and use $k_{\mathrm{mac}}$ to generate a HMAC-SHA1
   message authentication code over the encrypted plaintext.
