@@ -184,12 +184,11 @@ least in the early deployment of \hoot.
 \end{table}
 
 To study the amount of computation required to support \hoot over
-Twitter, we used \hlfixme{our hoot prototype? did you call it from a
-  script or write a separate module to do this?} running on a MacBook
-Air with a 1.86GHz Intel Core 2 Duo and 4GB Ram to encrypt and decrypt
-\hlfixme{a really big number} of hoots using Base64 encoding.
-\hlfixme{How were the numbers taken? do you run 100K hoots and divide by
-  the time? Run for 1000 seconds and count the number of hoots?}  In
+Twitter, we modified our Python script to perform the encryption process 
+500,000 times running on a MacBook
+Air with a 1.86GHz Intel Core 2 Duo and 4GB Ram using Base64 encoding. We 
+also independently performed the decryption process 500,000 times. We 
+record how long each process took and divide by 500,000. In
 Table~\ref{tab:hps}, we see the result of this experiment. The amount of
 computation for encryption is negligible for Twitter: the average load
 can be handled by one laptop. A Twitter server could easily encrypt the
