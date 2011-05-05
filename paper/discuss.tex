@@ -2,20 +2,11 @@
 
 In this section, we discuss a variety of issues and future extensions of the Hoot design.
 
-\subsection{Incremental Rollout}
+\subsection{Deployment}
 
-\hlfixme{
-1. Can you incrementally roll it out
-	- Service provided by twitter or yourself
-2. 140 character limit
-	- Twitter doesn't have to go too far to have all the metadata for encryption	
-	- How hard is it for twitter to do this. 
-	- Reference message fitting into 140 char using unicode
-	- Reference peak hps, and how our system holds up
-}
+How could Twitter roll out a service like \hoot? Twitter would not need to go very far to have all the meta data necessary to encrypt and decrypt for their users. \hlfixme{They would need...} As we showed previously, fitting into the 140 character limit is possible with Unicode encryption, but Twitter could easily make an internal exception for Hoots. We also showed that computation for encryption and decryption is negligible. One computer can do it, and Twitter has entire racks of computers. The real issue is how the \hoot system would affect bandwidth for Twitter. 
 
-\hlfixme{computation is negligible. one computer can do it, twittr has more
-  than 1 comp. bandwidth is multiplied by more. more tweets per
+\hlfixme{ bandwidth is multiplied by more. more tweets per
   group. fundamentaly, twitter has to pay this for receiver
   anonymity. inherent to our scheme. Quantify how much. twitter's
   bandwitdh bill would go up and they aren't already making money. Cite
