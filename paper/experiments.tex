@@ -33,8 +33,7 @@ This distribution shows us that there is a large spectrum of subscriber
 anonymity set sizes that can be taken leveraged for \hoot. To get a high
 degree of anonymity, the group can choose a plain tag whose short tag
 collides with a popular tag. With such a group, the sudden influx of new
-followers will not be as suspicious. \hl{can we get a statistic on what
-  the average number of tags someone follows is?}  Some groups may opt
+followers will not be as suspicious. Some groups may opt
 for better plausible deniability by selecting a tag that is only
 moderately popular but serves as a believable innocuous interest for
 group members.
@@ -49,9 +48,9 @@ group members.
 \label{sec:collider}
 
 To explore the feasibility of finding a plain tag that collides with an
-existing short tag, we built a tool called the {\em collider}.
-\hlfixme{I presume this was build in Python? It matters for the
-  experiment. Also, what's the crypto library?}
+existing short tag, we built a tool called the {\em collider} in C and
+OpenMP 3.0, using the open source CommonCrypto/CommonDigest library provided
+by Apple. %how to cite? http://www.opensource.apple.com/source/CommonCrypto/
 The collider takes in a short tag, \textit{T}, a prefix string,
 \textit{S}, a suffix length, \textit{L}, an alphabet \textit{A}. It
 finds the concatenations of \textit{S} and strings of length \textit{L}
@@ -83,15 +82,14 @@ which makes the runtime of the collider executing on a system with
 }
 \end{center}
 \end{figure}
-\hlfixme{fig:collider-times: The suffix length on the x-axis should be
-  3, 4, 5, right?}
+\hlfixme{fig:collider-times: The suffix length on the x-axis should be 3, 4, 5, right?}
 
 \begin{figure}
 \begin{center}
 \includegraphics[scale=.5, viewport=0cm 0cm 16.5cm 7.5cm]{collider-hits.pdf}
 \caption{Percent of search space that returned hits for an entered short
   tag, with a Prefix of `rice', and given Suffix Length. We used the
-  short tags 'Ch', 'Char', and 'CharlieS' for short tags of length two,
+  short tags `Ch', `Char', and `CharlieS' for short tags of length two,
   four, and eight, respectively.
 \label{fig:collider-hits}
 }
@@ -106,11 +104,15 @@ With our implementation, it is currently infeasible for a single PC to
 do an exhaustive search for a suffix length greater than six in a
 reasonable amount of time, e.g. less than a day. Even if optimizations
 could speed up the calculation, it would likely need to take less than
-an hour to be usable for most groups.  \hlfixme{What about finding one
-  useful suffix? That's the real question...}
+an hour to be usable for most groups. On the other hand, finding a collision
+for a short tag is proportional to its size relative to the search space.
+\hlfixme{FiXme: What about finding one useful suffix? That's the real question...} 
+\hlfixme{Isn't search time for a single match independent of the search space of the suffix length and dependent
+on the search space of the short tag length? Or can we not assume even distribution of matching tags? Can I make
+that argument or am I missing something?}
 
 Another concern is the ability to find colliding tags at all. The
-probabilty of trying $|A|^L$ tags and finding at least one that has the
+probability of trying $|A|^L$ tags and finding at least one that has the
 same short tag as an existing $c$-character tag is given by:
 %
 \[1-(1-\frac{1}{|A|^c})^{|A|^L}.\]
@@ -128,14 +130,18 @@ specific prefix (``rice'') and fixed short tag values. The results,
 shown in Figure~\ref{fig:collider-hits}, confirm that short tags of
 length four require a suffix of length four or more to find a collision.
 
+Thus recipient anonymity is attainable for short tags of length 4 or less, and tied
+to this is recipient deniability. The more innocuous traffic that is pulled, the more
+it seems as if you are truly following some hot topic, rather than a more clandestine 
+group. An observer monitoring the tweets you download will be unable to differentiate 
+someone following a secret group and someone following a popular topic because members of
+both groups will pulling all HooTs from each other's groups.
+
 %how easy it is to collide with another tag. From
 %Fig. \ref{fig:collider-hits}, we find that beyond 4 characters, it was
 %impossible to find collisions within easily searchable spaces (suffix
 %sizes < 6).
 
-The results of these experiments indicate some limits on what choices a
-user can make regarding anonymity.
-\hlfixme{rewrite after figuring out the new meaning}
 %You can only collide with up to 4
 %characters in a tag before the search space becomes such that any
 %guarantee of collision is trivially small. 
@@ -211,8 +217,7 @@ groups.
 %of computers for decryption, but 
 %adopted with little engineering effort.
 
-\hl{Should experiments have a wrap up paragraph?}
+%\hl{Should experiments have a wrap up paragraph?}
 
-\hlfxnote{mkw -- I don't think so. We'll cover more ground in the
-  discussion.}
+%\hlfxnote{mkw -- I don't think so. We'll cover more ground in the discussion.}
 
