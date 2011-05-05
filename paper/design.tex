@@ -51,17 +51,6 @@ numbers of groups. As described in Section~\ref{sec:goals}, we propose
 that different groups' identifiers collide with each other for recipient
 anonymity and plausible deniability.
 
-\hlfxnote{The following ideas should be reflected in the intro, not
-  here: If a group is communicating in secret, not only do we want to
-  protect the content of the communication, but we would like to conceal
-  subscription to a particular group. For example, a rebellion group
-  wishes to communicate over Twitter using HooTs, but it can be
-  dangerous for a supporter of the rebellion to listen and subscribe to
-  the identifier of the group. If, however, the identifier of the group
-  can collide with the identifier of a popular Internet topic, like
-  Justin Bieber or many other such Twitter celebrities, group followers
-  can shadow their rebellious activities with other innocent topics.}
-
 To generate a collision, we need to shorten the long tag, generating a
 \textit{short tag} of $k$ bits. The short tag will, by design, induce
 collisions between unrelated plain tags. The shorter the short tag, the
@@ -137,7 +126,7 @@ phrases~\cite{mnemonics}. Techniques for generating pronounceable
 passwords may be particularly useful in this
 context~\cite{gasser}. Although word-of-mouth based on memorization is
 the preferred means of communication, we note that plain tags can be
-spoken while they are typed into a HooT client, facilitaing transfer to
+spoken while they are typed into a HooT client, facilitating transfer to
 some users who don't care to memorize the tag. Finally, balancing some
 risk of password discovery against usability and the risk of brute force
 and dictionary attacks, the password may be written down and passed by
@@ -145,31 +134,29 @@ hand~\cite{written-passwords}.
 
 \paragraphX{Message header and body.}  
 %
-The header of a HooT includes the short tag, to ensure that hashtag
-searches can find the message, as well as the necessary information for
-somebody who knows the plain tag to properly decrypt and verify the
-integrity of the message.\hlfixme{huh?}
+In addition to the \id{ShortTag}, the header contains a pair of keys
+for message body encryption and integrity verification.
 
-To that end, for every message, we generate a pair of random session
-keys, one for encryption and one for message integrity. Since we intend
+For every message, the pair of session keys is randomly generated. Since we intend
 to use efficient symmetric key ciphers and message authentication
-functions, session keys may be selected to be 128 bits \hl{actually the
+functions, session keys may be selected to be 128 bits \hl{chris to dustin - aren't you using HMAC?
+edit this bit accordingly.}
+
+\hl{actually the
   mac key is 160 bits since it is used for sha1. the encryption key is
-  128 bits though.}, \hlfixme{actually you still use 128 bit keys inside
+  128 bits though.} \hlfixme{actually you still use 128 bit keys inside
   the hash -- the output is 160 bits. Also, is there some reason not to
   be using HMAC here? It is the standard. -mkw} each. The session keys
 are then encrypted with a {\em tag key} derived from the long tag, using
 different bits than the $k$ bits used when truncating it to derive the
-short tag; the long tag should have plenty of entropy available for our
-use. \hlfixme{the prev. statement is not very precise. How much entropy
-  do we actually get? Strong cryptographic hash functions would have a
-  strong avalanche effect, so each output bit should be independent of
-  all other output bits. Thus, you would ideally get all of the entropy
-  of the secret hashtag from any subset of sufficiently many bits.}
-If we needed more, we could always use the remaining long tag bits
+short tag. Given a \id{LongTag} of 160 bits, if we assume half of those bits
+are used in the \id{ShortTag}, the remaining 80 bits give
+us $2^80$ possible keys that an attacker must brute force. In \ref{sec:experiments}
+we will show that we will use even fewer than half the bits outputted by a \id{LongTag}, and if
+needed, we could always use the remaining long tag bits
 to initialize a suitably strong pseudo-random number generator.
 
-In sum, the HooT client takes plaintext message $M$ and a plain tag
+In summary, the HooT client takes plaintext message $M$ and a plain tag
 ({\em PlainTag}) and constructs the HooT messages as follows:
 %Putting it all together, starting from a plaintext message $M$ with {\em
 %  PlainTag} within it \hl{this sentence doesn't make sense to me}, a
@@ -207,8 +194,7 @@ encryptions of the session keys.
 \end{center}
 \end{table*}
 
-\hlfixme{This needs some revision and might need to be placed or led into in a different way.}
-Table~\ref{tab:process} shows the process of how a plain-text tweet would be converted to a \hoot. 1 and 2 are two regular tweets from popular hashtags: \#bieber and \#CharlieSheen. 3 is a \hoot where receiver anonymity is critical, but it's short tag, 2p7, does not collide with anything else. 4 shows how the same group might alter their plain tag so they can deliberate collide with \#bierber's short tag of 9tx.
+For illustration, table \ref{tab:process} shows how a few plain-text tweets would be converted into a corresponding \hoot. 1 and 2 are two regular tweets from popular hashtags: \#bieber and \#CharlieSheen. 3 is a \hoot where receiver anonymity is critical, but it's short tag, 2p7, does not collide with anything else. 4 shows how the same group might alter their plain tag so they can deliberate collide with \#bierber's short tag of 9tx.
 
 
 \subsection{Security Analysis}
@@ -257,8 +243,7 @@ Provided an attacker knows a targeted group's prefix and the alphabet
 out of which they generate the suffix, our scheme is vulnerable to brute
 force.
 
-. If we consider the adversary
-to be a government for example, it would be fair to assume they have
+If we consider the adversary to be a government for example, it would be fair to assume they have
 thousands of machines at their disposal for such an attack. It becomes
 important, then for a user to pick a plain tag outside reasonable brute
 forcing bounds.
@@ -266,8 +251,9 @@ forcing bounds.
 
 \paragraphX{Traffic Analysis.}  
 %
-\hlfxnote{Sudden increases in a group's membership.}
 
+\hlfxnote{Sudden increases in a group's membership.}
+\hlfxnote{Chris - do you mean for the above to be under Traffic Analysis or in a separate section?}
 \hlfixme{Need to discuss all the features and attacks described in
   Section 2, at least briefly.}
 
