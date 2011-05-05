@@ -138,15 +138,8 @@ In addition to the \id{ShortTag}, the header contains a pair of keys
 for message body encryption and integrity verification.
 
 For every message, the pair of session keys is randomly generated. Since we intend
-to use efficient symmetric key ciphers and message authentication
-functions, session keys may be selected to be 128 bits \hl{chris to dustin - aren't you using HMAC?
-edit this bit accordingly.}
-
-\hl{actually the
-  mac key is 160 bits since it is used for sha1. the encryption key is
-  128 bits though.} \hlfixme{actually you still use 128 bit keys inside
-  the hash -- the output is 160 bits. Also, is there some reason not to
-  be using HMAC here? It is the standard. -mkw} each. The session keys
+to use efficient symmetric key ciphers and hash-based message authentication
+functions, session keys may be selected to be 128 bits each. The session keys
 are then encrypted with a {\em tag key} derived from the long tag, using
 different bits than the $k$ bits used when truncating it to derive the
 short tag. Given a \id{LongTag} of 160 bits, if we assume half of those bits
@@ -179,7 +172,7 @@ session keys. The final HooT would have multiple short tags and multiple
 encryptions of the session keys.
 
 \begin{table*}
-\caption{\hoot Process
+\caption{This table shows how an individual tweet would become a \hoot by noting the Long Tag, Short Tag, and the final \hoot. Tweet 4 shows how a rebellion group could collide with \#bieber and disguise it's messages.
 \label{tab:process}
 }
 \begin{center}
@@ -189,7 +182,7 @@ encryptions of the session keys.
 	1 & Its all bout the {\bf \#bieber} 100\%Belieber                                 & {\tt 9txrq71tfn8} &  {\tt 9tx} & {\tt \#9tx Xrtfn}... \\
 	2 & Don't be a drag; just be a queen whether you're broke or {\bf \#CharlieSheen} & {\tt 7prQnd121f2} & {\tt 7pr} & {\tt \#7pr n771r}... \\
 	3 & {\bf \#free-egypt} We'll meet at the usual, 11pm.                             & {\tt 2p7rtfx9pa1} & {\tt 2p7} & {\tt \#2p7 pp76a}... \\
-	4 & {\bf \#free-egype-9rqt} We'll meet at the usual, 11pm.                        & {\tt 9tx79srpLtt} &  {\tt 9tx}  & {\tt \#9tx 18yyQ}... \\
+	4 & {\bf \#free-egypt-9rqt} We'll meet at the usual, 11pm.                        & {\tt 9tx79srpLtt} &  {\tt 9tx}  & {\tt \#9tx 18yyQ}... \\
     \end{tabular}
 \end{center}
 \end{table*}
