@@ -11,15 +11,6 @@ We first show that Twitter groups provide good possibilities for cover
 traffic that \hoot can leverage to hide groups seeking plausible
 deniability.
 
-\begin{figure}
-\begin{center}
-\includegraphics[scale=.5, viewport= 0cm 0cm 16.6cm 12.9cm]{hash-tag-dist.pdf}
-\caption{2009 Twitter Hashtag activity distribution on a log-log
-  scale.\label{fig:hash-dist}
-}
-\end{center}
-\end{figure}
-
 In Figure~\ref{fig:hash-dist}, we show the distribution of number of
 tweets for each hashtag in the 2008 dataset, ordered by activity level in a log-log scatter
 plot. The
@@ -41,6 +32,26 @@ group members.
 %there were a more even distribution of tags, then someone observing you
 %following a particular tag would have less incentive to ignore suspicion
 %that your activities might be objectionable to them. 
+
+\begin{figure*}[t]
+\begin{minipage}[b]{0.48\linewidth}
+\centering
+\includegraphics[scale=.5, viewport=0cm 0cm 16.6cm 13.6cm]{collider-times.pdf}
+%\includegraphics[scale=.5]{collider-times.pdf}
+    \caption{Runtime for the collider to search for all matching tags with
+  suffixes of length $L=3,4,5$ on a PC with dual quad-core Intel i5
+  processors.}\label{fig:collider-times}
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.48\linewidth}
+\centering
+\includegraphics[scale=.5, viewport= 0cm 0cm 16.6cm 12.9cm]{hash-tag-dist.pdf}
+%\includegraphics[scale=.5]{hash-tag-dist.pdf}
+\caption{2009 Twitter Hashtag activity distribution on a log-log
+  scale.\vspace{0.4cm}\label{fig:hash-dist}
+}
+\end{minipage}
+\end{figure*}
 
 \subsection{Collider}
 \label{sec:collider}
@@ -71,40 +82,33 @@ which makes the runtime of the collider executing on a system with
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=.5, viewport=0cm 0cm 16.6cm 13.6cm]{collider-times.pdf}
-\caption{Runtime for the collider to search for all matching tags
-  suffixes of length $L=3,4,5$ on a PC with dual quad-core Intel i5
-  processors.
-  %spaces of sizes $62^3$, $62^4$, $62^5$ 
-\label{fig:collider-times}
-}
-\end{center}
-\end{figure}
-
-\begin{figure}
-\begin{center}
 \includegraphics[scale=.5, viewport=0cm 0cm 16.5cm 7.5cm]{collider-hits.pdf}
 \caption{Percent of search space that returned hits for an entered short
   tag, with a Prefix of `rice', and given Suffix Length. We used the
   short tags `Ch', `Char', and `CharlieS' for short tags of length two,
-  four, and eight, respectively.
-\label{fig:collider-hits}
-}
+  four, and eight, respectively.}\label{fig:collider-hits}
 \end{center}
 \end{figure}
+
 
 As expected, the runtime---shown in
 Figure~\ref{fig:collider-times}---scales exponentially with \textit{L}.
 With our implementation, it is currently infeasible for a single PC to
 do an exhaustive search for a suffix length greater than six in a
-reasonable amount of time, e.g. less than a day. Even if optimizations
-could speed up the calculation, it would likely need to take less than
-an hour to be usable for most groups. On the other hand, finding a collision
-for a short tag is proportional to its size relative to the search space.
-\hlfixme{FiXme: What about finding one useful suffix? That's the real question...} 
-\hlfixme{Isn't search time for a single match independent of the search space of the suffix length and dependent
-on the search space of the short tag length? Or can we not assume even distribution of matching tags? Can I make
-that argument or am I missing something?}
+reasonable amount of time, e.g. less than a day.  \hlfixme{We really
+  need to talk about time to find one useful suffix. This story sucks (=
+  hoot is unusable!) and you only need one useful suffix in practice.}
+
+%Even if optimizations
+%could speed up the calculation, it would likely need to take less than
+%an hour to be usable for most groups. On the other hand, finding a
+%collision for a short tag is proportional to its size relative to the
+%search space.  \hlfixme{FiXme: What about finding one useful suffix?
+%  That's the real question...}  \hlfixme{Isn't search time for a single
+%  match independent of the search space of the suffix length and
+%  dependent on the search space of the short tag length? Or can we not
+%  assume even distribution of matching tags? Can I make that argument or
+%  am I missing something?}
 
 Another concern is the ability to find colliding tags at all. The
 probability of trying $|A|^L$ tags and finding at least one that has the
@@ -125,12 +129,14 @@ specific prefix (``rice'') and fixed short tag values. The results,
 shown in Figure~\ref{fig:collider-hits}, confirm that short tags of
 length four require a suffix of length four or more to find a collision.
 
-Thus recipient anonymity is attainable for short tags of length 4 or less, and tied
-to this is recipient deniability. The more innocuous traffic that is pulled, the more
-it seems as if you are truly following some hot topic, rather than a more clandestine 
-group. An observer monitoring the tweets you download will be unable to differentiate 
-someone following a secret group and someone following a popular topic because members of
-both groups will pulling all HooTs from each other's groups.
+Thus recipient anonymity is attainable for short tags of length four or
+less, and tied to this is recipient deniability. The more innocuous
+traffic that is pulled, the more it seems as if you are truly following
+some hot topic, rather than a more clandestine group. An observer
+monitoring the tweets you download will be unable to differentiate
+someone following a secret group and someone following a popular topic
+because members of both groups will pulling all HooTs from each other's
+groups.
 
 %how easy it is to collide with another tag. From
 %Fig. \ref{fig:collider-hits}, we find that beyond 4 characters, it was
