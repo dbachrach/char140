@@ -1,32 +1,38 @@
-\section{HooT Design \& Security Analysis}
+\section{\hoot Design \& Security Analysis}
 \label{sec:design-sec}
 
-In this section, we describe the HooT protocol and analyze its security.
+In this section, we describe the \hoot protocol and analyze its security.
 
 \subsection{Design}
 \label{sec:design}
 
-We now describe HooT in detail. After giving a brief overview of the
-HooT protocol, we describe how hashtags are generated to provide
+We now describe \hoot in detail. After giving a brief overview of the
+\hoot  protocol, we describe how hashtags are generated to provide
 collisions with other groups and how the message header and body are
-constructed. 
+constructed to enable efficient searching.
 %We also analyze the security of messages.
 
-\paragraphX{Protocol overview.} The HooT protocol consists of a message
-header and a message body. The header contains the group identifier (the
-hashtag), an encryption key, a MAC Key, and an integrity digest. As in
+\paragraphX{Protocol overview.} A complete \hoot message consists of a 
+header and a message body. The header contains a group identifier
+(a Twitter-style hashtag), an encryption key and a MAC key, both
+encrypted with a session key, and finally a MAC
+over the ciphertext of the message (see
+Figure~\ref{fig:hoot-structure}). As in
 Twitter, messages do not name their recipients. Anyone who knows the
-secret hashtag associated with a HooT can both read the message and
-locate the message easily. Rather than attempting to treat every message
-posted to Twitter as a potential group message, and thus decrypting the
-entire Twitter stream, the protocol places an identifier into every HooT
+secret hashtag associated with a \hoot can decrypt and read the message
+as well as validate its integrity.
+We also need an efficient discovery mechanism.
+Rather than attempting to treat every message
+posted to Twitter as a potential group message, and thus being
+required to fetch and attempt decryption of every single message,
+the \hoot protocol places an identifier into every \hoot message
 as a hashtag so a fellow group member can simply search for the
 identifier to see all potential messages. With a constant group
 identifier, readers can also publicly follow that identifier like any
 other hashtag on Twitter.
 
 \paragraphX{Group identifiers.} To create a hashtag for use as the group
-identifier, HooT derives a short bitstring from the secret hashtag. We
+identifier, \hoot derives a short bitstring from the secret hashtag. We
 must do this in such a way as to give an attacker no information about
 the shared secret itself. A cryptographic hash function serves this
 purpose well.
@@ -39,9 +45,9 @@ prevent the adversary from guessing it. The result of hashing the plain
 tag with a given hash function \textit{H} (such as SHA-1) is referred to
 as the \textit{long tag}, i.e.:
 %
-$\mathit{LongTag} \leftarrow H\left(\mathit{PlainTag}\right)$.
+$\id{LongTag} \leftarrow H\left(\id{PlainTag}\right)$.
 
-The HooT protocol could simply use the long tag as an identifier, but
+The \hoot protocol could simply use the long tag as an identifier, but
 this choice leads to several problems. First, to achieve our design goal
 of keeping identifiers short and to fit within Twitter's 140 character
 limit, it is less than ideal to use the full output of a hash function
@@ -55,7 +61,7 @@ To generate a collision, we need to shorten the long tag, generating a
 \textit{short tag} of $k$ bits. The short tag will, by design, induce
 collisions between unrelated plain tags. The shorter the short tag, the
 higher the collision rate will be and the less sure an observer can be
-as to what topic a HooT reader is actually following. With this greater
+as to what topic a \hoot reader is actually following. With this greater
 anonymity comes more computational work: since more group messages will
 now belong to the same identifier, a follower must download and decrypt
 more messages to find the desired ones.
@@ -74,8 +80,9 @@ followers of that tag.
 % to find a collision with Justin Bieber's movie, we perform the following
 % calculations:
 %
+\begin{figure}
 \begin{codebox}
-\Procname{$\proc{Find-Tag}(\id{prefix}, \id{target}, N, k)$}:
+\Procname{$\proc{Find-Tag}(\id{prefix}, \id{target}, N, k):$}
 \zi \For $i \gets [0,N)$, in random order
 \zi \Do
 \zi $\id{PlainTag} \gets  \id{prefix}.\id{suffix}$
@@ -85,6 +92,8 @@ followers of that tag.
 \zi \End
 \End
 \end{codebox}
+\caption{Pseudocode for tag collision searching.\label{fig:find-tag}}
+\end{figure}
 
 % \begin{align*}
 % & \mathit{prefix} \leftarrow  ``\mathrm{\#Tahrir}'' \\
@@ -102,82 +111,103 @@ What should be reasonable values for $N$ and $k$?
 
 $k$ determines the length of the \id{ShortTag}. As discussed above, the value for $k$
 trades off anonymity versus search overhead for a receiver. $k$ will likely need to be
-a constant shared widely across the space of HooT users.
+a constant shared widely across the space of \hoot users.
 
 $N$ is bounded by how large a \id{PlainTag} string can be reasonably
-passed among potential HooT participants. If the communication of the
+passed among potential \hoot participants. If the communication of the
 \id{PlainTag} must happen by word of mouth, $N$ will be bounded,
 perhaps, by the number of digits that can be memorized by most humans
 (so, if humans can remember around seven decimal
 digits~\cite{miller56}, then $N$ would be $10^7$). Equivalently, we
 could search over some other memorizable namespace with suitably high
 entropy, like a short string of characters found on a keyboard.
-Regardless, the group creator would use \proc{Find-Tag} to search over all possible suffixes to
+Regardless, the group creator would use a \proc{Find-Tag} procedure (see
+Figure~\ref{fig:find-tag}) to search over all possible suffixes to
 identify hash collisions. Note that the search should be done
 randomly, rather than in-order, to increase the attacker's difficulty
-in conducting brute force attacks. 
+in conducting brute force attacks. Also not that process is only
+necessary once, when a tag is first created. 
 
-To further increase the entropy of the secret, the prefix could also be
-chosen randomly from a large dictionary. In general, any of a variety of
-password-selection techniques could be used for the prefix, including
-using pass-phrases consisting of multiple complete
-words~\cite{passphrase} and generating mnemonics of memorable sentences
-phrases~\cite{mnemonics}. Techniques for generating pronounceable
-passwords may be particularly useful in this
-context~\cite{gasser}. Although word-of-mouth based on memorization is
-the preferred means of communication, we note that plain tags can be
-spoken while they are typed into a HooT client, facilitating transfer to
-some users who don't care to memorize the tag. Finally, balancing some
-risk of password discovery against usability and the risk of brute force
-and dictionary attacks, the password may be written down and passed by
-hand~\cite{written-passwords}.
+To further increase the entropy of the plain tag, we can imagine a
+number of
+options that would still be amenable to human memorization. For
+example, the short tag's prefix could be
+chosen randomly from a large dictionary.
+If we were willing to relax our desire to have human-memorizable
+plain tags, then the whole plain tag could be selected at random.
+Certainly, this yields excellent resistance to brute force searching
+attacks,
+but it also creates additional complexity
+for organizers wishing to prevent leaks, since these plain tags will need
+to be written down~\cite{written-passwords}.
 
 \paragraphX{Message header and body.}  
 %
-In addition to the \id{ShortTag}, the header contains a pair of keys
-for message body encryption and integrity verification.
+In addition to the \id{ShortTag}, the header contains a pair of
+session keys
+for message body encryption ($k_{\func{enc}}$) and integrity
+verification ($k_{\func{mac}}$).
 
-For every message, the pair of session keys is randomly generated. Since we intend
+For every \hoot message, these session keys are randomly generated. Since we intend
 to use efficient symmetric key ciphers and hash-based message authentication
-functions, session keys may be selected to be 128 bits each. The session keys
+functions. 
+%, our random session keys should be selected to match the key
+% lengths of our ciphers (e.g., 128 bits for AES). 
+The session keys
 are then encrypted with a {\em tag key} derived from the long tag, using
-different bits than the $k$ bits used when truncating it to derive the
-short tag. Given a \id{LongTag} of 160 bits, if we assume half of those bits
-are used in the \id{ShortTag}, the remaining 80 bits give
-us $2^80$ possible keys that an attacker must brute force. In \ref{sec:experiments}
-we will show that we will use even fewer than half the bits outputted by a \id{LongTag}, and if
-needed, we could always use the remaining long tag bits
-to initialize a suitably strong pseudo-random number generator.
+different bits than the $k$ bits used when deriving the
+short tag. Given a long tag of 160 bits, if we assume half of those bits
+are used in the short tag, the remaining 80 bits give
+us $2^{80}$ possible keys that an attacker must potentially brute
+force, which is certainly greater than the entropy in the
+plaintext tag. (In Section~\ref{sec:experiments}, we flesh this out
+in more detail.) Of course, if we ever reached a point where the
+encryption and MAC session keys required more
+bits than we can get from carving up the long tag, we could always
+use the long tag to initialize a suitably strong pseudo-random number
+generator, getting us all the derived bits we might ever want.
 
-In summary, the HooT client takes plaintext message $M$ and a plain tag
-({\em PlainTag}) and constructs the HooT messages as follows:
+%In summary, the \hoot client takes plaintext message $M$ and a plain tag
+%({\em PlainTag}) and constructs the \hoot messages as follows:
 %Putting it all together, starting from a plaintext message $M$ with {\em
 %  PlainTag} within it \hl{this sentence doesn't make sense to me}, a
-%complete HooT message will be as follows:
+%complete \hoot message will be as follows:
 %
 
+\begin{figure}
 \begin{eqnarray*}
-\mathit{LongTag} & \leftarrow & H(\mathit{PlainTag}) \\
-\mathit{ShortTag} & \leftarrow & \mathit{LongTag}.\mathrm{bits}(0 \ldots k-1) \\
-k_{\mathrm{tag}} & \leftarrow & \mathit{LongTag}.\mathrm{bits}(k \ldots) \\
-k_{\mathrm{enc}}, k_{\mathrm{mac}} & \leftarrow & \mathit{random bits} \\
-C & \leftarrow & E_{k_{\mathrm{enc}}}(M) \\
-\mathit{HooT}  & \leftarrow &  \left(\mathit{ShortTag}, E_{k_{\mathrm{tag}}} \left(k_{\mathrm{enc}}, k_{\mathrm{mac}}\right), \mathrm{MAC}_{k_{\mathrm{mac}}}(C), C\right)
+M & \leftarrow & \mathrm{plaintext\ message,\ including} \id{PlainTag}
+\\
+\id{LongTag} & \leftarrow & H(\id{PlainTag}) \\
+\id{ShortTag} & \leftarrow & \id{LongTag}.\func{bits}(0 \ldots k-1) \\
+k_{\func{tag}} & \leftarrow & \id{LongTag}.\func{bits}(k \ldots) \\
+k_{\func{enc}}, k_{\func{mac}} & \leftarrow & \id{random bits} \\
+C & \leftarrow & E_{k_{\func{enc}}}(M) \\
+\id{HooT}  & \leftarrow &  \left(\id{ShortTag}, E_{k_{\func{tag}}}\left(k_{\func{enc}}, k_{\func{mac}}\right), \func{MAC}_{k_{\func{mac}}}(C), C\right)
 \end{eqnarray*}
+\caption{Structure of a \hoot message.\label{fig:hoot-structure}}
+\end{figure}
 %
-This technique can be generalized to support multiple plain tags. For
+
+So far, we have specified a \hoot structure with exactly one plain tag.
+This technique can easily be generalized to support multiple plain tags. For
 each one, a separate long tag can be generated, resulting in multiple
-tag keys ($k_\mathrm{tag}$), each of which is used to encrypt the same
-session keys. The final HooT would have multiple short tags and multiple
-encryptions of the session keys.
+tag keys ($k_{\func{tag}}$), each of which is used to encrypt the same
+session keys. The final \hoot would have multiple short tags and multiple
+encryptions of the session keys, but only one ciphertext message
+payload.
 
 \begin{table*}
-\caption{This table shows how an individual tweet would become a \hoot by noting the Long Tag, Short Tag, and the final \hoot. Tweet 4 shows how a rebellion group could collide with \#bieber and disguise it's messages.
+\caption{This table shows how several tweets might be converted to
+  \hoot messages, showing the long tag, the short tag, and the final
+  \hoot. The fourth message in this list demonstrates how an
+  organization could take advantage of the \hoot system to collide its
+  messages with those of an unrelated tag used for non-controversial
+  messages.
 \label{tab:process}
 }
 \begin{center}
     \begin{tabular}{ l  l  l  l  l }
-	\hline
 	 & Tweet & Long Tag & Short Tag & Hoot \\ \hline
 	1 & Its all bout the {\bf \#bieber} 100\%Belieber                                 & {\tt 9txrq71tfn8} &  {\tt 9tx} & {\tt \#9tx Xrtfn}... \\
 	2 & Don't be a drag; just be a queen whether you're broke or {\bf \#CharlieSheen} & {\tt 7prQnd121f2} & {\tt 7pr} & {\tt \#7pr n771r}... \\
@@ -187,7 +217,15 @@ encryptions of the session keys.
 \end{center}
 \end{table*}
 
-For illustration, table \ref{tab:process} shows how a few plain-text tweets would be converted into a corresponding \hoot. 1 and 2 are two regular tweets from popular hashtags: \#bieber and \#CharlieSheen. 3 is a \hoot where receiver anonymity is critical, but it's short tag, 2p7, does not collide with anything else. 4 shows how the same group might alter their plain tag so they can deliberate collide with \#bierber's short tag of 9tx.
+For illustration, Table~\ref{tab:process} shows how a few plain-text
+tweets might be converted into their corresponding \hoot messages. The
+first two messages are regular tweets from popular hashtags: \#bieber
+and \#CharlieSheen. The third is a \hoot where receiver anonymity is
+critical, but it's short tag, {\tt \#2p7}, does not collide with
+anything else, and thus subscribers to {\tt \#2p7} might risk
+discovery. The fourth message shows how the same group might alter
+their plain tag so they can deliberate collide with {\tt \#bierber},
+which maps to the same short tag ({\tt \#9tx}).
 
 
 \subsection{Security Analysis}
@@ -195,14 +233,14 @@ For illustration, table \ref{tab:process} shows how a few plain-text tweets woul
 
 Based on the threat model defined in Section~\ref{sec:threat} and the
 system design goals described in Section~\ref{sec:goals}, we now analyze
-the security of the proposed HooT protocol.
+the security of the proposed \hoot protocol.
 
 \paragraphX{Message security.}  
 %
 We begin with a brief analysis of the security of the message protocol
 itself.
 %We
-%analyze the broader security of the HooT scheme later in
+%analyze the broader security of the \hoot scheme later in
 %Section~\ref{sec:something-else}.
 
 First, note that the session keys are generated randomly and
@@ -223,10 +261,10 @@ plain tags will collide in the short tags), or whether a message is
 irrelevant to the user's plain tag search query and should be dropped.
 
 Replay attacks can be defeated by treating the session keys
-($k_{\mathrm{enc}}$, $k_{\mathrm{mac}}$) as nonces. It's highly unlikely
+($k_{\func{enc}}$, $k_{\func{mac}}$) as nonces. It's highly unlikely
 that two different messages will share the same session keys.
 
-%Consequently, the basic HooT message encryption scheme appears to be
+%Consequently, the basic \hoot message encryption scheme appears to be
 %sound, with the only obvious weakness being the selection of the plain
 %tag.
 
