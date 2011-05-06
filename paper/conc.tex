@@ -1,11 +1,3 @@
 \section{Conclusions}
 
-\hlfixme{TODO: we have a usability / entropy trade off. it would be great if we could have a better key distribution system.}
-
-\hlfixme{
--- Deliberate posting crap (to hide your stuff).
--- Increases work factor (signal to noise)
--- Fairly strong attacker, but user who don't have ability for a lot of entropy
--- 70 bits is enough compared to the weakness of everything else
--- Discuss how we can make it harder for an attacker. Maybe hashing 1000 times...
-}
+To provide censorship-resistance for groups wishing to communicate over a microblogging service like Twitter, we proposed \hoot. Hoots are private messages that are publicly posted but tagged with an identifier, so interested parties can find and decrypt them. By allowing many groups to collide with the same identifier, we protect recipient anonymity. We found that \hoot can be added to a service like Twitter with little additional computation resources and some increased bandwidth. By encouraging collisions, we require the user to memorize and transfer passwords which contain random characters. We identified a usability/entropy tradeoff with users lacking high entropy against a strong attacker. We believe that the amount of entropy is enough considering the weakness of the other components in the system like verbal key distribution. We can make it harder for an attacker, like hashing the Plain Tag 1,000 times instead of just once, but this only deters a strong attacker. In the future, a stronger key distribution system could remove the verbal component and allow for greater entropy and security.
