@@ -12,17 +12,20 @@ collisions with other groups and how the message header and body are
 constructed to enable efficient searching.
 %We also analyze the security of messages.
 
-\paragraphX{Protocol overview.} The HooT protocol consists of a message
+\paragraphX{Protocol overview.} A complete HooT message consists of a 
 header and a message body. The header contains a group identifier
 (a Twitter-style hashtag), an encryption key and a MAC key, both
 encrypted with a session key, and finally a MAC
 over the ciphertext of the message (see
 Figure~\ref{fig:hoot-structure}). As in
 Twitter, messages do not name their recipients. Anyone who knows the
-secret hashtag associated with a HooT can both read the message and
-locate the message easily. Rather than attempting to treat every message
-posted to Twitter as a potential group message, and thus decrypting the
-entire Twitter stream, the protocol places an identifier into every HooT
+secret hashtag associated with a HooT can decrypt and read the message
+as well as validate its integrity.
+We also need an efficient discovery mechanism.
+Rather than attempting to treat every message
+posted to Twitter as a potential group message, and thus being
+required to fetch and attempt decryption of every single message,
+the HooT protocol places an identifier into every HooT message
 as a hashtag so a fellow group member can simply search for the
 identifier to see all potential messages. With a constant group
 identifier, readers can also publicly follow that identifier like any
@@ -171,7 +174,7 @@ M & \leftarrow & \mathrm{plaintext\ message,\ including} \id{PlainTag}
 k_{\func{tag}} & \leftarrow & \id{LongTag}.\func{bits}(k \ldots) \\
 k_{\func{enc}}, k_{\func{mac}} & \leftarrow & \id{random bits} \\
 C & \leftarrow & E_{k_{\func{enc}}}(M) \\
-\id{HooT}  & \leftarrow &  \left(\id{ShortTag}, E_{k_{\func{tag}}} \left(k_{\func{enc}}, k_{\func{mac}}\right), \func{MAC}_{k_{\func{mac}}}(C), C\right)
+\id{HooT}  & \leftarrow &  \left(\id{ShortTag}, E_{k_{\func{tag}}}\left(k_{\func{enc}}, k_{\func{mac}}\right), \func{MAC}_{k_{\func{mac}}}(C), C\right)
 \end{eqnarray*}
 \caption{Structure of a HooT message.\label{fig:hoot-structure}}
 \end{figure}
