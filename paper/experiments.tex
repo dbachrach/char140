@@ -49,8 +49,8 @@ group members.
 
 To explore the feasibility of finding a plain tag that collides with an
 existing short tag, we built a tool called the {\em collider} in C and
-OpenMP 3.0, using the open source CommonCrypto/CommonDigest library provided
-by Apple. %how to cite? http://www.opensource.apple.com/source/CommonCrypto/
+OpenMP 3.0, using the open source CommonCrypto\footnote{\url{http://www.opensource.apple.com/source/CommonCrypto/}} library provided
+by Apple.
 The collider takes in a short tag, \textit{T}, a prefix string,
 \textit{S}, a suffix length, \textit{L}, an alphabet \textit{A}. It
 finds the concatenations of \textit{S} and strings of length \textit{L}
@@ -82,7 +82,6 @@ which makes the runtime of the collider executing on a system with
 }
 \end{center}
 \end{figure}
-\hlfixme{fig:collider-times: The suffix length on the x-axis should be 3, 4, 5, right?}
 
 \begin{figure}
 \begin{center}
@@ -95,8 +94,6 @@ which makes the runtime of the collider executing on a system with
 }
 \end{center}
 \end{figure}
-
-\hlfixme{fig:collider-hits: font!}
 
 As expected, the runtime---shown in
 Figure~\ref{fig:collider-times}---scales exponentially with \textit{L}.
@@ -185,12 +182,11 @@ least in the early deployment of \hoot.
 \end{table}
 
 To study the amount of computation required to support \hoot over
-Twitter, we used \hlfixme{our hoot prototype? did you call it from a
-  script or write a separate module to do this?} running on a MacBook
-Air with a 1.86GHz Intel Core 2 Duo and 4GB Ram to encrypt and decrypt
-\hlfixme{a really big number} of hoots using Base64 encoding.
-\hlfixme{How were the numbers taken? do you run 100K hoots and divide by
-  the time? Run for 1000 seconds and count the number of hoots?}  In
+Twitter, we modified our Python script to perform the encryption process 
+500,000 times running on a MacBook
+Air with a 1.86GHz Intel Core 2 Duo and 4GB Ram using Base64 encoding. We 
+also independently performed the decryption process 500,000 times. We 
+record how long each process took and divide by 500,000. In
 Table~\ref{tab:hps}, we see the result of this experiment. The amount of
 computation for encryption is negligible for Twitter: the average load
 can be handled by one laptop. A Twitter server could easily encrypt the
