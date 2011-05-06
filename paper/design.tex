@@ -228,7 +228,7 @@ their plain tag so they can deliberate collide with {\tt \#bierber},
 which maps to the same short tag ({\tt \#9tx}).
 
 
-\subsection{Security Analysis}
+\subsection{Security analysis}
 \label{sec:security}
 
 Based on the threat model defined in Section~\ref{sec:threat} and the
@@ -244,16 +244,17 @@ itself.
 %Section~\ref{sec:something-else}.
 
 First, note that the session keys are generated randomly and
-independently for each message, so that two identical plaintext messages
+independently for each message. Consequently, two identical plaintext messages
 will have different ciphetexts. If the encryption scheme in use requires
-an initialization vector (e.g., CBC mode), this could be included in the
+an initialization vector (e.g., CBC mode), this could be safely included in the
 message header. For other encryption schemes, such as counter mode, no
 IV is necessary and the randomness of the key will ensure the
 non-determinism of the ciphertext.
 
 Message integrity is validated with a symmetric-key message
-authentication code such as HMAC. Because the MAC is computed over the
-ciphertext, and the MAC key is also generated at random, the MAC leaks
+authentication code such as HMAC-SHA256. Because the MAC is computed over the
+ciphertext, and the MAC key is generated at randomly and independently
+from the encryption key, the MAC leaks
 absolutely no information about the plaintext. The MAC verification
 process also serves the purpose of identifying whether a prospective
 message matches the plain tag in question (for which multiple other
@@ -268,23 +269,64 @@ that two different messages will share the same session keys.
 %sound, with the only obvious weakness being the selection of the plain
 %tag.
 
-\paragraphX{Dictionary Attacks and Brute Force.}  
+\paragraphX{Brute force attacks.}  
 %
 Provided an attacker knows a targeted group's prefix and the alphabet
-out of which they generate the suffix, our scheme is vulnerable to brute
-force.
+out of which they generate the suffix, our scheme is amenable to brute
+force searching attacks. Table~\ref{tab:hps} shows how fast a modern
+computer can decrypt \hoot messages: between $2^{17}$ and $2^{18}$ per
+second. Clearly, plain tags must be selected with far more entropy
+than this. If the attacker has $2^{10}$ CPU cores and we want a plain
+tag to survive one week of analysis (just over $2^{19}$ seconds)
+before a plain tag is ``burned'' and needs to be replaced, then
+plain tags would require a minimum of 47 bits of entropy (e.g., 15
+decimal digits). 
 
-If we consider the adversary to be a government for example, it would be fair to assume they have
-thousands of machines at their disposal for such an attack. It becomes
-important, then for a user to pick a plain tag outside reasonable brute
-forcing bounds.
+If we limited plain tags to a word from a reasonably large dictionary (40,000
+entries) plus 7 decimal digits, then we only get 38.5 bits of
+entropy.  Our hypothetical attacker with $2^{10}$ CPU cores could
+brute force a plain text tag in 20 minutes.
+
+If a plain tag was composed of two dictionary words and 7 decimal
+digits, yielding 53.8 bits of entropy, then our hypothetical attacker would need 
+over two years of computation to brute force a plain tag. While this
+is certainly pushing the boundaries of what might be memorable without
+being written down, it's not inconceivable.
 
 
-\paragraphX{Traffic Analysis.}  
+\paragraphX{Traffic analysis and adaptive censorship.}  
 %
+Consider the case where an attacker can see what queries are
+subscribed to by each individual user within their country. The
+attacker suspects that there is hidden traffic on a particular short
+tag, based on the prevalence of queries for it, so the attacker
+proceeds to twist some arms and finds what appears to be a
+sudden and inexplicable rise in domestic fandom for a teenage pop star
+from a foreign country.
 
-\hlfxnote{Sudden increases in a group's membership.}
-\hlfxnote{Chris - do you mean for the above to be under Traffic Analysis or in a separate section?}
-\hlfixme{Need to discuss all the features and attacks described in
-  Section 2, at least briefly.}
+Is this falsifiable? Ironically, the locals who have chosen the
+foreign pop star for their cover traffic can best cover themselves by
+immersing themselves in the pop star's oeuvre. Still, the pop star's
+genuine traffic is no secret. The attacker could censor the short tag,
+in its entirety, accepting the false positives and causing outrage
+among the pop star's true fandom. Alternately, the
+attacker could censor the \hoot messages on the short tag that {\em do
+not match} the pop star's known plain tag. Of course, this would also
+have false positives with legitimate and innocuous traffic, but it
+would definitely force the organizers to shift their traffic to a
+different short tag, creating something of a game of cat-and-mouse.
+
+We note that the pop star could choose to surreptitiously help his
+overseas ``fans'' by regularly adding new plain tags under which he
+implores his genuine fans to discuss new topics (e.g., his new
+haircut, his new hit single, his guest appearance on a talk show, and
+so forth). The local organizers could then take advantage of this by
+running \proc{Find-Tag} to discover tags that collide with each
+one. No actual communication between the foreign pop star and his
+local ``fans'' would ever be necessary.
+
+% \hlfxnote{Sudden increases in a group's membership.}
+% \hlfxnote{Chris - do you mean for the above to be under Traffic Analysis or in a separate section?}
+% \hlfixme{Need to discuss all the features and attacks described in
+%   Section 2, at least briefly.}
 
