@@ -121,45 +121,54 @@ perhaps, by the number of digits that can be memorized by most humans
 digits~\cite{miller56}, then $N$ would be $10^7$). Equivalently, we
 could search over some other memorizable namespace with suitably high
 entropy, like a short string of characters found on a keyboard.
-Regardless, the group creator would use \proc{Find-Tag} to search over all possible suffixes to
+Regardless, the group creator would use a \proc{Find-Tag} procedure (see
+Figure~\ref{fig:find-tag}) to search over all possible suffixes to
 identify hash collisions. Note that the search should be done
 randomly, rather than in-order, to increase the attacker's difficulty
-in conducting brute force attacks. 
+in conducting brute force attacks. Also not that process is only
+necessary once, when a tag is first created. 
 
-To further increase the entropy of the secret, the prefix could also be
-chosen randomly from a large dictionary. In general, any of a variety of
-password-selection techniques could be used for the prefix, including
-using pass-phrases consisting of multiple complete
-words~\cite{passphrase} and generating mnemonics of memorable sentences
-phrases~\cite{mnemonics}. Techniques for generating pronounceable
-passwords may be particularly useful in this
-context~\cite{gasser}. Although word-of-mouth based on memorization is
-the preferred means of communication, we note that plain tags can be
-spoken while they are typed into a \hoot client, facilitating transfer to
-some users who don't care to memorize the tag. Finally, balancing some
-risk of password discovery against usability and the risk of brute force
-and dictionary attacks, the password may be written down and passed by
-hand~\cite{written-passwords}.
+To further increase the entropy of the plain tag, we can imagine a
+number of
+options that would still be amenable to human memorization. For
+example, the short tag's prefix could be
+chosen randomly from a large dictionary.
+If we were willing to relax our desire to have human-memorizable
+plain tags, then the whole plain tag could be selected at random.
+Certainly, this yields excellent resistance to brute force searching
+attacks,
+but it also creates additional complexity
+for organizers wishing to prevent leaks, since these plain tags will need
+to be written down~\cite{written-passwords}.
 
 \paragraphX{Message header and body.}  
 %
-In addition to the \id{ShortTag}, the header contains a pair of keys
-for message body encryption and integrity verification.
+In addition to the \id{ShortTag}, the header contains a pair of
+session keys
+for message body encryption ($k_{\func{enc}}$) and integrity
+verification ($k_{\func{mac}}$).
 
-For every message, the pair of session keys is randomly generated. Since we intend
+For every \hoot message, these session keys are randomly generated. Since we intend
 to use efficient symmetric key ciphers and hash-based message authentication
-functions, session keys may be selected to be 128 bits each. The session keys
+functions. 
+%, our random session keys should be selected to match the key
+% lengths of our ciphers (e.g., 128 bits for AES). 
+The session keys
 are then encrypted with a {\em tag key} derived from the long tag, using
-different bits than the $k$ bits used when truncating it to derive the
-short tag. Given a \id{LongTag} of 160 bits, if we assume half of those bits
-are used in the \id{ShortTag}, the remaining 80 bits give
-us $2^{80}$ possible keys that an attacker must brute force. In \ref{sec:experiments}
-we will show that we will use even fewer than half the bits outputted by a \id{LongTag}, and if
-needed, we could always use the remaining long tag bits
-to initialize a suitably strong pseudo-random number generator.
+different bits than the $k$ bits used when deriving the
+short tag. Given a long tag of 160 bits, if we assume half of those bits
+are used in the short tag, the remaining 80 bits give
+us $2^{80}$ possible keys that an attacker must potentially brute
+force, which is certainly greater than the entropy in the
+plaintext tag. (In Section~\ref{sec:experiments}, we flesh this out
+in more detail.) Of course, if we ever reached a point where the
+encryption and MAC session keys required more
+bits than we can get from carving up the long tag, we could always
+use the long tag to initialize a suitably strong pseudo-random number
+generator, getting us all the derived bits we might ever want.
 
-In summary, the \hoot client takes plaintext message $M$ and a plain tag
-({\em PlainTag}) and constructs the \hoot messages as follows:
+%In summary, the \hoot client takes plaintext message $M$ and a plain tag
+%({\em PlainTag}) and constructs the \hoot messages as follows:
 %Putting it all together, starting from a plaintext message $M$ with {\em
 %  PlainTag} within it \hl{this sentence doesn't make sense to me}, a
 %complete \hoot message will be as follows:
@@ -179,14 +188,22 @@ C & \leftarrow & E_{k_{\func{enc}}}(M) \\
 \caption{Structure of a \hoot message.\label{fig:hoot-structure}}
 \end{figure}
 %
-This technique can be generalized to support multiple plain tags. For
+
+So far, we have specified a \hoot structure with exactly one plain tag.
+This technique can easily be generalized to support multiple plain tags. For
 each one, a separate long tag can be generated, resulting in multiple
 tag keys ($k_{\func{tag}}$), each of which is used to encrypt the same
 session keys. The final \hoot would have multiple short tags and multiple
-encryptions of the session keys.
+encryptions of the session keys, but only one ciphertext message
+payload.
 
 \begin{table*}
-\caption{This table shows how an individual tweet would become a \hoot by noting the Long Tag, Short Tag, and the final \hoot. Tweet 4 shows how a rebellion group could collide with \#bieber and disguise it's messages.
+\caption{This table shows how several tweets might be converted to
+  \hoot messages, showing the long tag, the short tag, and the final
+  \hoot. The fourth message in this list demonstrates how an
+  organization could take advantage of the \hoot system to collide its
+  messages with those of an unrelated tag used for non-controversial
+  messages.
 \label{tab:process}
 }
 \begin{center}
@@ -200,7 +217,15 @@ encryptions of the session keys.
 \end{center}
 \end{table*}
 
-For illustration, table \ref{tab:process} shows how a few plain-text tweets would be converted into a corresponding \hoot. 1 and 2 are two regular tweets from popular hashtags: \#bieber and \#CharlieSheen. 3 is a \hoot where receiver anonymity is critical, but it's short tag, 2p7, does not collide with anything else. 4 shows how the same group might alter their plain tag so they can deliberate collide with \#bierber's short tag of 9tx.
+For illustration, Table~\ref{tab:process} shows how a few plain-text
+tweets might be converted into their corresponding \hoot messages. The
+first two messages are regular tweets from popular hashtags: \#bieber
+and \#CharlieSheen. The third is a \hoot where receiver anonymity is
+critical, but it's short tag, {\tt \#2p7}, does not collide with
+anything else, and thus subscribers to {\tt \#2p7} might risk
+discovery. The fourth message shows how the same group might alter
+their plain tag so they can deliberate collide with {\tt \#bierber},
+which maps to the same short tag ({\tt \#9tx}).
 
 
 \subsection{Security Analysis}
