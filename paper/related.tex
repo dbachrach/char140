@@ -25,14 +25,28 @@ prevention of fine-grained censorship rather than prevention of
 heavy-handed censorship.
 
 Censorship resistance has also been studied in the context of
-communication more broadly
+communication more broadly. Some systems aim to evade automated
+filters. Feamster et al. propose Infranet, which passes information over
+covert channels with the help of participating Web
+servers~\cite{infranet}. In another work, Feamster et al. point out that
+Infranet and other proxy-based solutions to censorship evasion face the
+problem of finding the proxies~\cite{feamster03proxy}. To address this
+problem, Feamster et al. require clients to solve cryptographic puzzles
+to find a proxy. The Tor anonymity system faces a similar problem. It
+has a widely-distributed list of servers~\cite{tor} and thus the censor
+could block Tor by blocking access to the servers on the list. Tor uses
+{\em bridges}, nodes that allow users to connect to Tor through them, to
+evade such blocking~\ref{tor-bridges}. Although the bridges are not
+published as widely, they must be disseminated to users and can be
+discovered through the same channels by the censors. In particular,
+China blocks access to Tor not only through blocking servers but bridges
+as well~\cite{tor-china}.
 
-Communications technologies:
-- Tor bridges
-
-
-Infranet
-- 
+In not relying on proxies, \hoot has the advantage of being easier to
+use (since it doesn't require puzzles or CAPTCHAs) and of providing
+plausible deniability, whereas the use of proxy-based censorship
+resistance tools is likely to be inherently unacceptable to the censor
+and could lead to the user being harassed or worse if found out.
 
 \balance
 
