@@ -9,12 +9,15 @@ In this section, we describe the HooT protocol and analyze its security.
 We now describe HooT in detail. After giving a brief overview of the
 HooT protocol, we describe how hashtags are generated to provide
 collisions with other groups and how the message header and body are
-constructed. 
+constructed to enable efficient searching.
 %We also analyze the security of messages.
 
 \paragraphX{Protocol overview.} The HooT protocol consists of a message
-header and a message body. The header contains the group identifier (the
-hashtag), an encryption key, a MAC Key, and an integrity digest. As in
+header and a message body. The header contains a group identifier
+(a Twitter-style hashtag), an encryption key and a MAC key, both
+encrypted with a session key, and finally a MAC
+over the ciphertext of the message (see
+Figure~\ref{fig:hoot-structure}). As in
 Twitter, messages do not name their recipients. Anyone who knows the
 secret hashtag associated with a HooT can both read the message and
 locate the message easily. Rather than attempting to treat every message
@@ -39,7 +42,7 @@ prevent the adversary from guessing it. The result of hashing the plain
 tag with a given hash function \textit{H} (such as SHA-1) is referred to
 as the \textit{long tag}, i.e.:
 %
-$\mathit{LongTag} \leftarrow H\left(\mathit{PlainTag}\right)$.
+$\id{LongTag} \leftarrow H\left(\id{PlainTag}\right)$.
 
 The HooT protocol could simply use the long tag as an identifier, but
 this choice leads to several problems. First, to achieve our design goal
@@ -74,8 +77,9 @@ followers of that tag.
 % to find a collision with Justin Bieber's movie, we perform the following
 % calculations:
 %
+\begin{figure}
 \begin{codebox}
-\Procname{$\proc{Find-Tag}(\id{prefix}, \id{target}, N, k)$}:
+\Procname{$\proc{Find-Tag}(\id{prefix}, \id{target}, N, k):$}
 \zi \For $i \gets [0,N)$, in random order
 \zi \Do
 \zi $\id{PlainTag} \gets  \id{prefix}.\id{suffix}$
@@ -85,6 +89,8 @@ followers of that tag.
 \zi \End
 \End
 \end{codebox}
+\caption{Pseudocode for tag collision searching.\label{fig:find-tag}}
+\end{figure}
 
 % \begin{align*}
 % & \mathit{prefix} \leftarrow  ``\mathrm{\#Tahrir}'' \\
@@ -156,18 +162,23 @@ In summary, the HooT client takes plaintext message $M$ and a plain tag
 %complete HooT message will be as follows:
 %
 
+\begin{figure}
 \begin{eqnarray*}
-\mathit{LongTag} & \leftarrow & H(\mathit{PlainTag}) \\
-\mathit{ShortTag} & \leftarrow & \mathit{LongTag}.\mathrm{bits}(0 \ldots k-1) \\
-k_{\mathrm{tag}} & \leftarrow & \mathit{LongTag}.\mathrm{bits}(k \ldots) \\
-k_{\mathrm{enc}}, k_{\mathrm{mac}} & \leftarrow & \mathit{random bits} \\
-C & \leftarrow & E_{k_{\mathrm{enc}}}(M) \\
-\mathit{HooT}  & \leftarrow &  \left(\mathit{ShortTag}, E_{k_{\mathrm{tag}}} \left(k_{\mathrm{enc}}, k_{\mathrm{mac}}\right), \mathrm{MAC}_{k_{\mathrm{mac}}}(C), C\right)
+M & \leftarrow & \mathrm{plaintext\ message,\ including} \id{PlainTag}
+\\
+\id{LongTag} & \leftarrow & H(\id{PlainTag}) \\
+\id{ShortTag} & \leftarrow & \id{LongTag}.\func{bits}(0 \ldots k-1) \\
+k_{\func{tag}} & \leftarrow & \id{LongTag}.\func{bits}(k \ldots) \\
+k_{\func{enc}}, k_{\func{mac}} & \leftarrow & \id{random bits} \\
+C & \leftarrow & E_{k_{\func{enc}}}(M) \\
+\id{HooT}  & \leftarrow &  \left(\id{ShortTag}, E_{k_{\func{tag}}} \left(k_{\func{enc}}, k_{\func{mac}}\right), \func{MAC}_{k_{\func{mac}}}(C), C\right)
 \end{eqnarray*}
+\caption{Structure of a HooT message.\label{fig:hoot-structure}}
+\end{figure}
 %
 This technique can be generalized to support multiple plain tags. For
 each one, a separate long tag can be generated, resulting in multiple
-tag keys ($k_\mathrm{tag}$), each of which is used to encrypt the same
+tag keys ($k_{\func{tag}}$), each of which is used to encrypt the same
 session keys. The final HooT would have multiple short tags and multiple
 encryptions of the session keys.
 
@@ -177,7 +188,6 @@ encryptions of the session keys.
 }
 \begin{center}
     \begin{tabular}{ l  l  l  l  l }
-	\hline
 	 & Tweet & Long Tag & Short Tag & Hoot \\ \hline
 	1 & Its all bout the {\bf \#bieber} 100\%Belieber                                 & {\tt 9txrq71tfn8} &  {\tt 9tx} & {\tt \#9tx Xrtfn}... \\
 	2 & Don't be a drag; just be a queen whether you're broke or {\bf \#CharlieSheen} & {\tt 7prQnd121f2} & {\tt 7pr} & {\tt \#7pr n771r}... \\
@@ -223,7 +233,7 @@ plain tags will collide in the short tags), or whether a message is
 irrelevant to the user's plain tag search query and should be dropped.
 
 Replay attacks can be defeated by treating the session keys
-($k_{\mathrm{enc}}$, $k_{\mathrm{mac}}$) as nonces. It's highly unlikely
+($k_{\func{enc}}$, $k_{\func{mac}}$) as nonces. It's highly unlikely
 that two different messages will share the same session keys.
 
 %Consequently, the basic HooT message encryption scheme appears to be
