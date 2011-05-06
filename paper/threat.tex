@@ -1,22 +1,27 @@
-\section{Threat Model and System Goals}
+\section{Threat model and system goals}
 
 In this section, we briefly outline our threat model and then describe
 the goals of our design.
 
-\subsection{Threat Model} \label{sec:threat}
+\subsection{Threat model} \label{sec:threat}
 HooT is designed to provide censorship resistance against an adversary
 who can observe all HooT traffic and can block any tweets it chooses. In
-practice, it may only block tweets being received by a subset of users,
+practice, the adversary may only block tweets being received by a subset of users,
 but this does not affect our model. The adversary seeks to identify and
 block tweets discussing a small set of topics, based on the identity of
-the sender, keywords in the content, or the hashtag itself. The
-adversary is not willing to block the tweets on hashtags used for most
-communication, though it might be willing to block a small fraction of
-such tweets. As shown by Kuppusamy and Shanmugam \cite{ict-economy}, information technology 
-and communication leads to greater economic growth. By blocking a large
-number of tweets, an authority reduces the reliability and utility of 
-the entire \hoot system and the communication upon it. Since communication is directly related to economic
-success, censoring the system by disabling the system can hurt economic growth.
+the sender, keywords in the content, or the hashtag itself. However,
+our adversary does not want to disable the entire service, nor does
+our adversary want to disable popular but innocuous discussion
+threads; such crude censorship might
+then generate additional unrest in the population. 
+% The
+% adversary is not willing to block the tweets on hashtags used for most
+% communication, though it might be willing to block a small fraction of
+% such tweets.
+Furthermore, Kuppusamy and Shanmugam~\cite{ict-economy} showed that information technology 
+and communication leads to greater economic growth. Broad censorship 
+reduces the utility of the entire system, which is presumably used for
+economic activities more valuable than discussing teenage pop stars.
 
 %  Blocking a large number of tweets reduces the reliability
 % and utility of the entire system, and {\em communication is great}.
@@ -30,21 +35,24 @@ Distributed.net distributed computing group cracked a 64-bit RC5 key in
 processors working for 790
 days.\footnote{\url{http://www.distributed.net/images/9/92/20020925_-_PR_-_64_bit_solved.pdf}}
 Extrapolating using Moore's Law, we assume that the adversary can
-perform the same computation in approximately two weeks. We describe how
-to address increases in computing power in Section~\ref{sec:discuss}.
+perform the same computation in approximately two weeks with today's
+machines, and of course the adversary's computational strength will
+only grow as time advances. We describe how
+to address this in Section~\ref{sec:discuss}.
 
 We assume that the HooT server does not cooperate with the adversary. We
 also assume that the adversary has no insiders in the group who leak the
-group's secrets and no other way to access the secrets, such as a
-keylogger on a group member's machine or coersion of a group
-member. Such an insider would effectively undermine HooT's censorship
+group's secrets. Likewise, we assume the adversary has no avenues
+to attack users, such as setting up a covert keylogger
+keylogger on a group member's machine or coercing a group
+member to divulge a secret. We concede that such attacks would effectively undermine HooT's censorship
 resistance. Note that this serves as a practical bound on any attack; if
 it would be easier to establish an insider in the group or subvert one
-of the client systems than perform the attack, then the attack is not
-worth considering in the system design. We discuss mitigations to such
-attacks in Section~\ref{sec:discuss}.
+of the client systems than to perform a computational attack, we will
+consider our design to be successful.
+We further discuss mitigations to such attacks in Section~\ref{sec:discuss}.
 
-\subsection{System Goals} \label{sec:goals}
+\subsection{System goals} \label{sec:goals}
 Our goal is to allow a user to send a secure message to a private group
 of individuals, allowing only the group members to read the plain-text
 message, and to accomplish this with a user interface that looks and
@@ -53,14 +61,15 @@ a variety of constraints and challenges.
 
 \begin{description}
 
-\item[Simple key distribution] To make the system as easy to use as
+\item[Simple key distribution.] To make the system as easy to use as
   possible, keys should be simple to create, distribute, and use. We
   therefore rule out any cryptographic key hierarchy such as a public
-  key infrastructure. Ideally, keys could be passed by literal
-  word-of-mouth, spoken from person to person in the group. We propose
+  key infrastructure or PGP/GPG key signing parties. Instead we wish
+  to have keys that can literally be passed via
+  word-of-mouth, from person to person in the group. We propose
   to derive keys from the group's plaintext hashtag, which effectively
-  serves as a password. When a user subscribes to a given plaintext
-  hashtag, she inputs the plaintext into her HooT client, and the client
+  serves as the membership password. When a user subscribes to a given plaintext
+  hashtag, she inputs the hashtag into her HooT client, and the client
   derives the necessary keys.
 %essentially use the plaintext hashtags as passwords for this
 %  purpose. In HooT, a group's tweets are encrypted
@@ -70,7 +79,7 @@ a variety of constraints and challenges.
 %would confuse unsophisticated users.  Instead, if the user knows the
 %hashtag, that's all that's necessary to read or post messages.
 
-\item[Confidentiality of tweets] Since the plaintext hashtag is being
+\item[Confidentiality of tweets.] Since the plaintext hashtag is being
   used to generate encryption keys, it should have sufficient entropy to
   protect against dictionary attacks and brute force. This is in tension
   with our desire to have the plaintext hashtags be easily memorized and
@@ -83,26 +92,25 @@ a variety of constraints and challenges.
 %  to have the plaintext hashtags be something that users can share and
 %  memorize by voice alone.
 
-\item[Censorship resistance and denial of service.] While do not attempt
+\item[Censorship resistance and denial of service.] While we do not attempt
   to defeat censorship of the HooT service in its entirety, we seek to
   defeat attempts to censor specific groups and keywords. Perng et
-  al. define {\em censorship susceptability} as the probability that the
+  al.~\cite{perng05revisited} define {\em censorship susceptability} as the probability that the
   adversary can block a targeted message while allowing at least one
-  other message to be received~\cite{perng05revisited}. This is a
+  other message to be received. This is a
   difficult requirement to meet in our system. We instead aim to allow
   only {\em heavy-handed censorship}, which we define as censorship of a
   group only through censorship of multiple, unrelated groups. By
   censoring these groups together, the adversary lowers the utility of
   the system as a whole. This is similar to the resistance provided by
-  document-based systems like Tangler and Dagster~\cite{tangler,
-    dagster}.
+  document-based systems like Tangler and Dagster~\cite{tangler,dagster}.
 %a fraction of it. We want to ensure that no firewall, perhaps wanting to
 %censor sensitive keywords, will be able to identify which messages are
 %acceptable and which are forbidden. It's all or nothing.
 % We also want to provide enough information that missing messages can
 % be detected as being absent.
 
-\item[Recipient anonymity] To achieve censorship resistance, we rely on
+\item[Recipient anonymity.] To achieve censorship resistance, we rely on
   being able to protect recipient anonymity. Adapting the definition
   from Pfitzmann and Hansen~\cite{terminology}, we require that the
   recipients of the tweets, i.e. the group members, not be identifiable
@@ -111,7 +119,7 @@ a variety of constraints and challenges.
   short hashtags that can be made to collide with those of other
   groups. All of the recipients in all groups with colliding hashtags
   form a recipient anonymity set, with the tweets from other colliding
-  groups providing {\em cover traffic}. HooT can also be said to provide
+  groups providing cover traffic. HooT can also be said to provide
   {\em subscriber anonymity}, as introduced by Mislove et al. in their
   description of AP3~\cite{ap3}. Hordes~\cite{hordes} and P5~\cite{P5}
   have similar requirements. The main additional feature of subscriber
@@ -125,15 +133,15 @@ a variety of constraints and challenges.
 %  design, we want our system to use unrelated messages as {\em cover
 %    traffic}.
 
-\item[Recipient deniability] If a HooT user is under physical threat to
+\item[Recipient deniability.] If a HooT user is under physical threat to
   reveal what hashtags she subscribes to, it's important that she can
   offer a convincing lie. Through careful selection of groups with
   colliding hashtags, she could name the hashtag of an innocuous group
   that could reasonably be of interest to members of the target group.
-  Suitable choices can include trending topics (e.g. the Justin Bieber
+  Suitable choices can include trending topics (e.g., the Justin Bieber
   movie hashtag {\tt \#nsn3d}), socially-appropriate discussion groups
-  (e.g. {\tt \#Bible} or {\tt \#Quran}), or topics that fit the profile
-  of the groups (e.g. hackers might choose {\tt \#infosec}).
+  (e.g. {\tt \#Bible} or {\tt \#Quran}), or topics that related to
+  other innocuous professional or personal interests.
 %  \hlfxnote{I specifically
 %    avoided describing who might use these tags and leave it to the
 %    reader to infer something like: young rebelious teens, paranoid tea
@@ -142,13 +150,16 @@ a variety of constraints and challenges.
 %  that happens to collide with the same set of messages that the
 %  receiver is downloading.
 
-\item[Sender anonymity or deniability] Along those lines, we can only
-  provide limited protection to a sender. A sender gains some plausible
-  deniability against an observer that she could be tweeting about the
-  topic of a colliding group. Similarly, she nominally gains sender
-  anonymity in the sense that members of the colliding groups could
-  actually be sender. If, however, a sender is physically threatened to
-  decrypt a posted message, we offer no protection.
+\item[Sender anonymity or deniability.] Along those lines, we can only
+  provide limited protection to a sender. A sender should gain some plausible
+  deniability against a passive attacker, in that she could be
+  tweeting about any possible topic that collides with her post.
+%   Similarly, she nominally gains sender
+%   anonymity in the sense that any member of any colliding group could
+%   actually be sender.
+ If, however, we must resist physical attacks against a sender,
+coercing them to decrypt a posted message, our core HooT design
+will not protect them.
 % mkw -- removed the backdoor idea for simplicity of the text.
 %     -- if restored, I suggest citing a related backdoor idea and point
 %     -- how expensive it would be.
@@ -158,18 +169,19 @@ Instead, message senders who need to remain anonymous or who require the
 ability to deny having posted a given message must use external means,
 such as Tor, to connect to the HooT service for posting messages. (If a
 decentralized or P2P transport mechanism was used for microblogging,
-like BirdFeeder~\cite{sandler08}, the system might be extended to have
-anonymous posting features.)
+like BirdFeeder~\cite{sandler09}, such a system could be extended to have
+anonymous posting features. For this specific research, we are
+generally targeting a centralized service more like Twitter.)
 
-\item[Replay attacks] It's possible that a malicious user, or even a
+\item[Replay attacks.] It's possible that a malicious user, or even a
   malicious microblogging service, could not only remove messages but
   could also replay old messages, possibly with telling side effects
-  (e.g. ``Meet in the town square at noon.''). We must have sufficient
+  (e.g. ``Meet in the town square at noon.''). We must have 
   mechanisms to reject duplicates.
 
-\item[Statistical and traffic analysis] Even if the adversary cannot
+\item[Statistical and traffic analysis.] Even if the adversary cannot
   decrypt messages, it may be able to learn things by scanning large
-  populations of HooT messages. While we make no attempt to hide who the
+  populations of HooT messages. While we make no explicit attempt to hide who the
   sender of a message might be (see ``sender anonymity,'' above), we do
   want to provide a strong degree of resistance to traffic analysis that
   might otherwise bind senders to receivers. Our system should make it
@@ -177,13 +189,13 @@ anonymous posting features.)
   \hlfixme{Should include discussion of social network privacy,
     community privacy, adversarial community privacy, etc.}
 
-\item[Secret informers and coerced users] If a group member, whether
+\item[Secret informers and coerced users.] If a group member, whether
   sender or recipient, is an insider for the adversary or if the
   plaintext hashtag is stolen through a keylogger or coersion, the key
-  is compromised and the group can be censored. While we cannot stop
-  such attacks, we can offer a form of key agility by enabling the
-  sender to distribute new hashtags to replace older, compromised
-  hashtags.
+  is compromised and the group's messages will become readable and
+  censorable to the adversary. While we cannot stop such attacks, we
+  clearly need some form of key agility, to allow group organizers to
+  distribute new hashtags to replace older, compromised hashtags.
 %We assume that plaintext
 %  hashtags can be shared by word of mouth, yielding something akin to a
 %  cryptographic key distribution service. What if one of the recipients
@@ -192,11 +204,13 @@ anonymous posting features.)
 %  we can offer some amount of key agility, where the sender can
 %  distribute new hashtags to replace older, compromised hashtags.
 
-\item[Compatibility] We want to ensure that HooT can be layered on top
+\item[Compatibility.] We want to ensure that HooT can be layered on top
   of Twitter, using existing Twitter mechanisms to search for and follow
   desired messages. We also must ensure that real Twitter users could
-  incrementally migrate to using HooT above Twitter and that HooT proxy
-  servers could efficiently bootstrap this process.
+  incrementally migrate to using HooT as a service above the existing
+  Twitter. To that end, we must demonstrate that we can implement
+  efficient proxy servers, converting Twitter to HooT to bootstrap an
+  effective HooT rollout.
 
 \end{description}
 
