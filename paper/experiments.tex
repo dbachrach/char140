@@ -111,17 +111,21 @@ reasonable amount of time, e.g. less than a day.  \hlfixme{We really
 %  am I missing something?}
 
 Another concern is the ability to find colliding tags at all. The
-probability of trying $|A|^L$ tags and finding at least one that has the
-same short tag as an existing $c$-character tag is given by:
+probability $p_{coll}$ of trying $|A|^L$ tags and finding at least one
+that has the same short tag as an existing $c$-character tag is given
+by:
 %
-\[1-(1-\frac{1}{|A|^c})^{|A|^L}.\]
+\[p_{coll} = 1-\left(1-\frac{1}{|A|^c}\right)^{|A|^L}.\]
 %
 For an alphabet of $|A|=62$ glyphs and a short tag length of $c=2$, a
 suffix of $L=3$ characters is enough to nearly guarantee at least one
 collision. For a short tag length of $c=4$, a suffix of $L=5$ is
-required.  \hlfixme{Numerically, on my calculator, I notice that for
-  A=62, L=c will give you prob. 0.643, and L=c+1 gives you very
-  tiny. That's not a coincidence -- find the correspondence.}
+required. 
+% mkw -- I can't figure out the general formula.
+% The 
+% \hlfixme{Numerically, on my calculator, I notice that for
+%  A=62, L=c will give you prob. 0.643, and L=c+1 gives you very
+%  tiny. That's not a coincidence -- find the correspondence.}
 
 To validate this analysis with real tags, we studied the number of
 collisions we could find for various values of $c$ and $L$ for a
