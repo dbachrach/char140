@@ -273,24 +273,22 @@ Provided an attacker knows a targeted group's prefix and the alphabet
 out of which they generate the suffix, our scheme is amenable to brute
 force searching attacks. Table~\ref{tab:hps} shows how fast a modern
 computer can decrypt \hoot messages: between $2^{17}$ and $2^{18}$ per
-second. Clearly, plain tags must be selected with far more entropy
-than this. If the attacker has $2^{10}$ CPU cores and we want a plain
-tag to survive one week of analysis (just over $2^{19}$ seconds)
-before a plain tag is ``burned'' and needs to be replaced, then
-plain tags would require a minimum of 47 bits of entropy (e.g., 15
-decimal digits). 
+second. Clearly, plain tags must be selected with far more entropy than
+this. If the attacker has $2^{10}$ CPU cores and we want a plain tag to
+survive one week of analysis (just over $2^{19}$ seconds) before a plain
+tag is ``burned'' and needs to be replaced, then plain tags would
+require a minimum of 47 bits of entropy (e.g., 15 decimal digits).
 
-If we limited plain tags to a word from a reasonably large dictionary (40,000
-entries) plus 7 decimal digits, then we only get 38.5 bits of
-entropy.  Our hypothetical attacker with $2^{10}$ CPU cores could
-brute force a plain tag in 20 minutes.
+If we limited plain tags to a word from a reasonably large dictionary
+(40,000 entries) plus 7 decimal digits, then we only get 38.5 bits of
+entropy.  Our hypothetical attacker with $2^{10}$ CPU cores could brute
+force a plain tag in 20 minutes.
 
 If a plain tag was composed of two dictionary words and 7 decimal
-digits, yielding 53.8 bits of entropy, then our hypothetical attacker would need 
-over two years of computation to brute force a plain tag. While this
-is certainly pushing the boundaries of what might be memorable without
-being written down, it's not inconceivable.
-
+digits, yielding 53.8 bits of entropy, then our hypothetical attacker
+would need over two years of computation to brute force a plain
+tag. While this is certainly pushing the boundaries of what might be
+memorable without being written down, it's not inconceivable.
 
 \paragraphX{Traffic analysis and adaptive censorship.}  
 %
