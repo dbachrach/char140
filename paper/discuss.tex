@@ -42,12 +42,12 @@ Previously, we stated that a Short Tag is the first K bytes of the Long Tag, so 
 Finally, as a result of the encoding systems, the size of the Short Tag space increases by a large factor for each character added. This takes a space that is highly populated to a space that is very sparse, so it is very possible that by adding one character to tag identifiers that groups would be uniquely identified. Groups that also deliberately collided with another group would often not collide at a longer Short Tag length. It would be convenient to instead grow the space by single bits at a time, so as to double the space, a much smaller factor. Unfortunately, Twitter is a character driven environment rather than bit driven, so this is difficult to address. It also does not deal with deliberate collisions. All deliberate collisions will need to be regenerated after a Short Tag length increase.
 
 
-\hl{
-chris 
-- need a citation for core growth so we can make argument about whether searching will keep being feasible
-- twitter vs moore
-- need a citation, or argument, for how fast we expect twitter to grow in the future, can we turn the nob slow enough to keep in pace with processing power, and still be usable? 
-}
+% \hl{
+% chris 
+% - need a citation for core growth so we can make argument about whether searching will keep being feasible
+% - twitter vs moore
+% - need a citation, or argument, for how fast we expect twitter to grow in the future, can we turn the nob slow enough to keep in pace with processing power, and still be usable? 
+% }
 
 \subsection{Alternate Backends}
 
