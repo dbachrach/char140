@@ -3,11 +3,47 @@
 Recent events in Egypt, Tunisia, and many other countries have shown that social networking sites (Facebook, Twitter, and presumably others) played a non-trivial role in helping people organize themselves, plan protests, and distribute videos and other news to the outside world. Egypt was notable in that they eventually cut themselves off from the entire Internet, in a belated and ultimately ineffectual attempt to turn the tide. While it's difficult to draw overarching conclusions about the centrality of social networking versus more traditional means of communication in these important world events, it is clear that social media played a non-trivial role. Many other countries' leaders may well be worried of copycat revolutionaries. Other such countries may well try to censor or otherwise tamper with their citizens' use of social networking. To pick a current example: Syria appears to be attempting
 a nationwide man-in-the-middle attack against Facebook~\cite{syria-facebook}. 
 
-As a first step toward improving social network systems for such environments, we wish to design a system to enable the use of strong cryptographic primitives, overlaid on existing microblogging services like Twitter. We wish to enable secure group communication without requiring prearranged public key hierarchies or other forms of key exchange. We wish to provide some measure of anonymity, by blurring the binding between the sender and recipients of any given message, using existing innocuous messages as a form of cover traffic, providing some measure of deniability, at least for recipients of messages.
+As a first step towards improving social network systems for such
+environments, we seek to enable the use strong cryptographic primitives
+overlaid on existing microblogging systems like Twitter, adding both
+encryption and integrity to {\em tweets} (Twitter messages) among
+groups. Keys must be shared to enable secure group communication, but we
+should not rely on pre-arranged public key hierarchies or complex
+protocols for key exchange. Users should be able to find tweets from
+their group easily and then be able to receive those tweets with some
+anonymity. Groups that may be targeted for their activities, even when
+tweets are encrypted, should be offered {\em plausbile deniability} that
+they could be participating in another group instead.
 
-In particular, our work aims to present an interface where most users never see or concern themselves with cryptographic keys. Instead, one of our key insights is that we can overload Twitter's ``hashtag'' mechanism as a way of deriving cryptographic key material. Before we can sort out exactly how that should work, it's important to first understand how hashtags are used in the wild.
+%The goals of \hoot are to enable Twitter messages
+%we propose \hoot, a system for censorship-resistant
+%communication. The first step in designing such a system is
+%As a first step toward improving social network systems for such environments, %we wish to design a system to enable the use of strong cryptographic primitives%, overlaid on existing microblogging services like Twitter. We wish to enable s%ecure group communication without requiring prearranged public key hierarchies %or other forms of key exchange. We wish to provide some measure of anonymity, b%y blurring the binding between the sender and recipients of any given message, %using existing innocuous messages as a form of cover traffic, providing some me%asure of deniability, at least for recipients of messages.
 
-Hashtags are widely used in the Twitter universe to label topics which others will then subscribe to and follow. For example, most Usenix conferences adopt the tag {\tt \#usenix}, allowing attendees to discuss the conference with one another in real time. Political protests might end up using several different tags (e.g., Egyptian discussions happen under {\tt \#tahrir}, {\tt \#jan25}, {\tt \#25jan}, and {\tt \#egypt}, among others). Hashtags searches are generally case-insensitive.
+To achieve these goals, we propose \hoot, a system for
+censorship-resistant microblogging. Our design features an interface in
+which most users never see or concern themselves with cryptographic
+keys. Instead, one of our key insights is that we can overload Twitter's
+{\em hashtag} mechanism as a way of deriving cryptographic key
+material. \hoot can be built on top of Twitter or another microblogging
+system without modifying the underlying system. Through careful design,
+encrypting and decrypting \msgs (\hoot messages) and bandwidth overhead
+should be acceptably small at both the server and client sides. 
+\hoot makes it very difficult for the censor to distinguish between the
+messages of a group with the messages of one or more other groups.
+%\hoot could have a remarkably small footprint in terms of additional
+%computation and communication costs for both Twitter and its clients.
+
+%Before we can sort out exactly how that should work, it's
+%important to first understand how hashtags are used in the wild.
+
+Hashtags are widely used in Twitter to label topics which others will
+then subscribe to and follow. For example, most Usenix conferences adopt
+the tag {\tt \#usenix}, allowing attendees to discuss the conference
+with one another in real time. Political protests might end up using
+several different tags (e.g., Egyptian discussions happen under {\tt
+  \#tahrir}, {\tt \#jan25}, {\tt \#25jan}, and {\tt \#egypt}, among
+others). Hashtags searches are generally case-insensitive.
 
 Some tags have staggering volumes of messages. To pick a notable example, pop singer Justin Bieber asked his roughly 9 million followers to discuss his movie, {\em Never Say Never} using the hashtag {\tt \#nsn3d}. At its peak, roughly 1\% of Twitter's traffic mentioned this tag\footnote{Statistics via Trendistic, Topsy, and HashTracking.}. Since the movie's release in February 2011, there have been roughly 164 thousand tweets using {\tt \#nsn3d}, an average of 1.6 per minute with significantly higher peaks. 500 recent tweets on this hashtag generated 346 thousand impressions, reaching an audience of 212 thousand followers within a 24 hour period (measured in mid-April 2011). 
 
