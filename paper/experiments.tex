@@ -1,31 +1,37 @@
 \section{Experiments}
 \label{sec:experiments}
 
-In this section, we describe the results of our analysis of the \hoot system with the 2008 Twitter dataset used by Sandler and Wallach\cite{sandler09}. This data contains 10,766,525 tweets with 255,833 hash tag references. Additionally, we show the results of experiments using our
+In this section, we describe the results of our analysis of the \hoot
+system with the 2008 Twitter dataset collected by Sandler and Wallach~\cite{sandler09}. This data contains 10,766,525 tweets with 255,833 hash tag references. Additionally, we show the results of experiments using our
 prototype to examine the computational overhead of implementing \hoot
 over all Twitter traffic.
 
-\subsection{Cover Traffic}
-
+\subsection{Cover traffic}
 We first show that Twitter groups provide good possibilities for cover
 traffic that \hoot can leverage to hide groups seeking plausible
 deniability.
 
-In Figure~\ref{fig:hash-dist}, we show the distribution of number of
-tweets for each hashtag in the 2008 dataset, ordered by activity level in a log-log scatter
-plot. The
-distribution appears to follow a typical power law distribution, with a
+In Figure~\ref{fig:hash-dist}, we show the distribution of 
+tweet volume for each hashtag in the 2008 dataset, ordered by activity
+volume in a log-log scatter plot. The
+distribution appears to follow a standard power law distribution, with a
 few very active hashtags and many hashtags with few tweets. A large
 cluster of hashtags appear only once in our dataset. 
 
 This distribution shows us that there is a large spectrum of subscriber
-anonymity set sizes that can be taken leveraged for \hoot. To get a high
-degree of anonymity, the group can choose a plain tag whose short tag
-collides with a popular tag. With such a group, the sudden influx of new
-followers will not be as suspicious. Some groups may opt
-for better plausible deniability by selecting a tag that is only
-moderately popular but serves as a believable innocuous interest for
-group members.
+anonymity set sizes that can be leveraged by \hoot. To get a high
+degree of anonymity, a group organizer can choose a plain tag whose short tag
+collides with a popular tag (and, thanks to the power-law
+distribution, we can be confident there will always be a reasonable
+distribution of plain tags, with varying popularity, to choose from).
+Among other benefits, a group organizer has the ability to dial in
+pretty much any amount of cover traffic for their group.
+
+ % With such a group, the sudden influx of new
+% followers will not be as suspicious. Some groups may opt
+% for better plausible deniability by selecting a tag that is only
+% moderately popular but serves as a believable innocuous interest for
+% group members.
 %gives
 %you plausible deniability as there are relatively few tags dominating
 %the space at a given time, and thus appear as legitimate interests. If
@@ -33,13 +39,15 @@ group members.
 %following a particular tag would have less incentive to ignore suspicion
 %that your activities might be objectionable to them. 
 
+% (dwallach note: plausible deniability is discussed earlier)
+
 \begin{figure*}[t]
 \begin{minipage}[b]{0.48\linewidth}
 \centering
 \includegraphics[scale=.5, viewport=0cm 0cm 16.6cm 13.6cm]{collider-times.pdf}
 %\includegraphics[scale=.5]{collider-times.pdf}
     \caption{Runtime for the collider to search for all matching tags with
-  suffixes of length $L=3,4,5$ on a PC with dual quad-core Intel i5
+  suffixes of length $L=3,4,5$ base-64 digits on a PC with dual quad-core Intel i5
   processors.}\label{fig:collider-times}
 \end{minipage}
 \hspace{0.5cm}
@@ -47,7 +55,7 @@ group members.
 \centering
 \includegraphics[scale=.5, viewport= 0cm 0cm 16.6cm 12.9cm]{hash-tag-dist.pdf}
 %\includegraphics[scale=.5]{hash-tag-dist.pdf}
-\caption{2009 Twitter Hashtag activity distribution on a log-log
+\caption{2009 Twitter hashtag activity distribution on a log-log
   scale.\vspace{0.4cm}\label{fig:hash-dist}
 }
 \end{minipage}
@@ -160,29 +168,29 @@ groups.
 \subsection{Performance}
 
 Adoption of \hoot requires that the overhead for encryption and
-decryption be reasonable. One path to adoption would have Twitter or
-another microblogging service offer \hoot for users seeking group
-privacy or censorship resistance. We thus consider computation overhead
-in the context of encrypting all Twitter traffic as a worst case. In
+decryption be minimal. For example, one path to adoption would have Twitter or
+another microblogging service offer \hoot semantics over their entire
+existing service. We thus consider computation overhead
+in the context of encrypting {\em all} Twitter traffic as a worst case. In
 March 2011, Twitter stated that the site receives 140 million tweets per
-day or 1620 tweets per second on average
-(\url{http://blog.twitter.com/2011/03/numbers.html}). They also said
-that the maximum tweets per second ever was 6939. These numbers act as
-rough upper bounds to the number of Hoots per second the system would
-need to keep up with. In all likelihood, the number of encrypted
-messages posted would be drastically smaller than regular messages, at
-least in the early deployment of \hoot.
+day or 1620 tweets per second on
+average\footnote{\url{http://blog.twitter.com/2011/03/numbers.html}}}. Twitter
+also stated that the maximum number tweets per second ever was 6939. These numbers act as
+rough upper bounds to the number of hoots per second the system would
+need to keep up with.
+% In all likelihood, the number of encrypted
+% messages posted would be drastically smaller than regular messages, at
+% least in the early deployment of \hoot.
 
 \begin{table}
-\caption{Average Hoots Per Second for Encryption and Decryption
-\label{tab:hps}
-}
+\caption{\hoot computation rate for encryption and
+  decryption.\label{tab:hps}}
+
 \begin{center}
-    \begin{tabular}{ l  l }
-	\hline
+    \begin{tabular}{ l  r }
 	Action & Average hoots per second \\ \hline
 	Encryption & 3610 \\
-	Decryption & 15590 \\ \hline
+	Decryption & 15590 
 %	Encryption & 3614.531 \\
 %	Decryption & 15587.328 \\ \hline
     \end{tabular}
@@ -192,16 +200,44 @@ least in the early deployment of \hoot.
 To study the amount of computation required to support \hoot over
 Twitter, we modified our Python script to perform the encryption process 
 500,000 times running on a MacBook
-Air with a 1.86GHz Intel Core 2 Duo and 4GB Ram using Base64 encoding. We 
-also independently performed the decryption process 500,000 times. We 
-record how long each process took and divide by 500,000. In
-Table~\ref{tab:hps}, we see the result of this experiment. The amount of
-computation for encryption is negligible for Twitter: the average load
-can be handled by one laptop. A Twitter server could easily encrypt the
-entire Twitter feed as the messages were posted. To handle peak usage
-like the 6939 tweets per second Twitter observed, a variety of
-optimizations could be made and, if necessary, the server could be a
-more powerful machine with more processors.
+Air with a 1.86~GHz Intel Core~2 Duo using Base64 encoding. We 
+also independently performed the decryption process 500,000 times. 
+Table~\ref{tab:hps} demonstrates that the computational overhead
+for \hoot cryptography is negligible for Twitter; the average
+computational load can be handled by a single computer and the peak
+load might require only two computers. Clearly, the issue for Twitter
+or a comparable service wouldn't be cryptographic costs, it would be
+bandwidth. That overhead would be entirely dependent on the selection
+of the short tag on the part of the various \hoot organizers. 
+
+On the client side, our experiments show that a modern computer can
+decrypt \hoot messages significantly faster than Twitter's peak
+message rate for the entirety of its traffic. (Even better, the MAC
+can be validated before the message ciphertext needs to be decrypted,
+providing a shortcut to skip undesired cover traffic.)  Again,
+computational overhead isn't going to be the limiting factor.
+Instead, the only issue will be bandwidth.
+
+Group organizers must then take client bandwidth into account when
+selecting hash collisions. An international pop music star might make
+for an excellent cover story, but he might simply be too popular for
+clients, particularly if the they are using cellular phone networks
+that haven't been brought up to the latest multi-megabit speeds.
+This is the one place where the short size of Twitter
+messages actually works in our favor. A modest data pipe of 128
+kbits/sec can transmit roughly 114 tweets per second. This is well
+within the regular bounds of most any short tag selected by the group
+organizers.
+
+Assuming the entire peak load 7000-or-so tweets per second ends up
+split uniformly across short tags with three base-64 digits (i.e., 18
+bit short tags), the average number of tweets per second per short tag
+is only 0.02 (i.e., only 1.6 \hoot messages per minute). That's well
+within any realistic bandwidth constraint.
+
+
+\if 0
+
 
 The decryption rate is important to clients, since clients will need to
 search through hoots with colliding hashtags and decrypt the session
@@ -225,3 +261,4 @@ groups.
 
 %\hlfxnote{mkw -- I don't think so. We'll cover more ground in the discussion.}
 
+\fi
