@@ -93,18 +93,19 @@ a variety of constraints and challenges.
 %  to have the plaintext hashtags be something that users can share and
 %  memorize by voice alone.
 
-\item[Censorship resistance and denial of service.] While we do not attempt
-  to defeat censorship of the \hoot service in its entirety, we seek to
-  defeat attempts to censor specific groups and keywords. Perng et
-  al.~\cite{perng05revisited} define {\em censorship susceptability} as the probability that the
-  adversary can block a targeted message while allowing at least one
-  other message to be received. This is a
+\item[Censorship resistance and denial of service.] While we do not
+  attempt to defeat censorship of the \hoot service in its entirety, we
+  seek to defeat attempts to censor specific groups and keywords. Perng
+  et al.~\cite{perng05revisited} define {\em censorship susceptability}
+  as the probability that the adversary can block a targeted message
+  while allowing at least one other message to be received. This is a
   difficult requirement to meet in our system. We instead aim to allow
   only {\em heavy-handed censorship}, which we define as censorship of a
   group only through censorship of multiple, unrelated groups. By
   censoring these groups together, the adversary lowers the utility of
   the system as a whole. This is similar to the resistance provided by
-  document-based systems like Tangler and Dagster~\cite{tangler,dagster}.
+  document-based systems like Tangler and
+  Dagster~\cite{tangler,dagster}.
 %a fraction of it. We want to ensure that no firewall, perhaps wanting to
 %censor sensitive keywords, will be able to identify which messages are
 %acceptable and which are forbidden. It's all or nothing.
@@ -182,11 +183,12 @@ generally targeting a centralized service more like Twitter.)
 
 \item[Statistical and traffic analysis.] Even if the adversary cannot
   decrypt messages, it may be able to learn things by scanning large
-  populations of \hoot messages. While we make no explicit attempt to hide who the
-  sender of a message might be (see ``sender anonymity,'' above), we do
-  want to provide a strong degree of resistance to traffic analysis that
-  might otherwise bind senders to receivers. Our system should make it
-  difficult or impossible for observers to reconstruct the social graph.
+  populations of \msgs. While we make no explicit attempt to hide who
+  the sender of a message might be (see ``sender anonymity,'' above), we
+  do want to provide a strong degree of resistance to traffic analysis
+  that might otherwise bind senders to receivers. Our system should make
+  it difficult or impossible for observers to reconstruct the social
+  graph.
 % mkw -- just not gonna make this paper. Also may not be needed
 %  \hlfixme{Should include discussion of social network privacy,
 %    community privacy, adversarial community privacy, etc.}
@@ -231,7 +233,7 @@ reasons to use it instead of plaintext tweets besides censorship
 resistance. If \hoot is widely adopted over Twitter for typical group
 communication, a censor that blocks other systems for
 censorship-resistance (such as Tor bridges), might not be willing to
-block all \hoot messages. 
+block all \msgs.
 
 Whether this is the case in the real world is hard to discern. China
 appears to have blocked iTunes for about 10 days in 2008 due to a

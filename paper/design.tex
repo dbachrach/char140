@@ -12,24 +12,21 @@ collisions with other groups and how the message header and body are
 constructed to enable efficient searching.
 %We also analyze the security of messages.
 
-\paragraphX{Protocol overview.} A complete \hoot message consists of a 
-header and a message body. The header contains a group identifier
-(a Twitter-style hashtag), an encryption key and a MAC key, both
-encrypted with a session key, and finally a MAC
-over the ciphertext of the message (see
-Figure~\ref{fig:hoot-structure}). As in
-Twitter, messages do not name their recipients. Anyone who knows the
-secret hashtag associated with a \hoot can decrypt and read the message
-as well as validate its integrity.
-We also need an efficient discovery mechanism.
-Rather than attempting to treat every message
-posted to Twitter as a potential group message, and thus being
-required to fetch and attempt decryption of every single message,
-the \hoot protocol places an identifier into every \hoot message
-as a hashtag so a fellow group member can simply search for the
-identifier to see all potential messages. With a constant group
-identifier, readers can also publicly follow that identifier like any
-other hashtag on Twitter.
+\paragraphX{Protocol overview.} A complete \msg consists of a header and
+a message body. The header contains a group identifier (a Twitter-style
+hashtag), an encryption key and a MAC key, both encrypted with a session
+key, and finally a MAC over the ciphertext of the message (see
+Figure~\ref{fig:hoot-structure}). As in Twitter, \msgs do not name their
+recipients. Anyone who knows the secret hashtag associated with a \msg
+can decrypt and read the message as well as validate its integrity. We
+also need an efficient discovery mechanism.  Rather than attempting to
+treat every message posted to Twitter as a potential group message, and
+thus being required to fetch and attempt decryption of every single
+message, the \hoot protocol places an identifier into every \msg as a
+hashtag so a fellow group member can simply search for the identifier to
+see all potential messages. With a constant group identifier, readers
+can also publicly follow that identifier like any other hashtag on
+Twitter.
 
 \paragraphX{Group identifiers.} To create a hashtag for use as the group
 identifier, \hoot derives a short bitstring from the secret hashtag. We
@@ -146,9 +143,9 @@ session keys
 for message body encryption ($k_{\func{enc}}$) and integrity
 verification ($k_{\func{mac}}$).
 
-For every \hoot message, these session keys are randomly generated. Since we intend
-to use efficient symmetric key ciphers and hash-based message authentication
-functions. 
+For every \msg, these session keys are randomly generated. Since we
+intend to use efficient symmetric key ciphers and hash-based message
+authentication functions.
 %, our random session keys should be selected to match the key
 % lengths of our ciphers (e.g., 128 bits for AES). 
 The session keys
@@ -183,11 +180,11 @@ k_{\func{enc}}, k_{\func{mac}} & \leftarrow & \id{random bits} \\
 C & \leftarrow & E_{k_{\func{enc}}}(M) \\
 \id{HooT}  & \leftarrow &  \left(\id{ShortTag}, E_{k_{\func{tag}}}\left(k_{\func{enc}}, k_{\func{mac}}\right), \func{MAC}_{k_{\func{mac}}}(C), C\right)
 \end{eqnarray*}
-\caption{Structure of a \hoot message.\label{fig:hoot-structure}}
+\caption{Structure of a \msg.\label{fig:hoot-structure}}
 \end{figure}
 %
 
-So far, we have specified a \hoot structure with exactly one plain tag.
+So far, we have specified a \msg structure with exactly one plain tag.
 This technique can easily be generalized to support multiple plain tags. For
 each one, a separate long tag can be generated, resulting in multiple
 tag keys ($k_{\func{tag}}$), each of which is used to encrypt the same
@@ -197,11 +194,10 @@ payload.
 
 \begin{table*}
 \caption{This table shows how several tweets might be converted to
-  \hoot messages, showing the long tag, the short tag, and the final
-  \hoot. The fourth message in this list demonstrates how an
-  organization could take advantage of the \hoot system to collide its
-  messages with those of an unrelated tag used for non-controversial
-  messages.
+  \msgs, showing the long tag, the short tag, and the final \msg. The
+  fourth message in this list demonstrates how a group could take
+  advantage of the \hoot system to collide its \msgs with those of an
+  unrelated tag used for non-controversial messages.
 \label{tab:process}
 }
 \begin{center}
@@ -216,14 +212,14 @@ payload.
 \end{table*}
 
 For illustration, Table~\ref{tab:process} shows how a few plain-text
-tweets might be converted into their corresponding \hoot messages. The
-first two messages are regular tweets from popular hashtags: \#bieber
-and \#CharlieSheen. The third is a \hoot where receiver anonymity is
+tweets might be converted into their corresponding \msgs. The first two
+messages are regular tweets from popular hashtags: \#bieber and
+\#CharlieSheen. The third is a \msg where receiver anonymity is
 critical, but it's short tag, {\tt \#2p7}, does not collide with
 anything else, and thus subscribers to {\tt \#2p7} might risk
-discovery. The fourth message shows how the same group might alter
-their plain tag so they can deliberate collide with {\tt \#bieber},
-which maps to the same short tag ({\tt \#9tx}).
+discovery. The fourth message shows how the same group might alter their
+plain tag so they can deliberate collide with {\tt \#bieber}, which maps
+to the same short tag ({\tt \#9tx}).
 
 
 \subsection{Security analysis}
@@ -242,26 +238,26 @@ itself.
 %Section~\ref{sec:something-else}.
 
 First, note that the session keys are generated randomly and
-independently for each message. Consequently, two identical plaintext messages
-will have different ciphetexts. If the encryption scheme in use requires
-an initialization vector (e.g., CBC mode), this could be safely included in the
-message header. For other encryption schemes, such as counter mode, no
-IV is necessary and the randomness of the key will ensure the
-non-determinism of the ciphertext.
+independently for each \msg. Consequently, two identical plaintext
+messages will have different ciphetexts. If the encryption scheme in use
+requires an initialization vector (e.g., CBC mode), this could be safely
+included in the message header. For other encryption schemes, such as
+counter mode, no IV is necessary and the randomness of the key will
+ensure the non-determinism of the ciphertext.
 
 Message integrity is validated with a symmetric-key message
-authentication code such as HMAC-SHA1. Because the MAC is computed over the
-ciphertext, and the MAC key is generated at randomly and independently
-from the encryption key, the MAC leaks
-absolutely no information about the plaintext. The MAC verification
-process also serves the purpose of identifying whether a prospective
-message matches the plain tag in question (for which multiple other
-plain tags will collide in the short tags), or whether a message is
-irrelevant to the user's plain tag search query and should be dropped.
+authentication code such as HMAC-SHA1. Because the MAC is computed over
+the ciphertext, and the MAC key is generated at randomly and
+independently from the encryption key, the MAC leaks absolutely no
+information about the plaintext. The MAC verification process also
+serves the purpose of identifying whether a prospective \msg matches the
+plain tag in question (for which multiple other plain tags will collide
+in the short tags), or whether a message is irrelevant to the user's
+plain tag search query and should be dropped.
 
 Replay attacks can be defeated by treating the session keys
 ($k_{\func{enc}}$, $k_{\func{mac}}$) as nonces. It's highly unlikely
-that two different messages will share the same session keys.
+that two different \msgs will share the same session keys.
 
 %Consequently, the basic \hoot message encryption scheme appears to be
 %sound, with the only obvious weakness being the selection of the plain
@@ -272,7 +268,7 @@ that two different messages will share the same session keys.
 Provided an attacker knows a targeted group's prefix and the alphabet
 out of which they generate the suffix, our scheme is amenable to brute
 force searching attacks. Table~\ref{tab:hps} shows how fast a modern
-computer can decrypt \hoot messages: between $2^{17}$ and $2^{18}$ per
+computer can decrypt \msgs: between $2^{17}$ and $2^{18}$ per
 second. Clearly, plain tags must be selected with far more entropy than
 this. If the attacker has $2^{10}$ CPU cores and we want a plain tag to
 survive one week of analysis (just over $2^{19}$ seconds) before a plain
@@ -300,17 +296,17 @@ proceeds to twist some arms and finds what appears to be a
 sudden and inexplicable rise in domestic fandom for a teenage pop star
 from a foreign country.
 
-Is this falsifiable? Ironically, the locals who have chosen the
-foreign pop star for their cover traffic can best cover themselves by
-immersing themselves in the pop star's oeuvre. Still, the pop star's
-genuine traffic is no secret. The attacker could censor the short tag,
-in its entirety, accepting the false positives and causing outrage
-among the pop star's true fandom. Alternately, the
-attacker could censor the \hoot messages on the short tag that {\em do
-not match} the pop star's known plain tag. Of course, this would also
-have false positives with legitimate and innocuous traffic, but it
-would definitely force the organizers to shift their traffic to a
-different short tag, creating something of a game of cat-and-mouse.
+Is this falsifiable? Ironically, the locals who have chosen the foreign
+pop star for their cover traffic can best cover themselves by immersing
+themselves in the pop star's oeuvre. Still, the pop star's genuine
+traffic is no secret. The attacker could censor the short tag, in its
+entirety, accepting the false positives and causing outrage among the
+pop star's true fandom. Alternately, the attacker could censor the \msgs
+on the short tag that {\em do not match} the pop star's known plain
+tag. Of course, this would also have false positives with legitimate and
+innocuous traffic, but it would definitely force the organizers to shift
+their traffic to a different short tag, creating something of a game of
+cat-and-mouse.
 
 We note that the pop star could choose to surreptitiously help his
 overseas ``fans'' by regularly adding new plain tags under which he

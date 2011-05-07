@@ -11,7 +11,9 @@ in the \hoot approach.
 \paragraphX{Generating a Hoot}
 The \hoot protocol allows for a variety of different encryption,
 hashing, and message authentication schemes. Our prototype client,
-implemented in Python using the PyCrypto\footnote{\url{http://www.dlitz.net/software/pycrypto/}} library, takes the following steps to construct a message:
+implemented in Python using the
+PyCrypto\footnote{\url{http://www.dlitz.net/software/pycrypto/}}
+library, takes the following steps to construct a \msg:
 \begin{itemize}
 \item We generate a long tag by taking a SHA2-256 hash of the plain
   tag. The first 128 bits of the long tag are used exclusively for the
@@ -30,7 +32,7 @@ implemented in Python using the PyCrypto\footnote{\url{http://www.dlitz.net/soft
   counter mode, and use $k_{\mathrm{mac}}$ to generate an HMAC-SHA1
   message authentication code over the encrypted plaintext of the
   message.
-\item We print the \hoot, consisting of a {\tt \#} symbol, the short tag,
+\item We print the \msg, consisting of a {\tt \#} symbol, the short tag,
   a space, the encrypted keys, the HMAC digest, and the ciphertext.
 \end{itemize}
 
@@ -52,7 +54,7 @@ Section~\ref{sec:collider}.)
 %Section~\ref{sec:experiments}.
 
 \paragraphX{Message length.}  
-We wish to render messages in a format that can be transmitted via
+We wish to render \msgs in a format that can be transmitted via
 Twitter. The primarily difficulty we face is Twitter's 140 character
 limit. We must also ensure that the short tags are rendered in standard
 Twitter hashtag format (i.e., preceded with a {\tt \#} character and
@@ -62,11 +64,11 @@ will efficiently find them.
 Interestingly, Twitter has a very broad definition of a character. Based
 on our testing, we believe that Twitter limits tweets to 140 Unicode
 (UTF-8) glyphs. While we could certainly take advantage of this to
-squeeze the longest possible \hoot messages into a single tweet,
-particularly if we were willing to restrict \hoot plaintext messages to
-7-bit ASCII, we chose not to pursue this for our
-initial implementation. Instead, we went with a standard Base64 encoding (the
-letters A-Z, a-z, 0-9, +, and /), yielding only six bits per glyph.
+squeeze the longest possible \msgs into a single tweet, particularly if
+we were willing to restrict plaintext messages to 7-bit ASCII, we chose
+not to pursue this for our initial implementation. Instead, we went with
+a standard Base64 encoding (the letters A-Z, a-z, 0-9, +, and /),
+yielding only six bits per glyph.
 
 Assuming a single short tag of two Base64 glyphs (12 bits), the maximum
 plain text message with our prototype implementation would be 31
@@ -96,7 +98,8 @@ in a \hoot, while still respecting Twitter's 140-character maximum.
 
 We note that Twitter is not the only microblogging system that we could
 leverage for \hoot traffic. \hoot could just as easily be built atop
-Google Buzz, which doesn't have Twitter's 140 character limit.\footnote{The 140 character limit is an
-  artifact of Twitter's original intent to support SMS cellular
-  telephone messaging as a way of delivering tweets. This unfortunate design decision
-  was originally made in 1985 and still haunts us today~\cite{latimes-char160}.}
+Google Buzz, which doesn't have Twitter's 140 character
+limit.\footnote{The 140 character limit is an artifact of Twitter's
+  original intent to support SMS cellular telephone messaging as a way
+  of delivering tweets. This unfortunate design decision was originally
+  made in 1985 and still haunts us today~\cite{latimes-char160}.}

@@ -4,13 +4,13 @@ In this section, we discuss a variety of issues and future extensions of the \ho
 
 \subsection{Deployment}
 
-There are two different paths through which \hoot could be deployed. First, it would be straightforward to implement a proxy service, whether operated by Twitter or by an independent third party, that reads every tweet, encrypts it, and provides a Twitter-like interface to the stream of \hoot messages. This would incur non-trivial monetary costs for the bandwidth and computation resources, but it's still well within the means of many organizations. A deeper concern is that any country could simply block traffic to or from the \hoot proxy server.
+There are two different paths through which \hoot could be deployed. First, it would be straightforward to implement a proxy service, whether operated by Twitter or by an independent third party, that reads every tweet, encrypts it, and provides a Twitter-like interface to the stream of \msgs. This would incur non-trivial monetary costs for the bandwidth and computation resources, but it is still well within the means of many organizations. A deeper concern is that any country could simply block traffic to or from the \hoot proxy server.
 
-Alternately, the proxy server could read every normal tweet, encrypt it, and post it back to Twitter. This, naturally, would double the number of tweets, which makes it something that Twitter would probably insist on doing themselves rather than accepting from a third-party service. A Twitter-internal implementation might instead, for example, precompute the short tags for every tweet but regenerate \hoot-encrypted messages on the fly rather than storing two copies.
+Alternately, the proxy server could read every normal tweet, encrypt it, and post it back to Twitter. This, naturally, would double the number of tweets, which makes it something that Twitter would probably insist on doing themselves rather than accepting from a third-party service. A Twitter-internal implementation might instead, for example, precompute the short tags for every tweet but regenerate \msgs on the fly rather than storing two copies.
 
-Any strategy where \hoot messages are injected by a proxy has the property that the \hoot need not necessarily specify the original sender's Twitter username.  Breaking the binding between the sender and the public \hoot message would greatly improve sender anonymity, but it would also allow any user who knows the relevant plain tag to impersonate any other member. We could imagine a variety of ways to add some sort of digital signature or hash-chaining layer into the \hoot message format to differentiate users with ``read-only'' versus ``posting'' privileges. We leave this for future work.
+Any strategy in which \msgs are injected by a proxy has the property that the \msg need not necessarily specify the original sender's Twitter username.  Breaking the binding between the sender and the public \hoot message would greatly improve sender anonymity, but it would also allow any user who knows the relevant plain tag to impersonate any other member. We could imagine a variety of ways to add some sort of digital signature or hash-chaining layer into the \msg format to differentiate users with ``read-only'' versus ``posting'' privileges. We leave this for future work.
 
-Regardless, a critical question is whether the plain tag for a \hoot message should ever be sent to Twitter. For users with dedicated clients, the users' plain tags could be stored locally, avoiding any issue where a compromise of Twitter's server becomes a single point of failure for \hoot's confidentiality and integrity. This would clearly be the preferred modality for \hoot usage, but that may not be feasible for a large number of potential \hoot users.
+Regardless, a critical question is whether the plain tag for a \msg should ever be sent to Twitter. For users with dedicated clients, the users' plain tags could be stored locally, avoiding any issue where a compromise of Twitter's server becomes a single point of failure for \hoot's confidentiality and integrity. This would clearly be the preferred modality for \hoot usage, but that may not be feasible for a large number of potential \hoot users.
 
 It's important to note that Twitter's web interface offers full SSL encryption. Twitter's dedicated smartphone clients currently use OAuth signatures, protecting message integrity but not privacy. Full encryption would be desirable for smartphone clients to defeat active adversaries who might use deep packet inspection to detect \hoot messages in transit and close the connection.
 
@@ -18,9 +18,12 @@ A few other considerations are worth noting:
 \begin{itemize}
 \item If Twitter could be convinced to directly support \hoot, then they could certainly stretch the 140-character limit to allow \hoot plaintext messages to be as long as regular Twitter messages.
 
-\item If \hoot users were connected to Twitter's web interface, then it would be essential for \hoot messages to be decrypted in the browser, via client-side JavaScript, rather than on the server. We want every \hoot message matching a short tag query to be transmitted over the network to ensure that passive network eavesdroppers, even in the face of full SSL encryption, will only see traffic patterns corresponding to particular short tags, which leaks nothing useful, versus particular plain tags, which would eliminate any cover traffic and thus leak valuable information to the adversary.
+\item If \hoot users were connected to Twitter's web interface, then it would be essential for \msgs to be decrypted in the browser, via client-side JavaScript, rather than on the server. We want every \msg matching a short tag query to be transmitted over the network to ensure that passive network eavesdroppers, will only see traffic patterns corresponding to those short tags. Sending just the \msgs matching a particular plain tag could leak the group's traffic pattern, even over an SSL-encrypted connection~\cite{liberatore06}.
 
-\item Regardless, an adversary conducting traffic analysis might be able to distinguish a subscription to a \hoot short tag from a subscription to something else, solely based on messages' timing and size. This could be addressed by having {\em all} Twitter users receive \hoot cover traffic for a randomly selected \hoot short tag, which their clients would then ignore. It could also be addressed by hacking normal Twitter clients from unsuspecting users to treat any request to follow a hashtag by having them follow the corresponding \hoot short tag, instead.
+%, thereby leaking .
+%, which leaks nothing useful, versus particular plain tags, which would elimina%te any cover traffic and thus leak valuable information to the adversary.
+
+\item Regardless, an adversary conducting traffic analysis might be able to distinguish a subscription to a \hoot short tag from a subscription to something else, solely based on \msgs' timing and size. This could be addressed by having {\em all} Twitter users receive \hoot cover traffic for a randomly selected \hoot short tag, which their clients would then ignore. It could also be addressed by hacking normal Twitter clients from unsuspecting users to treat any request to follow a hashtag by having them follow the corresponding \hoot short tag, instead.
 
 \item At some point, Twitter may deploy content-aware advertising on its services. Advertising should never be allowed to operate based on a decrypted \hoot, as the advertiser could well be the adversary, and could possibly use analysis of advertisement metrics to violate \hoot users' privacy.
 
@@ -47,11 +50,27 @@ The next question to ask after we have shown that rolling out the Hoot service i
 		
 \subsection{Usability}
 
-In essence, \hoot requires its users to manually negotiate a group cryptographic key management system. Even though the use case for \hoot looks and feels much like ``normal'' Twitter hashtags, we are still putting a non-trivial amount of trust into a protocol that requires users to use literal gossip to spread key material. Even highly motivated users could well make mistakes, and any small error would result in the inability to decrypt the desired \hoot messages. In particular, a significant amount of entropy is required for adequate security, causing \hoot plain tags to push the boundaries on human memorability. In effect, a good \hoot plain tag is comparable to a strong account password. \hoot's use of machine-generated plain tags would have comparable issues with organizations that require users to have strong passwords that are never written down and frequently changed.  And, unlike such organizations which can adopt a variety of ``two factor'' authentication technologies to reduce their reliance on passwords, \hoot fundamentally needs plain tags as strong as strong user passwords.
+In essence, \hoot requires its users to manually negotiate a group cryptographic key management system. Even though the use case for \hoot looks and feels much like ``normal'' Twitter hashtags, we are still putting a non-trivial amount of trust into a protocol that requires users to use literal gossip to spread key material. Even highly motivated users could well make mistakes, and any small error would result in the inability to decrypt the desired \msgs. In particular, a significant amount of entropy is required for adequate security, causing \hoot plain tags to push the boundaries on human memorability. In effect, a good \hoot plain tag is comparable to a strong account password. \hoot's use of machine-generated plain tags would have comparable issues with organizations that require users to have strong passwords that are never written down and frequently changed.  And, unlike such organizations which can adopt a variety of ``two factor'' authentication technologies to reduce their reliance on passwords, \hoot fundamentally needs plain tags as strong as strong user passwords.
 
 About the only good news in this process is the growing ubiquity of smartphones, typically having a variety of methods to communicate with other phones nearby. This would allow a set of plain tags to be quickly and painlessly shared via means including two-dimensional barcodes (displayed on one phone's screen, read with another phone's camera), a variety of close-range networking technologies (near-field communication, Bluetooth, ad-hoc WiFi, or infrared file transfer), or even acoustic transfer from one phone's speaker to another phone's microphone. If, in fact, the predominant modality for \hoot plain tag sharing is one of these mechanisms, then plaintag memorizability becomes a non-issue. Plain tags can then be implemented with general-purpose securely-chosen random numbers.
 
-A related usability question is the process for selecting the desired external hash tag with which to collide a \hoot plain tag. Earlier in this paper, we cavalierly suggested that famous pop singers helpfully provide all the cover traffic we might ever want, but this process ultimately needs to be handled with care, since recipient deniability requires the human recipient to have a convincing story under coercive pressure, and it's certainly the case that many people cannot convincingly demonstrate their admiration for an overseas pop sensation. Ultimately, the selection of a suitable Twitter hashtag for \hoot collisions is a process that will benefit from a dedicated web site, engineered for this specific purpose. Naturally, a censorship-happy country will do its best to block access to such a web site, requiring group organizers to leverage Tor or otherwise be resourceful enough to connect to the outside world.
+A related usability question is the process for selecting the desired
+external hash tag with which to collide a \hoot plain tag. Earlier in
+this paper, we cavalierly suggested that famous pop singers helpfully
+provide all the cover traffic we might ever want. However, this process
+ultimately needs to be handled with care, since recipient deniability
+requires the human recipient to have a convincing story under coercive
+pressure, and many people may not be able to convincingly demonstrate
+their admiration for an overseas pop sensation. A \hoot proxy or other
+site could facilitate this by providing information about the popularity
+of different short tags, including which ones are trending well in a
+given country or region.
+%The selection of a
+%suitable Twitter hashtag for \hoot collisions would benefit from a
+%dedicated web site, engineered for this specific purpose. 
+%Naturally, a censorship-happy country will do its best to block access
+%to such a web site, requiring group organizers to leverage Tor or
+%otherwise be resourceful enough to connect to the outside world.
 
 \if 0
 
@@ -68,9 +87,32 @@ To make the system even more usable, the client or Twitter should automatically 
 
 \subsection{Adaptability and scalability}
 
-Since \hoot benefits from and encourages collisions in the short tag space, there will come a point when there are simply too many collision, i.e., the ratio of desired messages to cover traffic will eventually become vanishingly small. The seemingly obvious solution is to adjust the length of short tags. Doubling the number of possible short tags reduces the number of collisions in half, or at least it would if there were  a uniform distribution of raw traffic across the space of short tags. Given how a small number of hashtags can become hot, trending topics, it's far from obvious how changing the standard short tag length would impact the distribution of message, nevermind the pragmatic concerns with keeping every user on the same page when the short tag length is supposed to change.
+Since \hoot benefits from and encourages collisions in the short tag
+space, there will come a point when there are simply too many
+collisions, i.e., the ratio of desired messages to cover traffic will
+eventually become too small to be practical for the proxy or client
+software to decrypt and filter through. The seemingly obvious solution
+is to adjust the length of short tags. Adding one character to the tag
+length would greatly decrease the chance of random collisions (by
+$\frac{1}{|A|}$ for alphabet $A$). However, modifying the tag length
+while the system is in use would not be straightforward for
+groups. Groups could rely on group leaders to facilitate the process,
+e.g. by announcing a new tag to use or giving out multiple plain tags in
+advance. Alternatively, the system operators could initially set tags to
+be long enough to prevent most random collisions and have groups
+emphasize chosen collisions in their plain tag generation.
 
-This process would benefit from the active engagement of group organizers. Consider the case where a low-volume group organizers selects a low-volume plain tag with which to collide. Everything works great until some heretofore unseen hashtag suddenly rockets to the top of Twitter's trending discussions and just happens to collide with the very same plain tag. Our group organizers would need to stay on top of these issues, with a migration strategy ready to go. Option \#1: implement a command to migrate to a new plain tag which could be broadcast in the message body of a \hoot; this would, of course, require some way of authenticating the command. Option \#2: group organizers would give out multiple plain tags, far in advance, allowing them to issue a suggestion that the group is moving from plain tag \#1 to plain tag \#2.
+%Doubling the number of possible short tags reduces the number of
+%collisions in half it would anyway, since the , or at least it would if
+%there were a uniform distribution of raw traffic across the space of
+%short tags.
+%Given how a small number of hashtags can become hot, trending topics,
+%it's far from obvious how changing the standard short tag length would
+%impact the distribution of message, nevermind the pragmatic concerns
+%with keeping every user on the same page when the short tag length is
+%supposed to change.
+%
+%This process would benefit from the active engagement of group organizers. Cons%ider the case where a low-volume group organizers selects a low-volume plain ta%g with which to collide. Everything works great until some heretofore unseen ha%shtag suddenly rockets to the top of Twitter's trending discussions and just ha%ppens to collide with the very same plain tag. Our group organizers would need %to stay on top of these issues, with a migration strategy ready to go. Option \%#1: implement a command to migrate to a new plain tag which could be broadcast %in the message body of a \hoot; this would, of course, require some way of auth%enticating the command. Option \#2: group organizers would give out multiple pl%ain tags, far in advance, allowing them to issue a suggestion that the group is% moving from plain tag \#1 to plain tag \#2.
 
 \if 0
 messages  there will be too much noise to signal for a specific group when following an identifier that collides with many groups. At some point, the entire Hoot universe will want to decrease the amount of collisions. The simple solution is to increase the Short Tag length. Whenever there is too many collisions, the Short Tag length will be increased by one, which will result in far less collisions until the communication increases and eventually the cycle continues. 

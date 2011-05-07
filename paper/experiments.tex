@@ -161,7 +161,7 @@ traffic that is pulled, the more it seems as if you are truly following
 some hot topic, rather than a more clandestine group. An observer
 monitoring the tweets you download will be unable to differentiate
 someone following a secret group and someone following a popular topic
-because members of both groups will pulling all HooTs from each other's
+because members of both groups will pulling all \msgs from each other's
 groups.
 \fi
 
@@ -225,12 +225,12 @@ bandwidth. That overhead would be entirely dependent on the selection
 of the short tag on the part of the various \hoot organizers. 
 
 On the client side, our experiments show that a modern computer can
-decrypt \hoot messages significantly faster than Twitter's peak
-message rate for the entirety of its traffic. (Even better, the MAC
-can be validated before the message ciphertext needs to be decrypted,
-providing a shortcut to skip undesired cover traffic.)  Again,
-computational overhead isn't going to be the limiting factor.
-Instead, the only issue will be bandwidth.
+decrypt \msgs significantly faster than Twitter's peak message rate for
+the entirety of its traffic. (Even better, the MAC can be validated
+before the message ciphertext needs to be decrypted, providing a
+shortcut to skip undesired cover traffic.)  Again, computational
+overhead isn't going to be the limiting factor.  Instead, the only issue
+will be bandwidth.
 
 Group organizers must then take client bandwidth into account when
 selecting hash collisions. An international pop music star might make
@@ -243,11 +243,11 @@ kbits/sec can transmit roughly 114 tweets per second. This is well
 within the regular bounds of most any short tag selected by the group
 organizers.
 
-Assuming the entire peak load 7000-or-so tweets per second ends up
-split uniformly across short tags with three base-64 digits (i.e., 18
-bit short tags), the average number of tweets per second per short tag
-is only 0.02 (i.e., only 1.6 \hoot messages per minute). That's well
-within any realistic bandwidth constraint.
+Assuming the entire peak load 7000-or-so tweets per second ends up split
+uniformly across short tags with three base-64 digits (i.e., 18 bit
+short tags), the average number of tweets per second per short tag is
+only 0.02 (i.e., only 1.6 \msgs per minute). That's well within any
+realistic bandwidth constraint.
 
 
 \if 0
