@@ -6,13 +6,13 @@ Microblogging services such as Twitter are an increasingly important way
 to communicate, both for individuals and for groups through the use of
 hashtags that denote topics of conversation. However, groups can be
 easily blocked from communicating through blocking of posts with the
-given hashtags. We propose HooT, a system for censorship-resistant
-microblogging. HooT presents an interface that is much like Twitter,
+	given hashtags. We propose \hoot, a system for censorship resistant
+microblogging. \hoot presents an interface that is much like Twitter,
 except that hashtags are replaced with very short hashes (e.g. 24 bits)
 of the group identifier. Naturally, with such short hashes, hashtags
-from different groups may collide and HooT users will actually seek to
+from different groups may collide and \hoot users will actually seek to
 create collisions. By encrypting all posts with keys derived from the
-group identifiers, Hoot client software can filter out other groups'
+group identifiers, \hoot client software can filter out other groups'
 posts while making such filtering difficult for the adversary. In
 essence, by leveraging collisions, groups can tunnel their posts in
 other groups' posts. A censor could not block a given group without also
@@ -25,7 +25,7 @@ blocking the other groups with colliding hashtags.
 %without observers able to read the message unless they know the original
 %hashtag or tags that were used when the HooT was created.
 %
-We evaluate the feasibility of HooT through traces collected from
+We evaluate the feasibility of \hoot through traces collected from
 Twitter, showing that a single modern computer has enough computational
 throughput to encrypt every tweet sent through Twitter in real time. We
 also use these traces to analyze the bandwidth and anonymity tradeoffs

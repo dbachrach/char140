@@ -4,8 +4,8 @@ In this section, we briefly outline our threat model and then describe
 the goals of our design.
 
 \subsection{Threat model} \label{sec:threat}
-HooT is designed to provide censorship resistance against an adversary
-who can observe all HooT traffic and can block any tweets it chooses. In
+\hoot is designed to provide censorship resistance against an adversary
+who can observe all \hoot traffic and can block any tweets it chooses. In
 practice, the adversary may only block tweets being received by a subset of users,
 but this does not affect our model. The adversary seeks to identify and
 block tweets discussing a small set of topics, based on the identity of
@@ -40,12 +40,12 @@ machines, and of course the adversary's computational strength will
 only grow as time advances. We describe how
 to address this in Section~\ref{sec:discuss}.
 
-We assume that the HooT server does not cooperate with the adversary. We
+We assume that the \hoot server does not cooperate with the adversary. We
 also assume that the adversary has no insiders in the group who leak the
 group's secrets. Likewise, we assume the adversary has no avenues
 to attack users, such as setting up a covert keylogger
-keylogger on a group member's machine or coercing a group
-member to divulge a secret. We concede that such attacks would effectively undermine HooT's censorship
+on a group member's machine or coercing a group
+member to divulge a secret. We concede that such attacks would effectively undermine \hoot's censorship
 resistance. Note that this serves as a practical bound on any attack; if
 it would be easier to establish an insider in the group or subvert one
 of the client systems than to perform a computational attack, we will
@@ -69,7 +69,7 @@ a variety of constraints and challenges.
   word-of-mouth, from person to person in the group. We propose
   to derive keys from the group's plaintext hashtag, which effectively
   serves as the membership password. When a user subscribes to a given plaintext
-  hashtag, she inputs the hashtag into her HooT client, and the client
+  hashtag, she inputs the hashtag into her \hoot client, and the client
   derives the necessary keys.
 %essentially use the plaintext hashtags as passwords for this
 %  purpose. In HooT, a group's tweets are encrypted
@@ -93,7 +93,7 @@ a variety of constraints and challenges.
 %  memorize by voice alone.
 
 \item[Censorship resistance and denial of service.] While we do not attempt
-  to defeat censorship of the HooT service in its entirety, we seek to
+  to defeat censorship of the \hoot service in its entirety, we seek to
   defeat attempts to censor specific groups and keywords. Perng et
   al. \hlfixme{Cite} ~\cite{perng05revisited} define {\em censorship susceptability} as the probability that the
   adversary can block a targeted message while allowing at least one
@@ -114,12 +114,12 @@ a variety of constraints and challenges.
   being able to protect recipient anonymity. Adapting the definition
   from Pfitzmann and Hansen~\cite{terminology}, we require that the
   recipients of the tweets, i.e. the group members, not be identifiable
-  from among a larger set of possible recipients. HooT makes this
+  from among a larger set of possible recipients. \hoot makes this
   possible by mapping plaintext hashtags, which identify the groups, to
   short hashtags that can be made to collide with those of other
   groups. All of the recipients in all groups with colliding hashtags
   form a recipient anonymity set, with the tweets from other colliding
-  groups providing cover traffic. HooT can also be said to provide
+  groups providing cover traffic. \hoot can also be said to provide
   {\em subscriber anonymity}, as introduced by Mislove et al. in their
   description of AP3~\cite{ap3}. Hordes \hlfixme{Cite} ~\cite{hordes} and \hlfixme{Cite} P5~\cite{P5}
   have similar requirements. The main additional feature of subscriber
@@ -133,7 +133,7 @@ a variety of constraints and challenges.
 %  design, we want our system to use unrelated messages as {\em cover
 %    traffic}.
 
-\item[Recipient deniability.] If a HooT user is under physical threat to
+\item[Recipient deniability.] If a \hoot user is under physical threat to
   reveal what hashtags she subscribes to, it's important that she can
   offer a convincing lie. Through careful selection of groups with
   colliding hashtags, she could name the hashtag of an innocuous group
@@ -158,7 +158,7 @@ a variety of constraints and challenges.
 %   anonymity in the sense that any member of any colliding group could
 %   actually be sender.
  If, however, we must resist physical attacks against a sender,
-coercing them to decrypt a posted message, our core HooT design
+coercing them to decrypt a posted message, our core \hoot design
 will not protect them.
 % mkw -- removed the backdoor idea for simplicity of the text.
 %     -- if restored, I suggest citing a related backdoor idea and point
@@ -167,7 +167,7 @@ will not protect them.
 %  decryptions).
 Instead, message senders who need to remain anonymous or who require the
 ability to deny having posted a given message must use external means,
-such as Tor, to connect to the HooT service for posting messages. (If a
+such as Tor, to connect to the \hoot service for posting messages. (If a
 decentralized or P2P transport mechanism was used for microblogging,
 like BirdFeeder~\cite{sandler09}, such a system could be extended to have
 anonymous posting features. For this specific research, we are
@@ -216,7 +216,7 @@ generally targeting a centralized service more like Twitter.)
 \end{description}
 
 %formalize the idea of which they 
-One goal that we do not see to achieve is {\em membership concealment},
+One goal that we do not seek to achieve is {\em membership concealment},
 which Vasserman et al. define as hiding the fact that the members are
 participating in the system~\cite{vasserman09mcon}. The rationale for
 membership concealment is that employing a tool designed to circumvent
