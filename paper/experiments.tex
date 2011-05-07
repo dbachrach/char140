@@ -61,24 +61,28 @@ pretty much any amount of cover traffic for their group.
 \end{minipage}
 \end{figure*}
 
-\subsection{Collider}
+\subsection{Finding tags}
 \label{sec:collider}
 
 To explore the feasibility of finding a plain tag that collides with an
 existing short tag, we built a tool called the {\em collider} in C and
-OpenMP 3.0, using the open source CommonCrypto\footnote{\url{http://www.opensource.apple.com/source/CommonCrypto/}} library provided
-by Apple.
+OpenMP~3.0, using the open source CommonCrypto\footnote{\url{http://www.opensource.apple.com/source/CommonCrypto/}} library provided
+by Apple. The collider implements the \proc{Find-Tag} algorithm
+described in Figure~\ref{fig:find-tag} and is trivially parallelizable
+by partitioning the search space.
+
+\if 0
 The collider takes in a short tag, \textit{T}, a prefix string,
 \textit{S}, a suffix length, \textit{L}, an alphabet \textit{A}. It
 finds the concatenations of \textit{S} and strings of length \textit{L}
 from \textit{A*} such that the truncated hash of the resultant string
 matches \textit{T}.
 
-The collider has two modes of operation. In the default mode, he user
-specifies the desired number of colliding tags. The collider begins its
+The collider has two modes of operation. In the default mode, the
+group organizer specifies the desired number of colliding tags. The collider begins its
 scan at a random point in the search space and continues scanning until
 the requested number of tags are found. The second mode scans the entire
-search space and therefore returns all matching tags for a given prefix
+search space, and returning all matching tags for a given prefix
 and suffix length.
 
 The search space is of size $|A|^L$. If we wanted to match byte strings,
@@ -88,25 +92,35 @@ $|A| = 62$. We note that the search space can be explored in parallel,
 which makes the runtime of the collider executing on a system with
 \textit{P} processing units $O(\frac{62^L}{P})$.
 
+% Wow, this really is useless. We need to return the time to find one
+% hit. -- dwallach
 \begin{figure}
 \begin{center}
 \includegraphics[scale=.5, viewport=0cm 0cm 16.5cm 7.5cm]{collider-hits.pdf}
-\caption{Percent of search space that returned hits for an entered short
-  tag, with a Prefix of `rice', and given Suffix Length. We used the
-  short tags `Ch', `Char', and `CharlieS' for short tags of length two,
-  four, and eight, respectively.}\label{fig:collider-hits}
+\caption{Fraction of search space that returned hits for an entered short
+  tag, with a fixed prefix and the desired suffix length (in
+  Base64). We terminated the computation if no results were found in
+  one day of computation.\label{fig:collider-hits}}
 \end{center}
 \end{figure}
+\fi
 
 
-As expected, the runtime---shown in
-Figure~\ref{fig:collider-times}---scales exponentially with \textit{L}.
-With our implementation, it is currently infeasible for a single PC to
-do an exhaustive search for a suffix length greater than six in a
-reasonable amount of time, e.g. less than a day.  \hlfixme{We really
-  need to talk about time to find one useful suffix. This story sucks (=
-  hoot is unusable!) and you only need one useful suffix in practice.}
+As expected, the runtime
+scales exponentially with the length
+of the desired hash collision.
+Performance is limited by the hash performance of our computer---
+roughly 1.9 million ($~2^{21}$) SHA1 hashes per second per core.
+% dwallach-- measured on my Core 2 Duo iMac -- close enough
+% for now.
+Consequently, finding a collision in a short tag that's only three
+Base64 digits (18 bits) takes a fraction of a second. Finding a
+collision in four digits takes only a few seconds.
+Even with our parallelized implementation, it is currently infeasible for a single PC to
+do an exhaustive search for a suffix greater than six Base64
+digits (36 bits) in less than a day.
 
+\if 0
 %Even if optimizations
 %could speed up the calculation, it would likely need to take less than
 %an hour to be usable for most groups. On the other hand, finding a
@@ -149,6 +163,7 @@ monitoring the tweets you download will be unable to differentiate
 someone following a secret group and someone following a popular topic
 because members of both groups will pulling all HooTs from each other's
 groups.
+\fi
 
 %how easy it is to collide with another tag. From
 %Fig. \ref{fig:collider-hits}, we find that beyond 4 characters, it was
@@ -165,7 +180,7 @@ groups.
 %
 %However, we also show that tag collision is possible, there are certainly tunab%le degrees of anonymity thanks to the apparent power-log distribution of twitte%r tags already, and finding such a collision is feasibly done on a personal com%puter. \hl{What more to say here?}
 
-\subsection{Performance}
+\subsection{Overall \hoot performance}
 
 Adoption of \hoot requires that the overhead for encryption and
 decryption be minimal. For example, one path to adoption would have Twitter or
