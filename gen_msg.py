@@ -126,19 +126,24 @@ def main():
     plain_tag = sys.argv[1]
     message = sys.argv[2]
     size = int(sys.argv[3])
+    method = sys.argv[4]
     
     if "-b" in sys.argv:
         encoding = "base64"
     else:
         encoding = "utf8"
+        
     
     v = ("-v" in sys.argv)
 
     
-    #hoot = "#fE Lw2BuD9HXARCFJy+xjmDbev4S+qknmamtBNagDJDpT6LJP1vsnJBrxPvV1PgygT0USP2pEdQ1n0UrYYFTynoWTaVL3g=Gowxmt+yfH4/PVGCsh/uROLXNoMcI4x0G3AOkPdvS2E="
-    for i in xrange(size):
-        hoot = encrypt_msg(message, plain_tag, encoding, verbose=v)
-        #decrypt_msg(hoot, plain_tag, encoding, verbose=v)
+    hoot = "#fE Lw2BuD9HXARCFJy+xjmDbev4S+qknmamtBNagDJDpT6LJP1vsnJBrxPvV1PgygT0USP2pEdQ1n0UrYYFTynoWTaVL3g=Gowxmt+yfH4/PVGCsh/uROLXNoMcI4x0G3AOkPdvS2E="
+    if method == "enc":
+        for i in xrange(size):
+            hoot = encrypt_msg(message, plain_tag, encoding, verbose=v)
+    elif method == "dec":
+        for i in xrange(size):
+            decrypt_msg(hoot, plain_tag, encoding, verbose=v)
 
 
 if __name__ == "__main__":
