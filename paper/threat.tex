@@ -29,16 +29,17 @@ economic activities more valuable than discussing teenage pop stars.
 %   relationship between communication and economic growth?} 
 
 The adversary has moderate computing power: we assume that it can
-perform a brute force key space search of up to 64 bits. The
-Distributed.net distributed computing group cracked a 64-bit RC5 key in
-2002 with computing power equivalent to approximately 46,000 2GHz
-processors working for 790
-days.\footnote{\url{http://www.distributed.net/images/9/92/20020925_-_PR_-_64_bit_solved.pdf}}
-Extrapolating using Moore's Law, we assume that the adversary can
-perform the same computation in approximately two weeks with today's
-machines, and of course the adversary's computational strength will
-only grow as time advances. We describe how
-to address this in Section~\ref{sec:discuss}.
+perform a brute force key space search of up to 47 bits. We describe how
+to address stronger adversaries in Section~\ref{sec:security}.
+%The
+%Distributed.net distributed computing group cracked a 64-bit RC5 key in
+%2002 with computing power equivalent to approximately 46,000 2GHz
+%processors working for 790
+%days.\footnote{\url{http://www.distributed.net/images/9/92/20020925_-_PR_-_64_b%it_solved.pdf}}
+%Extrapolating using Moore's Law, we assume that the adversary can
+%perform the same computation in approximately two weeks with today's
+%machines, and of course the adversary's computational strength will
+%only grow as time advances. 
 
 We assume that the \hoot server does not cooperate with the adversary. We
 also assume that the adversary has no insiders in the group who leak the
@@ -95,7 +96,7 @@ a variety of constraints and challenges.
 \item[Censorship resistance and denial of service.] While we do not attempt
   to defeat censorship of the \hoot service in its entirety, we seek to
   defeat attempts to censor specific groups and keywords. Perng et
-  al. \hlfixme{Cite} ~\cite{perng05revisited} define {\em censorship susceptability} as the probability that the
+  al.~\cite{perng05revisited} define {\em censorship susceptability} as the probability that the
   adversary can block a targeted message while allowing at least one
   other message to be received. This is a
   difficult requirement to meet in our system. We instead aim to allow
@@ -121,7 +122,7 @@ a variety of constraints and challenges.
   form a recipient anonymity set, with the tweets from other colliding
   groups providing cover traffic. \hoot can also be said to provide
   {\em subscriber anonymity}, as introduced by Mislove et al. in their
-  description of AP3~\cite{ap3}. Hordes \hlfixme{Cite} ~\cite{hordes} and \hlfixme{Cite} P5~\cite{P5}
+  description of AP3~\cite{ap3}. Hordes~\cite{hordes} and P5~\cite{P5}
   have similar requirements. The main additional feature of subscriber
   anonymity over recipient anonymity is that the act of subscribing
   should not reveal information that could be used to break recipient

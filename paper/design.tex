@@ -129,18 +129,15 @@ in conducting brute force attacks. Also not that process is only
 necessary once, when a tag is first created. 
 
 To further increase the entropy of the plain tag, we can imagine a
-number of
-options that would still be amenable to human memorization. For
-example, the short tag's prefix could be
-chosen randomly from a large dictionary.
-If we were willing to relax our desire to have human-memorizable
-plain tags, then the whole plain tag could be selected at random.
-Certainly, this yields excellent resistance to brute force searching
-attacks,
-but it also creates additional complexity
-for organizers wishing to prevent leaks, since these plain tags will need
-to be written down\hlfixme{There is a citation here to written-passwords%cite{written-passwords}
-}.
+number of options that would still be amenable to human
+memorization. For example, the short tag's prefix could be chosen
+randomly from a large dictionary.  If we were willing to relax our
+desire to have human-memorizable plain tags, then the whole plain tag
+could be selected at random.  Certainly, this yields excellent
+resistance to brute force searching attacks, but it also creates
+additional complexity for organizers wishing to prevent leaks, since
+these plain tags will need to be written down. 
+%This is ~\cite{written-passwords}.
 
 \paragraphX{Message header and body.}  
 %
@@ -225,7 +222,7 @@ and \#CharlieSheen. The third is a \hoot where receiver anonymity is
 critical, but it's short tag, {\tt \#2p7}, does not collide with
 anything else, and thus subscribers to {\tt \#2p7} might risk
 discovery. The fourth message shows how the same group might alter
-their plain tag so they can deliberate collide with {\tt \#bierber},
+their plain tag so they can deliberate collide with {\tt \#bieber},
 which maps to the same short tag ({\tt \#9tx}).
 
 
@@ -276,24 +273,22 @@ Provided an attacker knows a targeted group's prefix and the alphabet
 out of which they generate the suffix, our scheme is amenable to brute
 force searching attacks. Table~\ref{tab:hps} shows how fast a modern
 computer can decrypt \hoot messages: between $2^{17}$ and $2^{18}$ per
-second. Clearly, plain tags must be selected with far more entropy
-than this. If the attacker has $2^{10}$ CPU cores and we want a plain
-tag to survive one week of analysis (just over $2^{19}$ seconds)
-before a plain tag is ``burned'' and needs to be replaced, then
-plain tags would require a minimum of 47 bits of entropy (e.g., 15
-decimal digits). 
+second. Clearly, plain tags must be selected with far more entropy than
+this. If the attacker has $2^{10}$ CPU cores and we want a plain tag to
+survive one week of analysis (just over $2^{19}$ seconds) before a plain
+tag is ``burned'' and needs to be replaced, then plain tags would
+require a minimum of 47 bits of entropy (e.g., 15 decimal digits).
 
-If we limited plain tags to a word from a reasonably large dictionary (40,000
-entries) plus 7 decimal digits, then we only get 38.5 bits of
-entropy.  Our hypothetical attacker with $2^{10}$ CPU cores could
-brute force a plain tag in 20 minutes.
+If we limited plain tags to a word from a reasonably large dictionary
+(40,000 entries) plus 7 decimal digits, then we only get 38.5 bits of
+entropy.  Our hypothetical attacker with $2^{10}$ CPU cores could brute
+force a plain tag in 20 minutes.
 
 If a plain tag was composed of two dictionary words and 7 decimal
-digits, yielding 53.8 bits of entropy, then our hypothetical attacker would need 
-over two years of computation to brute force a plain tag. While this
-is certainly pushing the boundaries of what might be memorable without
-being written down, it's not inconceivable.
-
+digits, yielding 53.8 bits of entropy, then our hypothetical attacker
+would need over two years of computation to brute force a plain
+tag. While this is certainly pushing the boundaries of what might be
+memorable without being written down, it's not inconceivable.
 
 \paragraphX{Traffic analysis and adaptive censorship.}  
 %
