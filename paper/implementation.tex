@@ -15,11 +15,9 @@ implemented in Python using the
 PyCrypto\footnote{\url{http://www.dlitz.net/software/pycrypto/}}
 library, takes the following steps to construct a \msg:
 \begin{itemize}
-\item We generate a long tag by taking a SHA2-256 hash of the plain
-  tag. The first 128 bits of the long tag are used exclusively for the
-  short tag. The remaining bits
-  bits are used as the tag key, $k_{\mathrm{tag}}$, to encrypt the
-  session keys.
+\item We generate a long tag by taking a SHA-1 hash of the plain
+  tag. This provides 32 bits for the short tag and 128 bits for the
+ tag key, $k_{\mathrm{tag}}$, to encrypt the session keys.
 \item Using PyCrypto's cryptographically-strong random number
   generator, we generate 
   a random 128-bit encryption key, $k_{\mathrm{enc}}$, and a random 128-bit MAC key,
