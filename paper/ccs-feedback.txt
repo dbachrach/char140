@@ -2,37 +2,32 @@
 Our response:
 
 We thank the reviewers for their careful consideration of our work.
-At the very least, we certainly can't complain that they "don't get
-it." #h00t is a very straightforward design, which has its benefits.
+We certainly can't complain that they "don't get it."
 
-One reviewer complains that the attack model is weak. Indeed, the
-attack model of #h00t follows from its conception: trying to layer
-some sort of anonymity/censorship-resistant system above a public
-broadcast system. If we allowed clients to speak a custom protocol,
-then we could certainly achieve stronger security, but we would end up
-with weaker censorship resistance, since that custom protocol could
-easily be censored in its entirety.
+One reviewer complains that the attack model is weak. The attack model
+follows from trying to layer anonymity/censorship-resistant above an
+extant public broadcast system. If we allowed clients to speak a
+custom protocol, then we could certainly achieve stronger security,
+but we would end up with weaker censorship resistance, since that
+custom protocol could easily be censored in its entirety.
 
-We posit that layering above Twitter (or equivalent) would make it
-more difficult for censors to make surgical cuts, particularly if
-#h00t usage becomes widespread. As the second reviewer points out,
-this isn't a perfect match to how Twitter over SSL works, although
-MITM attacks using rogue CAs are certainly an issue. We do note in the
-paper that #h00t makes fairly modest demands on its Twitter substrate,
-making it amenable to a variety of other transports. If Twitter is
-blocked entirely but some "equivalent" is available, #h00t could still
-work. #h00t could also layer above a variety of DHT or MANET schemes
-(both areas for future work).
+Layering above Twitter (or equivalent) makes it more difficult for
+censors to make surgical cuts, particularly if #h00t usage becomes
+widespread. As the second reviewer points out, this isn't a perfect
+match to how Twitter over SSL works, although MITM attacks using rogue
+CAs are certainly an issue. We do note that #h00t makes fairly modest
+demands on its Twitter substrate, making it amenable to a variety of
+other transports. If Twitter is blocked entirely but some "equivalent"
+is available, #h00t could still work. #h00t could also layer above DHT
+or MANET schemes (areas for future work).
 
-The biggest weakness in #h00t is clearly its reliance on using human
-conversation and personal interactions to spread key material. We made
-this design decision for several reasons. If users are dealing with a
-hostile ISP and rogue CA, it becomes quite difficult to establish a
-root of trust. We chose human-scale gossip as a solution.
-We must consider the size of the keyspace that humans can
-keep in their heads (and point out its weaknesses) because purely
-spoken passwords would seem to have more desirable anti-coercion
-properties. We then discuss how to share longer passwords.
+The biggest weakness in #h00t is its reliance on using human personal
+interactions to spread key material. We made this design decision for
+several reasons. If users are dealing with a hostile ISP and rogue CA,
+it becomes quite difficult to establish a root of trust.  We must
+consider the size of the keyspace that humans can keep in their heads
+(and point out its weaknesses) because purely spoken passwords would
+seem to have more desirable anti-coercion properties.
 
 It may seem like punting key management to the human layer is a
 weakness, but it's really a tradeoff. We argue that this at least puts
@@ -47,22 +42,27 @@ knows nothing about what the secondary traffic was saying and has no
 idea exactly what the collateral damage will be. If the censor doesn't
 care about false positives, then #h00t fails.
 
-One reviewer claims we punt on privacy for group membership. Not
-at all. When a user subscribes to a particular hashtag, they gain the
-plausible cover story that they're actually subscribing to a popular
-teen idol, not to a dissident information stream. When a user posts to
-a particular hashtag, if they're using Tor, they're safe. If they do
-it in the open, they risk being coerced into decrypting their message.
+Scrypt: We were unaware of this. It's easy to add.
 
-The reviewers also discuss the need for Tor. #h00t uses Tor to make it
-safer to do the most dangerous activity: posting a new message. We
-don't require Tor at all for subscribing to a channel. By minimizing
-the requirement for Tor usage, and under the assumption that dissident
-groups would tend to have a small number of "speakers" and a large
-number of "listeners", we minimize the exposure of Tor, itself, to
-external censorship, since the sorts of countries we're talking about
-tend to actively go out of their way to kill Tor and other comparable
-tools that offer a clean path to the unfiltered Internet.
+Gzip: This requires a 10-byte header and 8-byte checksum. We would
+need something more efficient.
+
+Privacy for group membership: When a user subscribes to a particular
+hashtag, they gain the plausible cover story that they're actually
+subscribing to a popular teen idol, not to a dissident information
+stream. When a user posts to a particular hashtag, if they're using
+Tor, they're safe. If they do it in the open, they risk being coerced
+into decrypting their message.
+
+Tor: #h00t uses Tor to make it safer to do the most dangerous
+activity: posting a new message. We don't require Tor at all for
+subscribing to a channel. By minimizing the requirement for Tor usage,
+and under the assumption that dissident groups would tend to have a
+small number of "speakers" and a large number of "listeners", we
+minimize the exposure of Tor, itself, to external censorship, since
+the sorts of countries we're talking about tend to actively go out of
+their way to kill Tor and other comparable tools that offer a clean
+path to the unfiltered Internet.
 
 
 ================== ================== ==================
