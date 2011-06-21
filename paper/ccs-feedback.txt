@@ -1,0 +1,213 @@
+You are receiving this message because you submitted a paper to CCS 2011.
+You now have the opportunity to view the preliminary reviews of your
+submission and, if you wish, enter a response limited to 500 words.
+This response is completely optional and there is no requirement to
+respond.  If you do, the deadline is:
+
+9pm CDT (UTC-5) on Thursday, June 23.
+
+Your response must focus on the following:
+
+- Answers to specific questions raised by reviewers (if any).
+
+- Factual errors in the reviews.
+
+We stress that your paper is being evaluated as submitted.  You may
+NOT use your response to provide new research results or reformulate
+the presentation.
+
+Because of the extraordinary number of submissions this year and a
+compressed reviewing period, your submission may have fewer reviews
+at this point than you might have expected.  Many submissions will
+receive additional reviews during the program committee discussion.
+Due to logistical challenges, you will not be able to respond to these
+additional reviews.
+
+All evaluations are preliminary and no decisions have been made yet.
+The opinions you see appended to this message may change during
+the discussion.  Therefore, we are not releasing the current
+scores.
+
+Best wishes,
+
+Vitaly Shmatikov and George Danezis
+CCS 2011 program committee co-chairs
+
+----------------------- REVIEW 1 ---------------------
+PAPER: 272
+TITLE: #h00t: Censorship Resistant Microblogging
+AUTHORS: (anonymous)
+
+The paper proposes #h00t, an approach to exchange messages within a
+group despite censorship. The system operates on top of a
+microblogging site such as Twitter. In particular, each "secret"
+message is encrypted and prefixed with a tag that allows others in a
+group to effectively search for it. To provide plausible deniability,
+tags are selected so that they collide with tags for popular (maybe
+trending) topics.
+
+The paper addresses a timely topic; censorship is on the rise on the
+Internet, and we need more systems that allow groups to safely and
+securely exchange messages online. The problem that I have with #h00t
+is that the attacker model is extremely weak, and hence, the
+censorship resistant guarantees are not very strong. First, an
+attacker that wants to suppress the communication would simply block
+Twitter, which has happened in several countries in the past few
+months. Even more easily, the censor simply has to delete posts that
+share a certain tag. While this might remove some legitimate posts, I
+am not convinced by the paper's argument that this would have such
+strong, negative effect and upset people. For example, Twitter (and
+many other web sites) are banned in China - and people are well aware
+that they are censored. But this is basically accepted as a fact of
+life.
+
+The second issue is that the system relies on a secret that is kept
+from the censor and within the group of "dissidents." Again, this
+seems to be quite unrealistic and would only work in a very small
+circle of people, who could possible find other, easier ways to
+communicate. For a large group of people (who might not all known and
+trust each other), the requirement to keep a secret from the censor
+undermines the usefulness of the system. Moreover, posting messages
+requires access over Tor (to protect a sender). When I can access Tor
+despite being censored, why bother using Twitter and #h00t?
+
+The final issue is that the censor should be expected to know the
+trending (plaintext) keywords on the microblogging platform
+(Twitter). As Figure 4 shows, there are not so many topics with >100
+tweets associated to it. This would allow the censor to easily
+identify all the cover traffic, making sure that such messages stay
+(e.g., those for Justin Bieber) while removing all others. Again, this
+could cause some false positives, but why would the censor care? After
+all, most legitimate messages get through. Unfortunately, the more
+popular a term is (and hence, the more cover traffic it might
+provide), the more likely is it that the attacker knows the plaintext
+hashtag and can let this traffic pass through.
+
+
+----------------------- REVIEW 2 ---------------------
+PAPER: 272
+TITLE: #h00t: Censorship Resistant Microblogging
+AUTHORS: (anonymous)
+
+The paper outlines a censorship resistance system that attempts to hide
+signal in the noise that is Twitter. The proposed system, #h00t, claims
+to have specific anti-censorship properties that make possibly censored
+speech collide with non-censorable or undesirable-to-censor speech.
+
+It seems to me that the authors of the paper aren't really aware of how
+censorship happens and while their paper might be useful if *twitter*
+were censoring a specific hashtag, it isn't relevant for almost any
+other adversary. In Egypt, when the network was dropping Twitter on
+TEData, they did it at the first hop after the consumer's router or on
+the consumer's router itself for the IP addresses by some kind of router
+ACL or firewall. That means that content is never inspected at all;
+Syria has some ISPs that use BlueCoat and _those_ do content inspection
+but not if they're simply configured to do blocking.
+
+Most Twitter users are using HTTPS to connect to Twitter these days and
+so filtering based on content is pretty much moot without a full MITM
+attack. In the event of a full MITM, I've only heard about attempts to
+perform credential stealing (eg: Facebook in Syria, etc) and not stream
+filtering. Much of the filtering in the middle east is very rough and
+HTTPS is generally enough to stop content inspection related filtering;
+however, if it was possible for them to do content inspection, they'd
+key on the *words* in the tweet, not just the hashtag.
+
+Also, their citation of [7] is probably incorrect. The Facebook MITM is
+not nation wide, it's a single computer on one of a few ISPs in Syria
+and not at the core routers. I believe it to be an ISP employee with a
+Windows machine who was trying to teach themselves to perform a MITM on
+a live population.
+
+It seems like this kind of scheme may be useful in a world were Twitter
+decides to collaborate with a government, allows for content inspection
+and then some parts of the connection are inspected; I'm not actually
+sure that this situation is relevant as Twitter might have to try to
+stop such a scheme as part of the deal...
+
+Basically, their threat model isn't actually synced up with the
+censorship happening in the countries that they discuss in the
+introduction. They also discuss that their adversary can brute-force up
+to 47 bits, why 47? Weird magic numbers... It seems to me that 56bits is
+easy enough to do without any real effort, I know the MITM facebook SSL
+private key was factored in less than a single day by someone who sent
+me p and q. I bet other governments can do better. They should be using
+scrypt if they have to use such a short key length:
+http://www.tarsnap.com/scrypt.html
+
+They also assume that no person is compromised or willing to leak a key
+- this seems totally unrealistic. These are populist movements who are
+using Twitter as a tool of opportunity.
+
+There is basically no sender anonymity as it's a broadcast system with
+strong identity. There is some recipient anonymity in that they didn't
+know that subscription to a given hashtag would result in receiving a
+garbage/spam/other message. However, I think it's a stretch to call this
+"anonymity" so much as it might be deniability. They note this and call
+it both, I think it's only the latter.
+
+The paper entirely punts on membership concealment and that's really too
+bad. Twitter has a major issue for group privacy. I think this kind of
+instant traffic analysis will lead to a compromised group key within
+hours of heavy use in a serious conflict.
+
+Big ups for knowing about Tor and Tor bridges; they understand that
+sometimes you need an anonymity system and they punt on sender
+anonymity/deniability by saying that people should use Tor. I agree
+entirely...
+
+The figures in the paper are pretty hard to read - I'd prefer a Steven's
+TCP/IP style figure for the hoot structure.
+
+I'm a bit surprised that they don't structure the M (message) of a hoot
+with compression as a default - rather than Hoot = (ShortTag, Ektag
+(kenc , kmac ) , MACkmac (C),C) - C is Ekenc (M) and I'd expect it to be
+Ekenc (gzip(M))... Also, it seems strange that they're using "a MAC" but
+they don't specifically say that it is an HMAC as later in the paper
+they say that it is (HMAC-SHA1).
+
+It also seems like they should also specify very clearly the mode for
+their cipher. They discuss CBC vs CTR without settling on one formally.
+This is weak. The language is also a bit weak "the MAC key is generated
+at randomly and independently " is pretty cute ;-)
+
+I think that the replay attack prevention is not really reasonable. They
+claim: "Replay attacks can be defeated by treating the session keys
+(kenc , kmac ) as nonces. It???s highly unlikely that two different hoots
+will share the same session keys." - this basically says that it's
+unlikely to have a replayed message. That's pretty silly, of course it's
+unlikely and yet that is exactly what will happen. They should enforce
+the use of counter mode to prevent a replay and then hoot clients should
+track messages (probably by hashing them) to ensure that they're not
+being replayed...
+
+The entire protocol appears to be susceptible to bruceforce if the
+attacker has a Fire Hose of Twitter traffic and a 2^10 cpu cores. For
+some governments, such as the Chinese, they've got a ton of CPU cores.
+
+The short tag collision part of the paper is nice and I think that it
+has some promise.
+
+There is a critical piece that is missing - the renumbering issue. How
+do people switch from one short tag to another? They need a human? That
+seems like a punt where there should be an improvement. In a world of
+leaderless resistance, I hardly understand why we would want to rely on
+a leader keyed protocol... For mass movements? I think no... For
+something else? Perhaps...?
+
+They also suggest using client side javascript, I think this is a bad
+idea and that hoot is better as a proxy or as a browser plugin; this is
+like a ghetto multi-party OTR without Ian...
+
+I'm not convinced that #hoot prevents "fine-grained censorship rather
+than prevention of heavy-handed censorship" - I think that removal of
+hoots will still be possible wholesale. Also, I believe that Twitter
+itself will be blocked to a large number of people. Additionally, it
+appears to make it harder to Re-Tweet people, if not impossible.
+
+All in all, the protocol is a hoot but I think we might want something
+more serious, perhaps a holler...
+
+In short - I'd consider accepting the paper but I'd rip it apart before
+the camera ready. If they can't respond to these points well, I'd reject
+it. It's close but it's not really great.
