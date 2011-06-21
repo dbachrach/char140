@@ -42,10 +42,10 @@ knows nothing about what the secondary traffic was saying and has no
 idea exactly what the collateral damage will be. If the censor doesn't
 care about false positives, then #h00t fails.
 
-Scrypt: We were unaware of this. It's easy to add.
-
 Gzip: This requires a 10-byte header and 8-byte checksum. We would
 need something more efficient.
+
+Scrypt: Good idea.
 
 Privacy for group membership: When a user subscribes to a particular
 hashtag, they gain the plausible cover story that they're actually
@@ -54,15 +54,10 @@ stream. When a user posts to a particular hashtag, if they're using
 Tor, they're safe. If they do it in the open, they risk being coerced
 into decrypting their message.
 
-Tor: #h00t uses Tor to make it safer to do the most dangerous
-activity: posting a new message. We don't require Tor at all for
-subscribing to a channel. By minimizing the requirement for Tor usage,
-and under the assumption that dissident groups would tend to have a
-small number of "speakers" and a large number of "listeners", we
-minimize the exposure of Tor, itself, to external censorship, since
-the sorts of countries we're talking about tend to actively go out of
-their way to kill Tor and other comparable tools that offer a clean
-path to the unfiltered Internet.
+Tor: #h00t uses Tor to make it safer to post a new message. We don't
+require Tor for subscribing to a channel. Minimizing Tor usage
+minimizes the exposure of Tor, itself.  Many countries go out of their
+way to censor Tor.
 
 
 ================== ================== ==================
