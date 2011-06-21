@@ -28,24 +28,16 @@ The biggest weakness in #h00t is clearly its reliance on using human
 conversation and personal interactions to spread key material. We made
 this design decision for several reasons. If users are dealing with a
 hostile ISP and rogue CA, it becomes quite difficult to establish a
-root of trust. We chose human-scale gossip as a mechanism to establish
-key material. We then posit the size of the keyspace that humans can
-keep in their heads and analyze whether that's feasible to brute force
-(sadly, it's probably weak), which would require stronger keys to be
-exchanged, either by writing them down or by using phone-to-phone
-communication (e.g., QRcodes). It's important that we consider the
-limits of human memorable passwords (which have desirable
-anti-coercion properties), if only to emphasize the need for stronger
-alternatives. It may seem like punting key management to the human layer
-is a weakness, but it's really a tradeoff. We can't make broad
-statements about how effectively dissident groups are infiltrated by
-autocratic regimes, so it's hard to estimate how many members should
-share any given key and how frequently keys should be updated. In much
-the same way that Twitter punts many of the higher-level semantics
-of user messages to external conventions (e.g., hash tags, @usernames,
-URL shorteners), #h00t punts key management. We argue that this at
-least puts control over message privacy in the hands of the people to
-whom it matters most.
+root of trust. We chose human-scale gossip as a solution.
+We must consider the size of the keyspace that humans can
+keep in their heads (and point out its weaknesses) because purely
+spoken passwords would seem to have more desirable anti-coercion
+properties. We then discuss how to share longer passwords.
+
+It may seem like punting key management to the human layer is a
+weakness, but it's really a tradeoff. We argue that this at least puts
+control over message privacy in the hands of the people to whom it
+matters most.
 
 Nitty gritty: one reviewer notes that the censor will know the top
 trending hashtags, and can thus identify the primary source of
