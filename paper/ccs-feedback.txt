@@ -1,3 +1,79 @@
+================== ================== ==================
+Our response:
+
+We thank the reviewers for their careful consideration of our work.
+At the very least, we certainly can't complain that they "don't get
+it." #h00t is a very straightforward design, which has its benefits.
+
+One reviewer complains that the attack model is weak. Indeed, the
+attack model of #h00t follows from its conception: trying to layer
+some sort of anonymity/censorship-resistant system above a public
+broadcast system. If we allowed clients to speak a custom protocol,
+then we could certainly achieve stronger security, but we would end up
+with weaker censorship resistance, since that custom protocol could
+easily be censored in its entirety.
+
+We posit that layering above Twitter (or equivalent) would make it
+more difficult for censors to make surgical cuts, particularly if
+#h00t usage becomes widespread. As the second reviewer points out,
+this isn't a perfect match to how Twitter over SSL works, although
+MITM attacks using rogue CAs are certainly an issue. We do note in the
+paper that #h00t makes fairly modest demands on its Twitter substrate,
+making it amenable to a variety of other transports. If Twitter is
+blocked entirely but some "equivalent" is available, #h00t could still
+work. #h00t could also layer above a variety of DHT or MANET schemes
+(both areas for future work).
+
+The biggest weakness in #h00t is clearly its reliance on using human
+conversation and personal interactions to spread key material. We made
+this design decision for several reasons. If users are dealing with a
+hostile ISP and rogue CA, it becomes quite difficult to establish a
+root of trust. We chose human-scale gossip as a mechanism to establish
+key material. We then posit the size of the keyspace that humans can
+keep in their heads and analyze whether that's feasible to brute force
+(sadly, it's probably weak), which would require stronger keys to be
+exchanged, either by writing them down or by using phone-to-phone
+communication (e.g., QRcodes). It's important that we consider the
+limits of human memorable passwords (which have desirable
+anti-coercion properties), if only to emphasize the need for stronger
+alternatives. It may seem like punting key management to the human layer
+is a weakness, but it's really a tradeoff. We can't make broad
+statements about how effectively dissident groups are infiltrated by
+autocratic regimes, so it's hard to estimate how many members should
+share any given key and how frequently keys should be updated. In much
+the same way that Twitter punts many of the higher-level semantics
+of user messages to external conventions (e.g., hash tags, @usernames,
+URL shorteners), #h00t punts key management. We argue that this at
+least puts control over message privacy in the hands of the people to
+whom it matters most.
+
+Nitty gritty: one reviewer notes that the censor will know the top
+trending hashtags, and can thus identify the primary source of
+messages on the channel (our Justin Bieber example), and can thus
+unilaterally remove all non-Bieber traffic. In this case, the censor
+knows nothing about what the secondary traffic was saying and has no
+idea exactly what the collateral damage will be. If the censor doesn't
+care about false positives, then #h00t fails.
+
+One reviewer claims we punt on privacy for group membership. Not
+at all. When a user subscribes to a particular hashtag, they gain the
+plausible cover story that they're actually subscribing to a popular
+teen idol, not to a dissident information stream. When a user posts to
+a particular hashtag, if they're using Tor, they're safe. If they do
+it in the open, they risk being coerced into decrypting their message.
+
+The reviewers also discuss the need for Tor. #h00t uses Tor to make it
+safer to do the most dangerous activity: posting a new message. We
+don't require Tor at all for subscribing to a channel. By minimizing
+the requirement for Tor usage, and under the assumption that dissident
+groups would tend to have a small number of "speakers" and a large
+number of "listeners", we minimize the exposure of Tor, itself, to
+external censorship, since the sorts of countries we're talking about
+tend to actively go out of their way to kill Tor and other comparable
+tools that offer a clean path to the unfiltered Internet.
+
+
+================== ================== ==================
 You are receiving this message because you submitted a paper to CCS 2011.
 You now have the opportunity to view the preliminary reviews of your
 submission and, if you wish, enter a response limited to 500 words.
