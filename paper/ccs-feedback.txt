@@ -5,17 +5,19 @@ aggressive and block the service entirely. While this is certainly
 true and has recently been seen in several countries, microblogging is
 becoming increasingly central to users' daily communications, creating
 a situation where microblogging censorship is tantamount to censoring
-the entire Internet.
+the entire Internet. Defeating a country-wide shutdown is beyond the
+scope of our work.
 
-We also note that our #h00t design places fairly modest demands on the
-underlying service and could just as easily be layered above
-peer-to-peer or adhoc schemes (areas for future work).
+We also note that our #h00t design places modest demands on the
+underlying microblogging service; it could be layered above
+censorship-resistant peer-to-peer or adhoc schemes (interesting areas
+for future work).
 
 Review2 points out that SSL makes #h00t largely unnecessary. We note
 that not only are MITM attacks an issue, but the adverary might choose
-to block SSL connections, or might exercise legal authority to order
-the service to conduct its own censorship. #h00t keeps the plaintext
-away from the censors.
+to block SSL connections, or might exercise its legal authority to
+order Twitter (or its local equivalent) to conduct centralized
+censorship. #h00t keeps the plaintext away from the censors.
 
 The biggest weakness in #h00t is its reliance on using human personal
 interactions to spread key material. We made this design decision for
@@ -28,18 +30,19 @@ seem to have more desirable anti-coercion properties.
 It may seem like punting key management to the human layer is a
 weakness, but it's really a tradeoff. We argue that this at least puts
 control over message privacy in the hands of the people to whom it
-matters most. If the adversary's best attack is a spy who can infiltrate
-the group to gain their secrets, we feel that the system is effective.
+matters most. If the adversary's best attack is a spy who can
+infiltrate the group to gain their secrets, we feel that the system is
+effective.
 
 Review1 notes that the censor knows trending hashtags, can identify
 the primary source of their messages (our Bieber example), and can
 thus remove other (non-Bieber) traffic. In this case, the censor knows
-nothing about the content of the secondary traffic and what the what the
-collateral damage will be (i.e., false positives have a cost). #h00t
-gives groups some strength in numbers: the censor blocks all or none.
-Alternately, #h00t groups might steer away from popular tags, where
-their message volume may still be well below the most popular users
-of the same tag.
+nothing about the content of the secondary traffic and what the what
+the collateral damage will be (i.e., false positives have a
+cost). #h00t gives groups some strength in numbers: the censor blocks
+all or none.  Alternately, #h00t groups might steer away from popular
+tags, where their message volume may still be well below the most
+popular users of the same tag.
 
 Gzip: This requires a 10-byte header and 8-byte checksum, which is too
 long.
@@ -47,13 +50,11 @@ long.
 Scrypt: Good idea.
 
 Privacy for group membership: When a user subscribes to a particular
-hashtag, they gain the plausible cover story that they're actually
-subscribing to a popular teen idol, not to a dissident information
-stream. When a user posts to a particular hashtag, if they're using
-Tor, they're safe. If they do it in the open, they risk being coerced
-into decrypting their message.
+hashtag, they gain the plausible cover story that they're subscribing
+to something innocuous, not to a dissident information stream.
 
-Tor: #h00t uses Tor to make it safer to post a new message. We don't
-require Tor for subscribing to a channel. Minimizing Tor usage
-minimizes the exposure of Tor, itself.  Many countries go out of their
-way to censor Tor.
+Tor: When a user posts to a particular hashtag, if they're using Tor,
+they're safe. If they do it in the open, they risk being coerced into
+decrypting their message.  We don't require Tor for subscribing to a
+channel. Minimizing Tor usage minimizes the exposure of Tor bridge
+nodes. Many countries go out of their way to censor Tor.
