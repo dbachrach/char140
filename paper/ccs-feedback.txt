@@ -1,21 +1,21 @@
 We thank the reviewers for their careful consideration of our work.
 
-Both reviews point out that the attacker could simply be more aggressive
-and block the service entirely. While this is certainly true and happens
-today, we imagine microblogging becoming more pervasive heavily used (a
-la [21]). In such an environment, blocking microblogging services would
-be like blocking email or SMS. The adversary might block it during the
-"revolution", but otherwise leave it alone. Against aggressive blocking,
-censorship resistance becomes very hard and is beyond the intended
-scope.
+Both reviews point out that the attacker could simply be more
+aggressive and block the service entirely. While this is certainly
+true and has recently been seen in several countries, microblogging is
+becoming increasingly central to users' daily communications, creating
+a situation where microblogging censorship is tantamount to censoring
+the entire Internet.
+
+We also note that our #h00t design places fairly modest demands on the
+underlying service and could just as easily be layered above
+peer-to-peer or adhoc schemes (areas for future work).
 
 Review2 points out that SSL makes #h00t largely unnecessary. We note
 that not only are MITM attacks an issue, but the adverary might choose
-to block SSL connections to Twitter, forcing all connections to go as
-plaintext. Why allow #h00t messages then? Blocking SSL doesn't stop
-users from accessing the service, but blocking #h00t messages blocks
-users from getting some content (including legit content, as per the
-usage model).
+to block SSL connections, or might exercise legal authority to order
+the service to conduct its own censorship. #h00t keeps the plaintext
+away from the censors.
 
 The biggest weakness in #h00t is its reliance on using human personal
 interactions to spread key material. We made this design decision for
@@ -31,25 +31,29 @@ control over message privacy in the hands of the people to whom it
 matters most. If the adversary's best attack is a spy who can infiltrate
 the group to gain their secrets, we feel that the system is effective.
 
-Review1 notes that the censor knows top trending hashtags, can identify
-the primary source of messages on the channel (Bieber example), and can
-thus remove all non-Bieber traffic. In this case, the censor knows
+Review1 notes that the censor knows trending hashtags, can identify
+the primary source of their messages (our Bieber example), and can
+thus remove other (non-Bieber) traffic. In this case, the censor knows
 nothing about the content of the secondary traffic and what the what the
-collateral damage will be (i.e. false positives have a cost). A #h00t
-group can leverage other groups: if multiple private groups use the
-Bieber channel, the censor either blocks all of these or none. The #h00t
-group can also use one of many obscure hashtags; tracking all of these
-is hard. Hashtags often trend from little or no activity, making it hard
-for the censor to discriminate against newly trending groups.
+collateral damage will be (i.e., false positives have a cost). #h00t
+gives groups some strength in numbers: the censor blocks all or none.
+Alternately, #h00t groups might steer away from popular tags, where
+their message volume may still be well below the most popular users
+of the same tag.
 
 Gzip: This requires a 10-byte header and 8-byte checksum, which is too
 long.
 
 Scrypt: Good idea.
 
-Privacy for group membership: Subscription is protected, but posting is
-risky. If the user can post using Tor, they are safe. Otherwise, they
-risk being coerced into decrypting their message.
+Privacy for group membership: When a user subscribes to a particular
+hashtag, they gain the plausible cover story that they're actually
+subscribing to a popular teen idol, not to a dissident information
+stream. When a user posts to a particular hashtag, if they're using
+Tor, they're safe. If they do it in the open, they risk being coerced
+into decrypting their message.
 
 Tor: #h00t uses Tor to make it safer to post a new message. We don't
-require Tor for subscribing to a channel.
+require Tor for subscribing to a channel. Minimizing Tor usage
+minimizes the exposure of Tor, itself.  Many countries go out of their
+way to censor Tor.
