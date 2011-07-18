@@ -2,9 +2,11 @@
 \label{sec:experiments}
 
 In this section, we describe the results of our analysis of the \hoot
-system with the 2008 Twitter dataset collected by Sandler and Wallach~\cite{sandler09}. This data contains 10,766,525 tweets with 255,833 hash tag references. Additionally, we show the results of experiments using our
-prototype to examine the computational overhead of implementing \hoot
-over all Twitter traffic.
+system with the 2008 Twitter dataset collected by Sandler and
+Wallach~\cite{sandler09}. This data contains 10,766,525 tweets with
+255,833 hashtag references. Additionally, we show the results of
+experiments using our prototype to examine the computational overhead of
+implementing \hoot over all Twitter traffic.
 
 \subsection{Cover traffic}
 We first show that Twitter groups provide good possibilities for cover
@@ -78,12 +80,12 @@ finds the concatenations of \textit{S} and strings of length \textit{L}
 from \textit{A*} such that the truncated hash of the resultant string
 matches \textit{T}.
 
-The collider has two modes of operation. In the default mode, the
-group organizer specifies the desired number of colliding tags. The collider begins its
-scan at a random point in the search space and continues scanning until
-the requested number of tags are found. The second mode scans the entire
-search space, and returning all matching tags for a given prefix
-and suffix length.
+The collider has two modes of operation. In the default mode, the group
+organizer specifies the desired number of colliding tags. The collider
+begins its scan at a random point in the search space and continues
+scanning until the requested number of tags are found. The second mode
+scans the entire search space, and returning all matching tags for a
+given prefix and suffix length.
 
 The search space is of size $|A|^L$. If we wanted to match byte strings,
 $|A| = 256$. However, since Twitter operates on characters and not
@@ -105,20 +107,20 @@ which makes the runtime of the collider executing on a system with
 \end{figure}
 \fi
 
-
-As expected, the runtime
-scales exponentially with the length
-of the desired hash collision.
-Performance is limited by the hash performance of our computer---
-roughly 1.9 million ($~2^{21}$) hashes per second per core.
+As expected, the runtime scales exponentially with the length of the
+desired collision.  Performance is limited by the performance of SHA-1
+of our computer--- roughly 1.9 million ($~2^{21}$) hashes per second per
+core.
 % dwallach-- measured on my Core 2 Duo iMac -- close enough
 % for now.
 Consequently, finding a collision in a short tag that's only three
 Base64 digits (18 bits) takes a fraction of a second. Finding a
-collision in four digits takes only a few seconds.
-Even with our parallelized implementation, it is currently infeasible for a single PC to
-do an exhaustive search for a suffix greater than six Base64
-digits (36 bits) in less than a day.
+collision in four digits takes only a few seconds. Even with our
+parallelized implementation, it is currently infeasible for a single PC
+to do an exhaustive search for a suffix greater than six Base64 digits
+(36 bits) in less than a day. Note that performance would be slower if
+scrypt or any other slow key derivation function was used in place of
+SHA-1.
 
 \if 0
 %Even if optimizations
@@ -183,16 +185,16 @@ groups.
 \subsection{Overall \hoot performance}
 
 Adoption of \hoot requires that the overhead for encryption and
-decryption be minimal. For example, one path to adoption would have Twitter or
-another microblogging service offer \hoot semantics over their entire
-existing service. We thus consider computation overhead
-in the context of encrypting {\em all} Twitter traffic as a worst case. In
+decryption be minimal. For example, one path to adoption would have
+Twitter or another microblogging service offer \hoot semantics over
+their entire existing service. We thus consider computation overhead in
+the context of encrypting {\em all} Twitter traffic as a worst case. In
 March 2011, Twitter stated that the site receives 140 million tweets per
 day or 1620 tweets per second on
 average\footnote{\url{http://blog.twitter.com/2011/03/numbers.html}}. Twitter
-also stated that the maximum number tweets per second ever was 6939. These numbers act as
-rough upper bounds to the number of hoots per second the system would
-need to keep up with.
+also stated that the maximum number tweets per second ever was
+6939. These numbers act as rough upper bounds to the number of hoots per
+second the system would need to keep up with.
 % In all likelihood, the number of encrypted
 % messages posted would be drastically smaller than regular messages, at
 % least in the early deployment of \hoot.
@@ -212,17 +214,19 @@ need to keep up with.
 \end{table}
 
 To study the amount of computation required to support \hoot over
-Twitter, we modified our Python script to perform the encryption process 
-500,000 times running on a MacBook
-Air with a 1.86~GHz Intel Core~2 Duo using Base64 encoding to demonstrate how the performance would be on a typical end user's laptop. This also gives us a lower bound for performance on modern hardware. We 
-also independently performed the decryption process 500,000 times. 
-Table~\ref{tab:hps} demonstrates that the computational overhead
-for \hoot cryptography is negligible for Twitter; the average
-computational load can be handled by a single computer and the peak
-load might require only two computers. Clearly, the issue for Twitter
-or a comparable service wouldn't be cryptographic costs, it would be
-bandwidth. That overhead would be entirely dependent on the selection
-of the short tag on the part of the various \hoot organizers. 
+Twitter, we modified our Python script to perform the encryption process
+500,000 times running on a MacBook Air with a 1.86~GHz Intel Core~2 Duo
+using Base64 encoding to demonstrate how the performance would be on a
+typical end user's laptop. This also gives us a lower bound for
+performance on modern hardware. We also independently performed the
+decryption process 500,000 times.  Table~\ref{tab:hps} demonstrates that
+the computational overhead for \hoot cryptography is negligible for
+Twitter; the average computational load can be handled by a single
+computer and the peak load might require only two computers. Clearly,
+the issue for Twitter or a comparable service wouldn't be cryptographic
+costs, it would be bandwidth. That overhead would be entirely dependent
+on the selection of the short tag on the part of the various \hoot
+organizers.
 
 On the client side, our experiments show that a modern computer can
 decrypt \msgs significantly faster than Twitter's peak message rate for
@@ -233,15 +237,14 @@ overhead isn't going to be the limiting factor.  Instead, the only issue
 will be bandwidth.
 
 Group organizers must then take client bandwidth into account when
-selecting hash collisions. An international pop music star might make
-for an excellent cover story, but he might simply be too popular for
-clients, particularly if the they are using cellular phone networks
-that haven't been brought up to the latest multi-megabit speeds.
-This is the one place where the short size of Twitter
-messages actually works in our favor. A modest data pipe of 128
-kbits/sec can transmit roughly 114 tweets per second. This is well
-within the regular bounds of most any short tag selected by the group
-organizers.
+selecting collisions. An international pop music star might make for an
+excellent cover story, but he might simply be too popular for clients,
+particularly if the they are using cellular phone networks that haven't
+been brought up to the latest multi-megabit speeds.  This is the one
+place where the short size of Twitter messages actually works in our
+favor. A modest data pipe of 128 kbits/sec can transmit roughly 114
+tweets per second. This is well within the regular bounds of most any
+short tag selected by the group organizers.
 
 Assuming the entire peak load 7000-or-so tweets per second ends up split
 uniformly across short tags with three base-64 digits (i.e., 18 bit

@@ -5,32 +5,45 @@ the goals of our design.
 
 \subsection{Threat model} \label{sec:threat}
 \hoot is designed to provide censorship resistance against an adversary
-who can observe all \hoot traffic and can block any tweets it chooses. In
-practice, the adversary may only block tweets being received by a subset of users,
-but this does not affect our model. The adversary seeks to identify and
-block tweets discussing a small set of topics, based on the identity of
-the sender, keywords in the content, or the hashtag itself. However,
-our adversary does not want to disable the entire service, nor does
-our adversary want to disable popular but innocuous discussion
-threads; such crude censorship might
-then generate additional unrest in the population. 
+who can observe all \hoot traffic and can block any tweets it
+chooses. In practice, the adversary may only block tweets being received
+by a subset of users, but this does not affect our model. The adversary
+seeks to identify and block tweets discussing a small set of topics,
+based on the identity of the sender, keywords in the content, or the
+hashtag itself. The adversary blocks SSL access to the service or acts
+as a man-in-the-middle to enable eavesdropping and selective blocking.
+However, our adversary does not want to disable the entire service, nor
+does our adversary want to disable popular but innocuous discussion
+threads; such crude censorship might then generate additional unrest in
+the population.
+
+We argue that some governments will be interested in this level of
+censorship, in which the microblogging service is allowed in a
+restricted fashion. We note that some countries are currently censoring
+services such as Facebook and Twitter in their entirety. As
+microblogging services become an increasingly important form of
+communication, however, we believe that most countries will find
+complete censorship of these services to be incompatible with operating
+in the modern world. It is possible that blocking all microblogging
+services could be seen as heavy-handed as blocking email would be today.
 % The
 % adversary is not willing to block the tweets on hashtags used for most
 % communication, though it might be willing to block a small fraction of
 % such tweets.
-Furthermore, Kuppusamy and Shanmugam~\cite{ict-economy} showed that information technology 
-and communication leads to greater economic growth. Broad censorship 
-reduces the utility of the entire system, which is presumably used for
-economic activities more valuable than discussing teenage pop stars.
+Furthermore, Kuppusamy and Shanmugam~\cite{ict-economy} showed that
+information technology and communication leads to greater economic
+growth. Broad censorship reduces the utility of the entire system, which
+is presumably used for economic activities more valuable than discussing
+teenage pop stars.
 
 %  Blocking a large number of tweets reduces the reliability
 % and utility of the entire system, and {\em communication is great}.
 % \hlfixme{fix this sentence. can we cite something showing the
 %   relationship between communication and economic growth?} 
 
-The adversary has moderate computing power: we assume that it can
-perform a brute force key space search of up to 47 bits. We describe how
-to address stronger adversaries in Section~\ref{sec:security}.
+The adversary has moderate computing power and can perform a brute force
+key space search over a reasonable space. We describe
+how to address stronger adversaries in Section~\ref{sec:security}.
 %The
 %Distributed.net distributed computing group cracked a 64-bit RC5 key in
 %2002 with computing power equivalent to approximately 46,000 2GHz

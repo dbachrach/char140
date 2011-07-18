@@ -1,7 +1,20 @@
 \section{Introduction}
 
-Recent events in Egypt, Tunisia, and many other countries have shown that social networking sites (Facebook, Twitter, and presumably others) played a non-trivial role in helping people organize themselves, plan protests, and distribute videos and other news to the outside world. Egypt was notable in that they eventually cut themselves off from the entire Internet, in a belated and ultimately ineffectual attempt to turn the tide. While it's difficult to draw overarching conclusions about the centrality of social networking versus more traditional means of communication in these important world events, it is clear that social media played a non-trivial role. Many other countries' leaders may well be worried of copycat revolutionaries. Other such countries may well try to censor or otherwise tamper with their citizens' use of social networking. To pick a current example: Syria appears to be attempting
-a nationwide man-in-the-middle attack against Facebook~\cite{syria-facebook}. 
+Recent events in Egypt, Tunisia, and many other countries have shown
+that social networking sites (Facebook, Twitter, and presumably others)
+played a non-trivial role in helping people organize themselves, plan
+protests, and distribute videos and other news to the outside
+world. Egypt was notable in that they eventually cut themselves off from
+the entire Internet, in a belated and ultimately ineffectual attempt to
+turn the tide. While it's difficult to draw overarching conclusions
+about the centrality of social networking versus more traditional means
+of communication in these important world events, it is clear that
+social media played a non-trivial role. Many other countries' leaders
+may well be worried of copycat revolutionaries. Other such countries may
+well try to censor or otherwise tamper with their citizens' use of
+social networking. To pick a current example: Syria appears to be
+attempting a nationwide man-in-the-middle attack against
+Facebook~\cite{syria-facebook}.
 
 As a first step towards improving social network systems for such
 environments, we seek to enable the use strong cryptographic primitives
@@ -45,9 +58,31 @@ several different tags (e.g., Egyptian discussions happen under {\tt
   \#tahrir}, {\tt \#jan25}, {\tt \#25jan}, and {\tt \#egypt}, among
 others). Hashtags searches are generally case-insensitive.
 
-Some tags have staggering volumes of messages. To pick a notable example, pop singer Justin Bieber asked his roughly 9 million followers to discuss his movie, {\em Never Say Never} using the hashtag {\tt \#nsn3d}. At its peak, roughly 1\% of Twitter's traffic mentioned this tag\footnote{Statistics via Trendistic, Topsy, and HashTracking.}. Since the movie's release in February 2011, there have been roughly 164 thousand tweets using {\tt \#nsn3d}, an average of 1.6 per minute with significantly higher peaks. 500 recent tweets on this hashtag generated 346 thousand impressions, reaching an audience of 212 thousand followers within a 24 hour period (measured in mid-April 2011). 
+Some tags have staggering volumes of messages. To pick a notable
+example, pop singer Justin Bieber asked his roughly 9 million followers
+to discuss his movie, {\em Never Say Never} using the hashtag {\tt
+  \#nsn3d}. At its peak, roughly 1\% of Twitter's traffic mentioned this
+tag\footnote{Statistics via Trendistic, Topsy, and HashTracking.}. Since
+the movie's release in February 2011, there have been roughly 164
+thousand tweets using {\tt \#nsn3d}, an average of 1.6 per minute with
+significantly higher peaks. 500 recent tweets on this hashtag generated
+346 thousand impressions, reaching an audience of 212 thousand followers
+within a 24 hour period (measured in mid-April 2011).
 
-Of course, not all tags are as popular. We will show later, in Section~\ref{sec:experiments}, that hashtag usage follows a power-law distribution; a small number of hashtags are incredibly widely used and large numbers of tags are used very rarely or only once. We would like to design a system that can leverage these communications to create cover traffic for other, more sensitive messages, but without simply reusing the popular hashtag for other content. This will require converting hashtags into cryptographic keys and arranging for them to collide in some fashion, such that a query for {\tt \#nsn3d} and a query for a more sensitive tag are indistinguishable to an observer, thus providing some measure of deniability to group subscribers (``Protests? I'm just a fan of Justin Bieber!''). We also need to give some amount of control to the organizers of the sensitive communications, allowing them to select any popular hashtag with which they might prefer to collide.
+Of course, not all tags are as popular. We will show later, in
+Section~\ref{sec:experiments}, that hashtag usage follows a power-law
+distribution; a small number of hashtags are incredibly widely used and
+large numbers of tags are used very rarely or only once. We would like
+to design a system that can leverage these communications to create
+cover traffic for other, more sensitive messages, but without simply
+reusing the popular hashtag for other content. This will require
+converting hashtags into cryptographic keys and arranging for them to
+collide in some fashion, such that a query for {\tt \#nsn3d} and a query
+for a more sensitive tag are indistinguishable to an observer, thus
+providing some measure of deniability to group subscribers (``Protests?
+I'm just a fan of Justin Bieber!''). We also need to give some amount of
+control to the organizers of the sensitive communications, allowing them
+to select any popular hashtag with which they might prefer to collide.
 
 Ultimately, we see two main paths to designing our system. One option would be to send encrypted messages that include the real {\tt \#nsn3d} tag, perhaps engineering some sort of steganographic process that tries to hide the plaintext within messages that are statistically similar to other posts from Bieber's fan, but it seems inappropriate to produce false messages like this. The other possibility is to imagine that {\em all} Twitter messages are encrypted in a uniform way, where knowing the plaintext of the hashtags would enable the decryption of a message. (It's easy to see a proxy server, of some sort, providing an ``encrypted'' interface to Twitter in this fashion% ; more on that in \hlfixme{TODO} Section~\ref{sec:whatever-else}
 .) This is the design we chose to pursue. In this setup, we can encrypt and MAC every message with a random session key, which can be decrypted if the user knows the proper hashtag. ``Encrypted'' hashtags can also be generated by hashing the plaintext hashtags and truncating those hashes.  (We address this unwieldy vocabulary when we present our design in Section~\ref{sec:design}.) Consequently, two different plaintext hashtags can collide with each other with a probability related to the number of bits in the truncated hash.

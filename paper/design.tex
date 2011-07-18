@@ -29,30 +29,34 @@ can also publicly follow that identifier like any other hashtag on
 Twitter.
 
 \paragraphX{Group identifiers.} To create a hashtag for use as the group
-identifier, \hoot derives a short bitstring from the secret hashtag. We
-must do this in such a way as to give an attacker no information about
-the shared secret itself. A cryptographic hash function serves this
-purpose well.
+identifier, \hoot derives a fixed-length bitstring from the secret
+hashtag. We must do this in such a way as to give an attacker no
+information about the shared secret itself. A cryptographic hash
+function serves this purpose well, but makes brute force very easy. We
+recommend a more expensive key derivation function, such as scrypt,
+which works well against brute force even against optimized
+hardware~\cite{scrypt}. Percival estimates that it would require
+\$610,000 of specialized hardware to crack an 8-character,
+scrypt-secured password that included only lower-case letters.
 %Hash functions provide a great way to get a
 %set of bits from a shared secret without divulging much information
 %about the original shared secret. 
 We call the secret hashtag a \textit{plain tag}, which is comparable to
 a normal Twitter hashtag, though it should have enough entropy to
-prevent the adversary from guessing it. The result of hashing the plain
-tag with a given hash function \textit{H} (such as SHA-1) is referred to
-as the \textit{long tag}, i.e.:
+prevent the adversary from guessing it. The result of the key derivation
+function \textit{H} is referred to as the \textit{long tag}, i.e.:
 %
 $\id{LongTag} \leftarrow H\left(\id{PlainTag}\right)$.
 
 The \hoot protocol could simply use the long tag as an identifier, but
 this choice leads to several problems. First, to achieve our design goal
 of keeping identifiers short and to fit within Twitter's 140 character
-limit, it is less than ideal to use the full output of a hash function
-(e.g. 160 bits for SHA-1 or 256 bits for SHA-256). Secondly, strong hash
-cryptographic functions produce virtually no collisions for reasonable
-numbers of groups. As described in Section~\ref{sec:goals}, we propose
-that different groups' identifiers collide with each other for recipient
-anonymity and plausible deniability.
+limit, it is less than ideal to use the full output of a key derivation
+function (e.g. 128 bits). Secondly, a good key derivation function, much
+like a cryptographic hash function, produces virtually no collisions for
+reasonable numbers of groups. As described in Section~\ref{sec:goals},
+we propose that different groups' identifiers collide with each other
+for recipient anonymity and plausible deniability.
 
 To generate a collision, we need to shorten the long tag, generating a
 \textit{short tag} of $k$ bits. The short tag will, by design, induce
@@ -102,38 +106,41 @@ followers of that tag.
 % & \mathbf{then}\ \mathrm{emit} (\mathit{PlainTag} , {\mathit{ShortTag}}) 
 % \end{align*}
 %
-This algorithm searches for a tag collision, where the \id{PlainTag} suffix is
-a number between 0 and $N$, and the \id{ShortTag} is $k$ bits long.
-What should be reasonable values for $N$ and $k$?
+This algorithm searches for a tag collision, where the \id{PlainTag}
+suffix is a number between 0 and $N$, and the \id{ShortTag} is $k$ bits
+long.  What should be reasonable values for $N$ and $k$?
 
-$k$ determines the length of the \id{ShortTag}. As discussed above, the value for $k$
-trades off anonymity versus search overhead for a receiver. $k$ will likely need to be
-a constant shared widely across the space of \hoot users.
+$k$ determines the length of the \id{ShortTag}. As discussed above, the
+value for $k$ trades off anonymity versus search overhead for a
+receiver. $k$ will likely need to be a constant shared widely across the
+space of \hoot users.
 
 $N$ is bounded by how large a \id{PlainTag} string can be reasonably
 passed among potential \hoot participants. If the communication of the
 \id{PlainTag} must happen by word of mouth, $N$ will be bounded,
 perhaps, by the number of digits that can be memorized by most humans
-(so, if humans can remember around seven decimal
-digits~\cite{miller56}, then $N$ would be $10^7$). Equivalently, we
-could search over some other memorizable namespace with suitably high
-entropy, like a short string of characters found on a keyboard.
-Regardless, the group creator would use a \proc{Find-Tag} procedure (see
-Figure~\ref{fig:find-tag}) to search over all possible suffixes to
-identify hash collisions. Note that the search should be done
-randomly, rather than in-order, to increase the attacker's difficulty
-in conducting brute force attacks. Also not that process is only
-necessary once, when a tag is first created. 
+(so if humans can remember around seven decimal digits~\cite{miller56},
+then $N$ would be $10^7$). Equivalently, we could search over some other
+memorizable namespace with suitably high entropy, like a short string of
+characters found on a keyboard.  Regardless, the group creator would use
+a \proc{Find-Tag} procedure (see Figure~\ref{fig:find-tag}) to search
+over all possible suffixes to identify collisions. Note that the search
+should be done randomly, rather than in-order, to increase the
+attacker's difficulty in conducting brute force attacks. Also not that
+process is only necessary once, when a tag is first created.
 
 To further increase the entropy of the plain tag, we can imagine a
 number of options that would still be amenable to human
 memorization. For example, the short tag's prefix could be chosen
-randomly from a large dictionary.  If we were willing to relax our
-desire to have human-memorizable plain tags, then the whole plain tag
-could be selected at random.  Certainly, this yields excellent
+randomly from a large dictionary or replaced with a full phrase. NIST
+estimates a 40-character pass phrase with no checks or restrictions to
+have about 56 bits of entropy~\cite{nist}. If we were willing to relax
+our desire to have human-memorizable plain tags, then the whole plain
+tag could be selected at random. Certainly, this yields excellent
 resistance to brute force searching attacks, but it also creates
 additional complexity for organizers wishing to prevent leaks, since
-these plain tags will need to be written down. 
+these plain tags will need to be written down or saved and shown on a
+mobile device.
 %This is ~\cite{written-passwords}.
 
 \paragraphX{Message header and body.}  

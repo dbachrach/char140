@@ -16,8 +16,11 @@ PyCrypto\footnote{\url{http://www.dlitz.net/software/pycrypto/}}
 library, takes the following steps to construct a \msg:
 \begin{itemize}
 \item We generate a long tag by taking a SHA-1 hash of the plain
-  tag. This provides 32 bits for the short tag and 128 bits for the
- tag key, $k_{\mathrm{tag}}$, to encrypt the session keys.
+  tag.\footnote{Unfortunately, we did not have time to implement and
+    test with scrypt. Scrypt runs much slower, but can be tuned for
+    different trade-offs of speed and security~\cite{scrypt}.}  This
+  provides 32 bits for the short tag and 128 bits for the tag key,
+  $k_{\mathrm{tag}}$, to encrypt the session keys.
 \item Using PyCrypto's cryptographically-strong random number
   generator, we generate 
   a random 128-bit encryption key, $k_{\mathrm{enc}}$, and a random 128-bit MAC key,
